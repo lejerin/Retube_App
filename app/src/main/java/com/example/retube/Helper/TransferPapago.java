@@ -1,4 +1,8 @@
-package com.example.retube;
+package com.example.retube.Helper;
+
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -13,33 +17,44 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DetectPapago {
+// 네이버 기계번역 (Papago SMT) API 예제
+public class TransferPapago {
 
-    public String startDetect(String text) {
-         String clientId = "WpsgWfnfde9g6DQukZui";//애플리케이션 클라이언트 아이디값";
-         String clientSecret = "CgL9FauIu0";//애플리케이션 클라이언트 시크릿값";
+    public String startTransfer(String text, String source, String target) {
+        String clientId = "WpsgWfnfde9g6DQukZui";//애플리케이션 클라이언트 아이디값";
+        String clientSecret = "CgL9FauIu0";//애플리케이션 클라이언트 시크릿값";
 
-        String query;
+        String apiURL = "https://openapi.naver.com/v1/papago/n2mt";
+
         try {
-            query = URLEncoder.encode(text, "UTF-8");
+            text = URLEncoder.encode(text, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("인코딩 실패", e);
         }
-        String apiURL = "https://openapi.naver.com/v1/papago/detectLangs";
 
         Map<String, String> requestHeaders = new HashMap<>();
         requestHeaders.put("X-Naver-Client-Id", clientId);
         requestHeaders.put("X-Naver-Client-Secret", clientSecret);
 
-        String responseBody = post(apiURL, requestHeaders, query);
-        String result = responseBody.substring(responseBody.lastIndexOf(":\"")+2,responseBody.length()-2);
+        String responseBody = post(apiURL, requestHeaders, text, source, target);
+        JSONObject o = null;
+        try {
+            o = new JSONObject(responseBody);
+            JSONObject a = o.getJSONObject("message");
+            JSONObject b = a.getJSONObject("result");
+            return b.getString("translatedText");
 
-        return result;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return responseBody;
     }
 
-    private String post(String apiUrl, Map<String, String> requestHeaders, String text){
+    private static String post(String apiUrl, Map<String, String> requestHeaders, String text, String source, String target){
         HttpURLConnection con = connect(apiUrl);
-        String postParams =  "query="  + text; //원본언어: 한국어 (ko) -> 목적언어: 영어 (en)
+        String postParams = "source="+source+"&target="+ target +"&text=" + text; //원본언어: 한국어 (ko) -> 목적언어: 영어 (en)
+
         try {
             con.setRequestMethod("POST");
             for(Map.Entry<String, String> header :requestHeaders.entrySet()) {
@@ -65,7 +80,7 @@ public class DetectPapago {
         }
     }
 
-    private HttpURLConnection connect(String apiUrl){
+    private static HttpURLConnection connect(String apiUrl){
         try {
             URL url = new URL(apiUrl);
             return (HttpURLConnection)url.openConnection();
@@ -76,7 +91,7 @@ public class DetectPapago {
         }
     }
 
-    private String readBody(InputStream body){
+    private static String readBody(InputStream body){
         InputStreamReader streamReader = new InputStreamReader(body);
 
         try (BufferedReader lineReader = new BufferedReader(streamReader)) {

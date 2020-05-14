@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.retube.Helper.TransferPapago;
 import com.example.retube.R;
 import com.example.retube.Retrofit.GetDataService;
 import com.example.retube.Retrofit.RetrofitInstance;
@@ -40,15 +41,21 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private SparseBooleanArray mSelectedItems = new SparseBooleanArray(0);
     private SparseBooleanArray mSelectedReplies = new SparseBooleanArray(0);
 
+    private SparseBooleanArray mSelectedTransfer = new SparseBooleanArray(0);
+    private SparseBooleanArray mSelectedTransferData = new SparseBooleanArray(0);
 
     private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
 
     private HashMap<Integer,List<Replies.Item>> repliesHashMap = new HashMap<Integer, List<Replies.Item>>();
-    private List<List<Replies.Item>> repliesList;
+
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_FOOTER = 1;
     private static final int TYPE_ITEM = 2;
+
+    private String sourceTarget = "ko";
+    private TransferPapago transferPapago = new TransferPapago();
+    private HashMap<Integer,String> tranferHashMap = new HashMap<Integer,String>();
 
     public interface OnItemClickListener {
         void onItemClick(View v, int position) ;
@@ -136,6 +143,26 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
 
+            if(!sourceTarget.equals("ko")){
+                yth.transferBtn.setVisibility(View.VISIBLE);
+            }else{
+                yth.transferBtn.setVisibility(View.GONE);
+            }
+
+            if (mSelectedTransfer.get(position, false) == true) {
+
+                // Create layout manager with initial prefetch item count
+                    yth.transferText.setText(tranferHashMap.get(position));
+                    yth.transferText.setVisibility(View.VISIBLE);
+
+
+            } else {
+                yth.transferText.setVisibility(View.GONE);
+            }
+
+
+
+
 
 
         }
@@ -164,7 +191,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     class YoutubeHolder extends RecyclerView.ViewHolder{
 
         ImageView thumbnail;
-        TextView title,subtitle,likeNum,messageNum;
+        TextView title,subtitle,likeNum,messageNum,transferBtn, transferText;
         Button recomment;
         RecyclerView recommentRecyclerView;
 
@@ -178,6 +205,53 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             messageNum = itemView.findViewById(R.id.commentrepliesNum);
             recomment = itemView.findViewById(R.id.recommentBtn);
             recommentRecyclerView = itemView.findViewById(R.id.recommentRecyclerView);
+            transferBtn = itemView.findViewById(R.id.transferBtn);
+            transferText = itemView.findViewById(R.id.transferText);
+
+            if(!sourceTarget.equals("ko")){
+                transferBtn.setVisibility(View.VISIBLE);
+            }
+            transferBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final int realPosition = getAdapterPosition() - 1;
+
+                    if (mSelectedTransferData.get(realPosition, false) == true) {
+                        if (mSelectedTransfer.get(realPosition, false) == true) {
+                            mSelectedTransfer.delete(realPosition);
+                            transferText.setVisibility(View.GONE);
+                        } else {
+                            mSelectedTransfer.put(realPosition, true);
+                            transferText.setVisibility(View.VISIBLE);
+                        }
+
+                    } else {
+                        mSelectedTransferData.put(realPosition, true);
+                        if (transferText.getText().equals("")) {
+                            Thread thread = new Thread() {
+                                public void run() {
+
+                                    String data = transferPapago.startTransfer(subtitle.getText().toString(), sourceTarget, "ko");
+                                    transferText.setText(data);
+                                    tranferHashMap.put(realPosition,data);
+                            }
+                            };
+                            thread.start();
+                            try {
+                                thread.join();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        transferText.setVisibility(View.VISIBLE);
+                        mSelectedTransfer.put(realPosition, true);
+                    }
+
+                }
+            });
+
+
 
             recomment.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -323,6 +397,23 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         mSelectedItems.clear();
                         mSelectedReplies.clear();
 
+
+                        switch (position){
+                            case 0:
+                                //한국어
+                                sourceTarget = "ko";
+                                break;
+                            case 1:
+                                sourceTarget = "en";
+                                break;
+                            case 2:
+                                sourceTarget = "ka";
+                                break;
+                            case 3:
+                                sourceTarget = "vi";
+                                break;
+
+                        }
                     }
                 }
 

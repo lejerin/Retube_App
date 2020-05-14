@@ -44,6 +44,23 @@
                 android:layout_marginTop="5dp"
                 android:text="Sub" />
 
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/transferBtn"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="번역보기" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/transferText"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp" />
+
 
 
             <LinearLayout

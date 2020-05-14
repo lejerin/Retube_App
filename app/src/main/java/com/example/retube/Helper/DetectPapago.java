@@ -1,5 +1,7 @@
-package com.example.retube;
+package com.example.retube.Helper;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -14,35 +16,40 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-// 네이버 기계번역 (Papago SMT) API 예제
-public class ApiExamTranslateNmt {
+public class DetectPapago {
 
-    public String startTransfer(String text, String source, String target) {
-        String clientId = "WpsgWfnfde9g6DQukZui";//애플리케이션 클라이언트 아이디값";
-        String clientSecret = "CgL9FauIu0";//애플리케이션 클라이언트 시크릿값";
+    public String startDetect(String text) {
+         String clientId = "WpsgWfnfde9g6DQukZui";//애플리케이션 클라이언트 아이디값";
+         String clientSecret = "CgL9FauIu0";//애플리케이션 클라이언트 시크릿값";
 
-        String apiURL = "https://openapi.naver.com/v1/papago/n2mt";
-
+        String query;
         try {
-            text = URLEncoder.encode("안녕하세요. 오늘 기분은 어떻습니까?", "UTF-8");
+            query = URLEncoder.encode(text, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("인코딩 실패", e);
         }
+        String apiURL = "https://openapi.naver.com/v1/papago/detectLangs";
 
         Map<String, String> requestHeaders = new HashMap<>();
         requestHeaders.put("X-Naver-Client-Id", clientId);
         requestHeaders.put("X-Naver-Client-Secret", clientSecret);
 
-        String responseBody = post(apiURL, requestHeaders, text, source, target);
+        String responseBody = post(apiURL, requestHeaders, query);
+        String result = responseBody.substring(responseBody.lastIndexOf(":\"")+2,responseBody.length()-2);
+        JSONObject o = null;
+        try {
+            o = new JSONObject(responseBody);
+            return o.getString("langCode");
 
-        return responseBody;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
-    private static String post(String apiUrl, Map<String, String> requestHeaders, String text, String source, String target){
+    private String post(String apiUrl, Map<String, String> requestHeaders, String text){
         HttpURLConnection con = connect(apiUrl);
-        String postParams = "source="+source+"&"+target+
-                "=en&text=" + text; //원본언어: 한국어 (ko) -> 목적언어: 영어 (en)
-
+        String postParams =  "query="  + text; //원본언어: 한국어 (ko) -> 목적언어: 영어 (en)
         try {
             con.setRequestMethod("POST");
             for(Map.Entry<String, String> header :requestHeaders.entrySet()) {
@@ -68,7 +75,7 @@ public class ApiExamTranslateNmt {
         }
     }
 
-    private static HttpURLConnection connect(String apiUrl){
+    private HttpURLConnection connect(String apiUrl){
         try {
             URL url = new URL(apiUrl);
             return (HttpURLConnection)url.openConnection();
@@ -79,7 +86,7 @@ public class ApiExamTranslateNmt {
         }
     }
 
-    private static String readBody(InputStream body){
+    private String readBody(InputStream body){
         InputStreamReader streamReader = new InputStreamReader(body);
 
         try (BufferedReader lineReader = new BufferedReader(streamReader)) {
