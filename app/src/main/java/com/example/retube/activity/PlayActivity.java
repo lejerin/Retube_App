@@ -2,10 +2,13 @@ package com.example.retube.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +17,7 @@ import com.example.retube.R;
 import com.example.retube.Retrofit.GetDataService;
 import com.example.retube.Retrofit.RetrofitInstance;
 import com.example.retube.adapter.CommentsAdapter;
+import com.example.retube.models.Home.First;
 import com.example.retube.models.VideoStats.VideoStats;
 import com.example.retube.models.comments.Comment;
 import com.example.retube.models.comments.Replies;
@@ -71,7 +75,11 @@ public class PlayActivity extends YouTubeBaseActivity {
     private int beforeListNum = 0;
     private boolean beforeAdd = false;
 
-    private int papagoCount = 0;
+    private TextView title;
+    private ConstraintLayout moreLayout;
+    private ImageView moreBtn;
+    private boolean clickTitle = false;
+    private int viewCountAll = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +88,27 @@ public class PlayActivity extends YouTubeBaseActivity {
 
         Intent intent = getIntent(); /*데이터 수신*/
         videoid = intent.getExtras().getString("videoID"); /*String형*/
+        title = findViewById(R.id.title);
+        title.setText(intent.getExtras().getString("title"));
+
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        // 인텐트 정보가 있는 경우 실행
+
+        if (Intent.ACTION_SEND.equals(action) && type != null) {
+
+            if ("text/plain".equals(type)) {
+
+                // 가져온 인텐트의 텍스트 정보
+                String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+                videoid = sharedText.substring(sharedText.lastIndexOf("/") +1);
+                System.out.println("공유링크 :" + videoid);
+                getVideoTitle();
+            }
+
+        }
+
 
 
         youTubePlayerView = findViewById(R.id.youtubePlay);
@@ -90,6 +119,30 @@ public class PlayActivity extends YouTubeBaseActivity {
         commentNum = findViewById(R.id.commentNum);
         commentProgressBar = findViewById(R.id.commentProgressBar);
 
+        moreBtn = findViewById(R.id.moreBtn);
+        moreLayout = findViewById(R.id.moreLayout);
+        moreLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!clickTitle) {
+
+                    moreBtn.setImageDrawable(getResources().getDrawable(
+                            R.drawable.triangle));
+                    title.setMaxLines(4);
+                    title.setEllipsize(TextUtils.TruncateAt.END);
+                    viewCount.setText("조회수 " + viewCountAll +"회");
+                } else {
+                    moreBtn.setImageDrawable(getResources().getDrawable(
+                            R.drawable.retriangle));
+                    title.setMaxLines(2);
+                    title.setEllipsize(TextUtils.TruncateAt.END);
+                    viewCount.setText("조회수 " + getNumlength(viewCountAll) +"회");
+                }
+                clickTitle = !clickTitle;
+
+            }
+        });
 
         onInitializedListener = new YouTubePlayer.OnInitializedListener() {
             @Override
@@ -154,6 +207,37 @@ public class PlayActivity extends YouTubeBaseActivity {
 
     }
 
+
+    private void getVideoTitle() {
+
+        GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
+        final Call<First> videoTitleRequest = dataService
+                .getVideoTitle("snippet",
+                        "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0",videoid);
+        videoTitleRequest.enqueue(new Callback<First>() {
+            @Override
+            public void onResponse(Call<First> call, Response<First> response) {
+
+                if(response.isSuccessful()){
+                    if(response.body()!=null){
+                        title.setText(response.body().getItems().get(0).getSnippet().getTitle());
+
+                    }else{
+                        System.out.println("실패");
+                    }
+                }else{
+                    System.out.println("실패dd");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<First> call, Throwable t) {
+
+            }
+        });
+    }
+
     private void getVideoDetail() {
 
         GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
@@ -165,11 +249,12 @@ public class PlayActivity extends YouTubeBaseActivity {
 
                 if(response.isSuccessful()){
                     if(response.body()!=null){
-
-                        viewCount.setText("조회수 " + response.body().getItems().get(0).getStatistics().getViewCount() + "회");
-                        likeCount.setText(response.body().getItems().get(0).getStatistics().getLikeCount());
-                        dislikeCount.setText(response.body().getItems().get(0).getStatistics().getDislikeCount());
-                        commentNum.setText("댓글개수 " + response.body().getItems().get(0).getStatistics().getCommentCount());
+                        System.out.println("공유링크 :" + videoid);
+                        viewCountAll = Integer.parseInt(response.body().getItems().get(0).getStatistics().getViewCount());
+                        viewCount.setText("조회수 " + getNumlength(viewCountAll) +"회");
+                        likeCount.setText(getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getLikeCount())));
+                        dislikeCount.setText(getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getDislikeCount())));
+                        commentNum.setText("댓글 " + getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getCommentCount()))) ;
 
 
                     }else{
@@ -282,7 +367,6 @@ public class PlayActivity extends YouTubeBaseActivity {
     private List<Comment.Item> detectPapago(final List<Comment.Item> item) {
 
         final List<Comment.Item> list = new ArrayList<>();
-        papagoCount += 1;
 
 
         Thread thread = new Thread()
@@ -341,6 +425,26 @@ public class PlayActivity extends YouTubeBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         commentsRequest.cancel();
+    }
+
+    private String getNumlength(int num){
+
+        int length = (int)(Math.log10(num)+1);
+
+        if(length == 4){
+            Double a = num/1000.0;
+            return  (Math.floor((a) * 10) / 10.0) + "천";
+        }else if(length == 5){
+            Double a = num/10000.0;
+            return (Math.floor((a) * 10) / 10.0) + "만";
+        }else if(length > 5){
+            length = num/10000;
+            return  length + "만";
+        }
+
+
+        return  String.valueOf(num);
+
     }
 }
 

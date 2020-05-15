@@ -396,6 +396,9 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         mLanListener.onLanClick(view, position);
                         mSelectedItems.clear();
                         mSelectedReplies.clear();
+                        mSelectedTransfer.clear();
+                        mSelectedTransferData.clear();
+                        tranferHashMap.clear();
 
 
                         switch (position){

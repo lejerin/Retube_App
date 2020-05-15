@@ -12,10 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.retube.R;
+import com.example.retube.models.Channel.ChannelList;
 import com.example.retube.models.Home.Item;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
@@ -24,6 +26,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private List<Item> videoList;
+    private HashMap<Integer, ChannelList.Item> chennelList = new HashMap<Integer, ChannelList.Item>();
     private OnItemClickListener mListener = null;
     public interface OnItemClickListener
     {
@@ -36,21 +39,23 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.mListener = listener;
     }
 
-    public HomeAdapter(Context context, List<Item> videoList) {
+    public HomeAdapter(Context context, List<Item> videoList,HashMap<Integer,ChannelList.Item> chennelList) {
         this.context = context;
         this.videoList = videoList;
+        this.chennelList = chennelList;
     }
 
     class YoutubeHolder extends RecyclerView.ViewHolder{
 
-        ImageView thumbnail;
-        TextView title,subtitle;
+        ImageView thumbnail,chImg;
+        TextView title,subtitle,chnnelName;
 
         public YoutubeHolder(@NonNull View itemView) {
             super(itemView);
             thumbnail = itemView.findViewById(R.id.rc_img);
             title = itemView.findViewById(R.id.rc_title);
             subtitle = itemView.findViewById(R.id.rc_subtitle);
+            chImg = itemView.findViewById(R.id.chImg);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -64,19 +69,37 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             });
         }
-        public void setData(Item data){
+        public void setData(Item data,ChannelList.Item ch){
             String getTitle = data.getSnippet().getTitle();
             String getSubTitle = data.getSnippet().getPublishedAt();
             String getThumb = data.getSnippet().getThumbnails().getHigh().getUrl();
+            String getch = ch.getSnippet().getThumbnails().getHigh().getUrl();
+            String getchName = ch.getSnippet().getTitle();
 
             title.setText(getTitle);
-            subtitle.setText(getSubTitle);
+            subtitle.setText(getchName + " . " +getSubTitle);
             Picasso.get()
                     .load(getThumb)
                     .placeholder(R.drawable.gray)
                     .fit()
                     .centerCrop()
                     .into(thumbnail, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.d(TAG, "Thumbnail success");
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Log.d(TAG, "Thumbnail error");
+                        }
+                    });
+            Picasso.get()
+                    .load(getch)
+                    .placeholder(R.drawable.gray)
+                    .fit()
+                    .centerCrop()
+                    .into(chImg, new Callback() {
                         @Override
                         public void onSuccess() {
                             Log.d(TAG, "Thumbnail success");
@@ -105,8 +128,9 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Item videoYT = videoList.get(position);
+        ChannelList.Item videochennel =  chennelList.get(position);
         YoutubeHolder yth = (YoutubeHolder) holder;
-        yth.setData(videoYT);
+        yth.setData(videoYT,videochennel);
     }
 
     @Override

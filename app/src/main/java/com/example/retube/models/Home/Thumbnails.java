@@ -1,5 +1,6 @@
 package com.example.retube.models.Home;
 
+import com.example.retube.models.Channel.ChannelList;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +14,8 @@ private Medium medium;
     @Expose
     private High high;
 
-public Medium getMedium() {
+
+    public Medium getMedium() {
 return medium;
 }
 
@@ -28,5 +30,6 @@ this.medium = medium;
     public void setHigh(High high) {
         this.high = high;
     }
+
 
 }

@@ -1,5 +1,6 @@
 package com.example.retube.Retrofit;
 
+import com.example.retube.models.Channel.ChannelList;
 import com.example.retube.models.Home.First;
 import com.example.retube.models.Search.Searchs;
 import com.example.retube.models.VideoStats.VideoStats;
@@ -42,10 +43,25 @@ public interface GetDataService {
     );
 
     @GET("videos")
+    Call<First> getVideoTitle(
+            @Query("part") String part,
+            @Query("key") String key,
+            @Query("id") String id
+    );
+
+    @GET("videos")
     Call<VideoStats> getVideoDetail(
             @Query("part") String part,
             @Query("key") String key,
             @Query("id") String id
+    );
+
+    @GET("channels")
+    Call<ChannelList> getChannels(
+            @Query("part") String part,
+            @Query("id") String id,
+            @Query("key") String key,
+            @Query("maxResults") int maxResults
     );
 
     @GET("videos")

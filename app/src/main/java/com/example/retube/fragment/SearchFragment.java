@@ -75,6 +75,7 @@ public class SearchFragment extends Fragment {
             public void onItemClick(View v, int pos) {
 
                 Intent intent = new Intent(getActivity(), PlayActivity.class);
+                intent.putExtra("title",videoSearchList.get(pos).getSnippet().getTitle());
                 intent.putExtra("videoID",videoSearchList.get(pos).getId().getVideoId());
                 startActivity(intent);
 
