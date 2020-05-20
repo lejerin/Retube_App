@@ -70,6 +70,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
+                    android:layout_marginTop="1dp"
                     android:tint="@color/gray"
                     android:src="@drawable/like"
                     android:layout_width="15dp"
@@ -83,6 +84,7 @@
                     android:layout_height="wrap_content"/>
 
                 <ImageView
+                    android:layout_marginTop="3dp"
                     android:tint="@color/gray"
                     android:layout_marginLeft="15dp"
                     android:src="@drawable/dislike"
@@ -97,6 +99,7 @@
                     android:layout_height="wrap_content"/>
 
                 <ImageView
+                    android:layout_marginTop="3dp"
                     android:tint="@color/gray"
                     android:layout_marginLeft="15dp"
                     android:src="@drawable/message"

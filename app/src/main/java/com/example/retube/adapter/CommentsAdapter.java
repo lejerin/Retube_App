@@ -410,7 +410,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 sourceTarget = "en";
                                 break;
                             case 2:
-                                sourceTarget = "ka";
+                                sourceTarget = "ja";
                                 break;
                             case 3:
                                 sourceTarget = "vi";

@@ -14,9 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.retube.R;
 import com.example.retube.models.Channel.ChannelList;
 import com.example.retube.models.Home.Item;
+import com.example.retube.models.VideoStats.VideoStats;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,6 +33,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<Item> videoList;
     private HashMap<Integer, ChannelList.Item> chennelList = new HashMap<Integer, ChannelList.Item>();
+    private HashMap<Integer, Integer> viewCountList = new HashMap<Integer, Integer>();
     private OnItemClickListener mListener = null;
     public interface OnItemClickListener
     {
@@ -39,10 +46,13 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.mListener = listener;
     }
 
-    public HomeAdapter(Context context, List<Item> videoList,HashMap<Integer,ChannelList.Item> chennelList) {
+
+    public HomeAdapter(Context context, List<Item> videoList,HashMap<Integer,ChannelList.Item> chennelList,
+                       HashMap<Integer,Integer> viewCountList) {
         this.context = context;
         this.videoList = videoList;
         this.chennelList = chennelList;
+        this.viewCountList = viewCountList;
     }
 
     class YoutubeHolder extends RecyclerView.ViewHolder{
@@ -69,15 +79,44 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             });
         }
-        public void setData(Item data,ChannelList.Item ch){
+        public void setData(Item data,ChannelList.Item ch,Integer viewCount){
             String getTitle = data.getSnippet().getTitle();
-            String getSubTitle = data.getSnippet().getPublishedAt();
+            System.out.println("시간" + data.getSnippet().getPublishedAt());
+            String getSubTitle =  formatTimeString(data.getSnippet().getPublishedAt());
             String getThumb = data.getSnippet().getThumbnails().getHigh().getUrl();
-            String getch = ch.getSnippet().getThumbnails().getHigh().getUrl();
-            String getchName = ch.getSnippet().getTitle();
+            String getchName = "";
+            String getViewCount = "";
+            if(ch != null){
+                String getch = ch.getSnippet().getThumbnails().getHigh().getUrl();
+                 getchName = ch.getSnippet().getTitle();
+                Picasso.get()
+                        .load(getch)
+                        .placeholder(R.drawable.gray)
+                        .fit()
+                        .centerCrop()
+                        .into(chImg, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                Log.d(TAG, "Thumbnail success");
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                Log.d(TAG, "Thumbnail error");
+                            }
+                        });
+            }else{
+                chImg.setImageResource(R.drawable.gray);
+            }
+
+            if(viewCount != null){
+                getViewCount = getNumlength(viewCount);
+
+            }
+
 
             title.setText(getTitle);
-            subtitle.setText(getchName + " . " +getSubTitle);
+            subtitle.setText(getchName +  " \u00b7 " + getViewCount +"회" +  " \u00b7 " +getSubTitle);
             Picasso.get()
                     .load(getThumb)
                     .placeholder(R.drawable.gray)
@@ -94,22 +133,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             Log.d(TAG, "Thumbnail error");
                         }
                     });
-            Picasso.get()
-                    .load(getch)
-                    .placeholder(R.drawable.gray)
-                    .fit()
-                    .centerCrop()
-                    .into(chImg, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            Log.d(TAG, "Thumbnail success");
-                        }
 
-                        @Override
-                        public void onError(Exception e) {
-                            Log.d(TAG, "Thumbnail error");
-                        }
-                    });
 
         }
     }
@@ -129,8 +153,11 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Item videoYT = videoList.get(position);
         ChannelList.Item videochennel =  chennelList.get(position);
+        Integer viewCount = viewCountList.get(position);
+
+
         YoutubeHolder yth = (YoutubeHolder) holder;
-        yth.setData(videoYT,videochennel);
+        yth.setData(videoYT,videochennel,viewCount);
     }
 
     @Override
@@ -138,5 +165,67 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return videoList.size();
     }
 
+    private String formatTimeString(String str){
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            ZonedDateTime dateTime = ZonedDateTime.parse(str + "[Europe/London]");
+
+            String a = dateTime.getYear()+"-"+dateTime.getMonthValue() + "-"+ dateTime.getDayOfMonth() +
+                    " " + dateTime.getHour() + ":" + dateTime.getMinute() + ":" + dateTime.getSecond();
+            SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                Date to = transFormat.parse(a);
+                long regTime = to.getTime();
+                long curTime = new Date().getTime() - 9*60*60*1000;
+
+                long diffTime = (curTime - regTime) / 1000;
+                String msg = null;
+                if (diffTime < 60) {
+                    msg = "방금 전";
+                } else if ((diffTime /= 60) < 60) {
+                    msg = diffTime + "분 전";
+                } else if ((diffTime /= 60) < 24) {
+                    msg = (diffTime) + "시간 전";
+                } else if ((diffTime /= 24) < 30) {
+                    msg = (diffTime) + "일 전";
+                } else if ((diffTime /= 30) < 12) {
+                    msg = (diffTime) + "달 전";
+                } else {
+                    msg = (diffTime) + "년 전";
+                }
+                return msg;
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+
+
+       return "";
+    }
+
+    private String getNumlength(int num){
+
+        int length = (int)(Math.log10(num)+1);
+
+        if(length == 4){
+            Double a = num/1000.0;
+            return  (Math.floor((a) * 10) / 10.0) + "천";
+        }else if(length == 5){
+            Double a = num/10000.0;
+            return (Math.floor((a) * 10) / 10.0) + "만";
+        }else if(length > 5){
+            length = num/10000;
+            return  length + "만";
+        }
+
+
+        return  String.valueOf(num);
+
+    }
 
 }

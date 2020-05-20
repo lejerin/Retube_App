@@ -16,6 +16,11 @@ import com.example.retube.models.Search.Item;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.content.ContentValues.TAG;
@@ -24,11 +29,13 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private Context context;
     private List<Item> videoList;
+    private HashMap<Integer, Integer> viewCountList = new HashMap<Integer, Integer>();
     private OnItemClickListener mListener = null;
     public interface OnItemClickListener
     {
         void onItemClick(View v, int pos);
     }
+
 
     // OnItemClickListener 객체 참조를 어댑터에 전달하는 메서드
     public void setOnItemClickListener(OnItemClickListener listener)
@@ -36,21 +43,23 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.mListener = listener;
     }
 
-    public SearchAdapter(Context context, List<Item> videoList) {
+    public SearchAdapter(Context context, List<Item> videoList, HashMap<Integer,Integer> viewCountList) {
         this.context = context;
         this.videoList = videoList;
+        this.viewCountList = viewCountList;
     }
 
     class YoutubeHolder extends RecyclerView.ViewHolder{
 
         ImageView thumbnail;
-        TextView title,subtitle;
+        TextView title,subtitle,datetitle;
 
         public YoutubeHolder(@NonNull View itemView) {
             super(itemView);
             thumbnail = itemView.findViewById(R.id.searchImg);
             title = itemView.findViewById(R.id.search_title);
-            subtitle = itemView.findViewById(R.id.search_name);
+            subtitle = itemView.findViewById(R.id.search_chName);
+            datetitle = itemView.findViewById(R.id.searchDate);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -64,13 +73,21 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 }
             });
         }
-        public void setData(Item data){
+        public void setData(Item data, Integer viewCount){
             String getTitle = data.getSnippet().getTitle();
-            String getSubTitle = data.getSnippet().getPublishedAt();
+            String getSubTitle =  formatTimeString(data.getSnippet().getPublishedAt());
+            String chname = data.getSnippet().getChannelTitle();
             String getThumb = data.getSnippet().getThumbnails().getMedium().getUrl();
+            String getViewCount = "";
+
+            if(viewCount != null){
+                getViewCount = getNumlength(viewCount);
+
+            }
 
             title.setText(getTitle);
-            subtitle.setText(getSubTitle);
+            subtitle.setText(chname);
+            datetitle.setText(getSubTitle +  " \u00b7 " + getViewCount +"회");
             Picasso.get()
                     .load(getThumb)
                     .placeholder(R.drawable.gray)
@@ -105,8 +122,10 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Item videoYT = videoList.get(position);
+        Integer viewCount = viewCountList.get(position);
+
         YoutubeHolder yth = (YoutubeHolder) holder;
-        yth.setData(videoYT);
+        yth.setData(videoYT,viewCount);
     }
 
     @Override
@@ -114,5 +133,65 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return videoList.size();
     }
 
+    private String getNumlength(int num) {
+
+        int length = (int) (Math.log10(num) + 1);
+
+        if (length == 4) {
+            Double a = num / 1000.0;
+            return (Math.floor((a) * 10) / 10.0) + "천";
+        } else if (length == 5) {
+            Double a = num / 10000.0;
+            return (Math.floor((a) * 10) / 10.0) + "만";
+        } else if (length > 5) {
+            length = num / 10000;
+            return length + "만";
+        }
+        return  String.valueOf(num);
+
+    }
+
+    private String formatTimeString(String str){
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            ZonedDateTime dateTime = ZonedDateTime.parse(str + "[Europe/London]");
+
+            String a = dateTime.getYear()+"-"+dateTime.getMonthValue() + "-"+ dateTime.getDayOfMonth() +
+                    " " + dateTime.getHour() + ":" + dateTime.getMinute() + ":" + dateTime.getSecond();
+            SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                Date to = transFormat.parse(a);
+                long regTime = to.getTime();
+                long curTime = new Date().getTime() - 9*60*60*1000;
+
+                long diffTime = (curTime - regTime) / 1000;
+                String msg = null;
+                if (diffTime < 60) {
+                    msg = "방금 전";
+                } else if ((diffTime /= 60) < 60) {
+                    msg = diffTime + "분 전";
+                } else if ((diffTime /= 60) < 24) {
+                    msg = (diffTime) + "시간 전";
+                } else if ((diffTime /= 24) < 30) {
+                    msg = (diffTime) + "일 전";
+                } else if ((diffTime /= 30) < 12) {
+                    msg = (diffTime) + "달 전";
+                } else {
+                    msg = (diffTime) + "년 전";
+                }
+                return msg;
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+
+
+        return "";
+    }
 
 }

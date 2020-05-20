@@ -75,7 +75,7 @@ public class PlayActivity extends YouTubeBaseActivity {
     private int beforeListNum = 0;
     private boolean beforeAdd = false;
 
-    private TextView title;
+    private TextView title,descTextView;
     private ConstraintLayout moreLayout;
     private ImageView moreBtn;
     private boolean clickTitle = false;
@@ -89,7 +89,10 @@ public class PlayActivity extends YouTubeBaseActivity {
         Intent intent = getIntent(); /*데이터 수신*/
         videoid = intent.getExtras().getString("videoID"); /*String형*/
         title = findViewById(R.id.title);
+        descTextView = findViewById(R.id.DescTextView);
         title.setText(intent.getExtras().getString("title"));
+        descTextView.setText(intent.getExtras().getString("desc"));
+
 
         String action = intent.getAction();
         String type = intent.getType();
@@ -107,7 +110,13 @@ public class PlayActivity extends YouTubeBaseActivity {
                 getVideoTitle();
             }
 
+        }else{
+            if(intent.getExtras().getString("desc").equals("need")){
+                getVideoTitle();
+            }
         }
+
+
 
 
 
@@ -131,12 +140,14 @@ public class PlayActivity extends YouTubeBaseActivity {
                             R.drawable.triangle));
                     title.setMaxLines(4);
                     title.setEllipsize(TextUtils.TruncateAt.END);
+                    descTextView.setVisibility(View.VISIBLE);
                     viewCount.setText("조회수 " + viewCountAll +"회");
                 } else {
                     moreBtn.setImageDrawable(getResources().getDrawable(
                             R.drawable.retriangle));
                     title.setMaxLines(2);
                     title.setEllipsize(TextUtils.TruncateAt.END);
+                    descTextView.setVisibility(View.GONE);
                     viewCount.setText("조회수 " + getNumlength(viewCountAll) +"회");
                 }
                 clickTitle = !clickTitle;
@@ -221,7 +232,7 @@ public class PlayActivity extends YouTubeBaseActivity {
                 if(response.isSuccessful()){
                     if(response.body()!=null){
                         title.setText(response.body().getItems().get(0).getSnippet().getTitle());
-
+                        descTextView.setText(response.body().getItems().get(0).getSnippet().getDescription());
                     }else{
                         System.out.println("실패");
                     }
