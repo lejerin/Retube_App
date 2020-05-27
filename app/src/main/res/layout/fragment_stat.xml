@@ -278,10 +278,11 @@
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_marginStart="32dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginEnd="32dp"
                     android:background="@drawable/rect_rounded_white"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView2">
 
@@ -290,19 +291,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TextView"
-                        android:textSize="25dp"
+                        android:textSize="@dimen/keword_very_large"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.275" />
+                        app:layout_constraintVertical_bias="0.293" />
 
                     <TextView
                         android:id="@+id/search_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TextView"
-                        android:textSize="24dp"
+                        android:textSize="@dimen/keword_very_large"
                         app:layout_constraintBottom_toBottomOf="@+id/search_7"
                         app:layout_constraintEnd_toStartOf="@+id/search_1"
                         app:layout_constraintStart_toEndOf="@+id/search_4"
@@ -312,9 +313,9 @@
                         android:id="@+id/search_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="36dp"
                         android:text="TextView"
-                        android:textSize="23dp"
+                        android:textSize="@dimen/keword_large"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/search_1"
                         app:layout_constraintTop_toBottomOf="@+id/search_1" />
 
@@ -325,7 +326,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="16dp"
                         android:text="TextView"
-                        android:textSize="20dp"
+                        android:textSize="@dimen/keword_regular"
                         app:layout_constraintEnd_toStartOf="@+id/search_1"
                         app:layout_constraintHorizontal_bias="0.598"
                         app:layout_constraintStart_toStartOf="parent"
@@ -335,9 +336,9 @@
                         android:id="@+id/search_5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="8dp"
                         android:text="TextView"
-                        android:textSize="18dp"
+                        android:textSize="@dimen/keword_regular"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/search_3"
                         app:layout_constraintHorizontal_bias="1.0"
@@ -348,7 +349,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TextView"
-                        android:textSize="16dp"
+                        android:textSize="@dimen/keword_small"
                         app:layout_constraintBottom_toTopOf="@+id/search_3"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.584"
@@ -362,7 +363,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:text="TextView"
-                        android:textSize="16dp"
+                        android:textSize="@dimen/keword_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/search_2"
                         app:layout_constraintHorizontal_bias="0.269"
@@ -373,7 +374,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TextView"
-                        android:textSize="14dp"
+                        android:textSize="@dimen/keword_very_small"
                         app:layout_constraintBottom_toTopOf="@+id/search_7"
                         app:layout_constraintEnd_toStartOf="@+id/search_2"
                         app:layout_constraintHorizontal_bias="0.262"
@@ -386,7 +387,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TextView"
-                        android:textSize="13dp"
+                        android:textSize="@dimen/keword_very_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.683"
@@ -424,7 +425,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TextView"
-                        android:textSize="25dp"
+                        android:textSize="@dimen/keword_very_large"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.315"
@@ -437,30 +438,31 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:text="TextView"
-                        android:textSize="24dp"
+                        android:textSize="@dimen/keword_very_large"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/view_3"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toEndOf="@+id/view_1" />
+                        app:layout_constraintEnd_toStartOf="@+id/view_7"
+                        app:layout_constraintHorizontal_bias="0.62"
+                        app:layout_constraintStart_toEndOf="@+id/view_4" />
 
                     <TextView
                         android:id="@+id/view_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
                         android:text="TextView"
-                        android:textSize="23dp"
+                        android:textSize="@dimen/keword_large"
+                        app:layout_constraintBottom_toTopOf="@+id/view_2"
                         app:layout_constraintEnd_toStartOf="@+id/view_6"
                         app:layout_constraintStart_toEndOf="@+id/view_1"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.39" />
 
                     <TextView
                         android:id="@+id/view_9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:text="TextView"
-                        android:textSize="13dp"
+                        android:textSize="@dimen/keword_very_small"
                         app:layout_constraintEnd_toStartOf="@+id/view_3"
                         app:layout_constraintStart_toEndOf="@+id/view_5"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -470,9 +472,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginTop="16dp"
                         android:text="TextView"
-                        android:textSize="18dp"
+                        android:textSize="@dimen/keword_regular"
+                        app:layout_constraintBottom_toTopOf="@+id/view_1"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -480,51 +482,48 @@
                         android:id="@+id/view_6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="32dp"
+                        android:layout_marginEnd="16dp"
                         android:text="TextView"
-                        android:textSize="16dp"
+                        android:textSize="@dimen/keword_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.187" />
+                        app:layout_constraintVertical_bias="0.069" />
 
                     <TextView
                         android:id="@+id/view_7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:text="TextView"
-                        android:textSize="16dp"
+                        android:textSize="@dimen/keword_small"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/view_1"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/view_5" />
+                        app:layout_constraintEnd_toEndOf="parent" />
 
                     <TextView
                         android:id="@+id/view_8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
                         android:text="TextView"
-                        android:textSize="14dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/view_2"
-                        app:layout_constraintHorizontal_bias="0.324"
-                        app:layout_constraintStart_toEndOf="@+id/view_7"
-                        app:layout_constraintTop_toBottomOf="@+id/view_1"
-                        app:layout_constraintVertical_bias="0.87" />
+                        android:textSize="@dimen/keword_very_small"
+                        app:layout_constraintBottom_toTopOf="@+id/view_7"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.76"
+                        app:layout_constraintStart_toEndOf="@+id/view_1"
+                        app:layout_constraintTop_toBottomOf="@+id/view_6"
+                        app:layout_constraintVertical_bias="0.65" />
 
                     <TextView
                         android:id="@+id/view_4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginBottom="20dp"
                         android:text="TextView"
-                        android:textSize="20dp"
+                        android:textSize="@dimen/keword_large"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.768"
-                        app:layout_constraintStart_toEndOf="@+id/view_2"
-                        app:layout_constraintTop_toBottomOf="@+id/view_6"
-                        app:layout_constraintVertical_bias="0.283" />
+                        app:layout_constraintStart_toStartOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

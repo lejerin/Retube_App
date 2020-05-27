@@ -106,7 +106,7 @@ public class StatFragment extends Fragment {
             if(i <= searches.size()){
                 String text = searches.get(i-1).getNoun();
                 if (text.length() > 5) {
-                    text = text.substring(0, 5) + "...";
+                    text = text.substring(0, 5) + "..";
                 }
                 searchTexts.get(i-1).setText(text);
             }else{

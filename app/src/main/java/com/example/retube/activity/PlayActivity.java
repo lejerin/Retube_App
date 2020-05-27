@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.retube.Helper.DetectPapago;
 import com.example.retube.Helper.WiseNLUExample;
 import com.example.retube.R;
+import com.example.retube.Realm.Category;
 import com.example.retube.Realm.User;
 import com.example.retube.Realm.ViewVideo;
 import com.example.retube.Retrofit.GetDataService;
@@ -247,6 +248,11 @@ public class PlayActivity extends YouTubeBaseActivity {
                     if(response.body()!=null){
                         title.setText(response.body().getItems().get(0).getSnippet().getTitle());
                         descTextView.setText(response.body().getItems().get(0).getSnippet().getDescription());
+                        saveDBCategory(Integer.parseInt(response.body().getItems().get(0).getSnippet().getCategoryId()));
+
+
+
+
                     }else{
                         System.out.println("실패");
                     }
@@ -469,6 +475,49 @@ public class PlayActivity extends YouTubeBaseActivity {
 
 
         return  String.valueOf(num);
+
+    }
+
+    private void saveDBCategory(int categoryid){
+
+        //영화&애니메이션 중복
+        if(categoryid == 30 || categoryid == 31) categoryid = 1;
+        //코미디
+        if(categoryid == 34) categoryid = 23;
+        //공포&스릴러
+        if(categoryid == 41) categoryid = 39;
+        //단편
+        if(categoryid == 42) categoryid = 18;
+
+
+        Realm realm = Realm.getDefaultInstance();//데이터 넣기(insert)
+        Category category = realm.where(Category.class).equalTo("categoryId",categoryid)
+                .findFirst();
+
+        if(category != null){
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+
+                    category.setCategoryCount(category.getCategoryCount() + 1);
+
+                }
+            });
+
+        }else{
+            int finalCategoryid = categoryid;
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+
+                    Category newCategory = realm.createObject(Category.class);
+                    newCategory.setCategoryId(finalCategoryid);
+                    newCategory.setCategoryCount(1);
+
+                }
+            });
+        }
+
 
     }
 

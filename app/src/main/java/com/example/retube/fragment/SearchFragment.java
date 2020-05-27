@@ -254,14 +254,14 @@ public class SearchFragment extends Fragment {
 
                 if(response.isSuccessful()){
                     if(response.body()!=null){
-                        System.out.println("조회수" + pos);
+                        System.out.println("검색 조회수" + pos);
                         viewCountList.put(pos, Integer.parseInt(response.body().getItems().get(0).getStatistics().getViewCount()));
                         if(pos == videoSearchList.size()-1){
                             startNum = videoSearchList.size();
-//                            adapter.notifyDataSetChanged();
-//                            if(more){
-//                                rv.smoothScrollToPosition(lastVisibleItemPosition + 1);
-//                            }
+                            adapter.notifyDataSetChanged();
+                            if(more){
+                                rv.smoothScrollToPosition(lastVisibleItemPosition + 1);
+                            }
 
                         }
                     }else{
