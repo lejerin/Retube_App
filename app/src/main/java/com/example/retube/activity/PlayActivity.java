@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.retube.Helper.DetectPapago;
 import com.example.retube.Helper.WiseNLUExample;
 import com.example.retube.R;
+import com.example.retube.Realm.User;
 import com.example.retube.Realm.ViewVideo;
 import com.example.retube.Retrofit.GetDataService;
 import com.example.retube.Retrofit.RetrofitInstance;
@@ -28,7 +29,11 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
@@ -99,6 +104,8 @@ public class PlayActivity extends YouTubeBaseActivity {
         descTextView.setText(intent.getExtras().getString("desc"));
 
         saveDBNoun(wiseNLUExample.getNoun(title.getText().toString()));
+        saveDBUserData();
+
 
         String action = intent.getAction();
         String type = intent.getType();
@@ -223,6 +230,7 @@ public class PlayActivity extends YouTubeBaseActivity {
         });
 
     }
+
 
 
     private void getVideoTitle() {
@@ -462,6 +470,81 @@ public class PlayActivity extends YouTubeBaseActivity {
 
         return  String.valueOf(num);
 
+    }
+
+    private void saveDBUserData() {
+        Realm realm = Realm.getDefaultInstance();//데이터 넣기(insert)
+        User user = realm.where(User.class).findFirst();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                user.setViewCount(user.getViewCount() + 1);
+                int v = 0;
+                try {
+                     v = viewTime();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                switch (v){
+                    case 0:
+                        user.setDown(user.getDown() + 1);
+                        break;
+                    case 1:
+                        user.setAm(user.getAm() + 1);
+                        break;
+                    case 2:
+                        user.setPm(user.getPm() + 1);
+                        break;
+                    case 3:
+                        user.setNight(user.getNight() + 1);
+                        break;
+                    default:
+                        break;
+                }
+
+                Calendar c1 = Calendar.getInstance();
+                if (c1.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ||
+                        c1.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+                    user.setHoly(user.getHoly() + 1);
+                }else{
+                    user.setWeek(user.getWeek() + 1);
+                }
+
+            }
+        });
+
+    }
+
+
+    private int viewTime() throws ParseException {
+
+        Date today = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd");
+        SimpleDateFormat fm = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+
+        //dawn
+        String dawn =  dateFormat.format(today) +  " 05:59:59";
+        if(today.getTime() <= fm.parse(dawn).getTime()){
+            return 0;
+        }
+        //am
+        String am =  dateFormat.format(today) +  " 11:59:59";
+        if(today.getTime() <= fm.parse(am).getTime()){
+            return 1;
+        }
+        //pm
+        String pm =  dateFormat.format(today) +  " 17:59:59";
+        if(today.getTime() <= fm.parse(pm).getTime()){
+            return 2;
+        }
+        //night
+        String night =  dateFormat.format(today) +  " 23:59:59";
+        if(today.getTime() <= fm.parse(night).getTime()){
+            return 3;
+        }
+
+        return -1;
     }
 
     private void saveDBNoun(List<String> list){

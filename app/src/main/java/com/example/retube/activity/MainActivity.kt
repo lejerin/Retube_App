@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         menuBawah = findViewById(R.id.menu_bawah)
-        setFragment(homeFragment)
+        setFragment(statFragment)
 
 
         menuBawah.setSelectedItemId(R.id.menu_home)
