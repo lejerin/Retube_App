@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.retube.Helper.DetectPapago;
+import com.example.retube.Helper.WiseNLUExample;
 import com.example.retube.R;
+import com.example.retube.Realm.ViewVideo;
 import com.example.retube.Retrofit.GetDataService;
 import com.example.retube.Retrofit.RetrofitInstance;
 import com.example.retube.adapter.CommentsAdapter;
@@ -29,6 +31,7 @@ import com.google.android.youtube.player.YouTubePlayerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,6 +40,8 @@ public class PlayActivity extends YouTubeBaseActivity {
 
     private YouTubePlayerView youTubePlayerView;
     private YouTubePlayer.OnInitializedListener onInitializedListener;
+
+    private WiseNLUExample wiseNLUExample = new WiseNLUExample();
 
     private TextView viewCount,likeCount, dislikeCount, commentNum;
 
@@ -93,6 +98,7 @@ public class PlayActivity extends YouTubeBaseActivity {
         title.setText(intent.getExtras().getString("title"));
         descTextView.setText(intent.getExtras().getString("desc"));
 
+        saveDBNoun(wiseNLUExample.getNoun(title.getText().toString()));
 
         String action = intent.getAction();
         String type = intent.getType();
@@ -455,6 +461,44 @@ public class PlayActivity extends YouTubeBaseActivity {
 
 
         return  String.valueOf(num);
+
+    }
+
+    private void saveDBNoun(List<String> list){
+        Realm realm = Realm.getDefaultInstance();//데이터 넣기(insert)
+
+        for(int i=0;i<list.size();i++){
+
+            int finalI = i;
+
+            ViewVideo isSearch = realm.where(ViewVideo.class).equalTo("noun",list.get(finalI)).findFirst();
+            if(isSearch != null){
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        isSearch.setCount(isSearch.getCount() + 1);
+                    }
+                });
+            }else{
+                realm.executeTransaction(new Realm.Transaction() { @Override public void execute(Realm realm) {
+
+                    Number maxId = realm.where(ViewVideo.class).max("id");
+                    // If there are no rows, currentId is null, so the next id must be 1
+                    // If currentId is not null, increment it by 1
+                    int nextId = (maxId == null) ? 1 : maxId.intValue() + 1;
+                    // User object created with the new Primary key
+
+                    ViewVideo search = realm.createObject(ViewVideo.class,nextId);
+                    search.setNoun(list.get(finalI));
+                    search.setCount(1);
+
+                }
+                } );
+            }
+
+
+        }
+
 
     }
 }

@@ -20,7 +20,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.retube.Helper.WiseNLUExample;
 import com.example.retube.R;
+import com.example.retube.Realm.Search;
 import com.example.retube.Retrofit.GetDataService;
 import com.example.retube.Retrofit.RetrofitInstance;
 import com.example.retube.activity.PlayActivity;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,6 +58,9 @@ public class SearchFragment extends Fragment {
     private String nextToken;
     private int lastVisibleItemPosition = 0;
     private boolean firstCommentToken = false;
+    private boolean more = false;
+
+    private WiseNLUExample wiseNLUExample = new WiseNLUExample();
 
     RecyclerView rv;
 
@@ -71,6 +77,7 @@ public class SearchFragment extends Fragment {
         rv = view.findViewById(R.id.seach_rc);
         searchText = view.findViewById(R.id.searchText);
         checkBtn = view.findViewById(R.id.checkBtn);
+
 
 
         adapter = new SearchAdapter(getContext(),videoSearchList,viewCountList);
@@ -118,9 +125,13 @@ public class SearchFragment extends Fragment {
 
                         hideKeyboard(getActivity());
                         videoSearchList.clear();
+                        viewCountList.clear();
                         firstCommentToken = false;
                         nextToken = null;
+
                         String input = searchText.getText().toString();
+                        saveDBNoun(wiseNLUExample.getNoun(input));
+
                         getSearchVideoDetail(input);
                         break;
 
@@ -140,9 +151,12 @@ public class SearchFragment extends Fragment {
             public void onClick(View v) {
                 hideKeyboard(getActivity());
                 videoSearchList.clear();
+                viewCountList.clear();
                 firstCommentToken = false;
                 nextToken = null;
+
                 String input = searchText.getText().toString();
+                saveDBNoun(wiseNLUExample.getNoun(input));
                 getSearchVideoDetail(input);
             }
         });
@@ -163,6 +177,8 @@ public class SearchFragment extends Fragment {
 
     private void getSearchVideoDetail(String input) {
 
+        more = false;
+
         GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
         Call<Searchs> videoDetailRequest = null;
         if(nextToken == null){
@@ -178,7 +194,7 @@ public class SearchFragment extends Fragment {
             videoDetailRequest= dataService
                     .getMoreSerchVideo("snippet", nextToken,30, "relevance", "video",
                             input,"none","AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0");
-
+            more = true;
         }
 
         videoDetailRequest.enqueue(new Callback<Searchs>() {
@@ -221,6 +237,10 @@ public class SearchFragment extends Fragment {
             getVeiwCount(videoSearchList.get(i).getId().getVideoId(),i);
         }
         System.out.println("조회수 불러오기 끝");
+        adapter.notifyDataSetChanged();
+        if(more){
+            rv.smoothScrollToPosition(lastVisibleItemPosition + 1);
+        }
     }
 
     private void getVeiwCount(String id, final int pos) {
@@ -238,8 +258,11 @@ public class SearchFragment extends Fragment {
                         viewCountList.put(pos, Integer.parseInt(response.body().getItems().get(0).getStatistics().getViewCount()));
                         if(pos == videoSearchList.size()-1){
                             startNum = videoSearchList.size();
-                            adapter.notifyDataSetChanged();
-                            rv.smoothScrollToPosition(lastVisibleItemPosition + 1);
+//                            adapter.notifyDataSetChanged();
+//                            if(more){
+//                                rv.smoothScrollToPosition(lastVisibleItemPosition + 1);
+//                            }
+
                         }
                     }else{
                         System.out.println("실패");
@@ -255,6 +278,44 @@ public class SearchFragment extends Fragment {
 
             }
         });
+    }
+
+    private void saveDBNoun(List<String> list){
+        Realm realm = Realm.getDefaultInstance();//데이터 넣기(insert)
+
+        for(int i=0;i<list.size();i++){
+
+            int finalI = i;
+
+            Search isSearch = realm.where(Search.class).equalTo("noun",list.get(finalI)).findFirst();
+            if(isSearch != null){
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+                        isSearch.setCount(isSearch.getCount() + 1);
+                    }
+                });
+            }else{
+                realm.executeTransaction(new Realm.Transaction() { @Override public void execute(Realm realm) {
+
+                    Number maxId = realm.where(Search.class).max("id");
+                    // If there are no rows, currentId is null, so the next id must be 1
+                    // If currentId is not null, increment it by 1
+                    int nextId = (maxId == null) ? 1 : maxId.intValue() + 1;
+                    // User object created with the new Primary key
+
+                    Search search = realm.createObject(Search.class,nextId);
+                    search.setNoun(list.get(finalI));
+                    search.setCount(1);
+
+                }
+                } );
+            }
+
+
+        }
+
+
     }
 
 }
