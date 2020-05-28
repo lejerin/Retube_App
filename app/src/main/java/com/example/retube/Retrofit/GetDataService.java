@@ -1,8 +1,9 @@
 package com.example.retube.Retrofit;
 
-import com.example.retube.models.Channel.ChannelList;
-import com.example.retube.models.Home.First;
+import com.example.retube.models.Channel;
+import com.example.retube.models.HomeMostPopular;
 import com.example.retube.models.Search.Searchs;
+import com.example.retube.models.Video;
 import com.example.retube.models.VideoStats.VideoStats;
 import com.example.retube.models.comments.Comment;
 import com.example.retube.models.comments.Replies;
@@ -12,6 +13,15 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface GetDataService {
+
+
+    @GET("videos")
+    Call<Video> getPlayVideo(
+            @Query("part") String part,
+            @Query("key") String key,
+            @Query("fields") String fields,
+            @Query("id") String id
+    );
 
 
     @GET("comments")
@@ -42,12 +52,6 @@ public interface GetDataService {
             @Query("key") String key
     );
 
-    @GET("videos")
-    Call<First> getVideoTitle(
-            @Query("part") String part,
-            @Query("key") String key,
-            @Query("id") String id
-    );
 
     @GET("videos")
     Call<VideoStats> getVideoDetail(
@@ -57,7 +61,7 @@ public interface GetDataService {
     );
 
     @GET("channels")
-    Call<ChannelList> getChannels(
+    Call<Channel> getChannels(
             @Query("part") String part,
             @Query("id") String id,
             @Query("key") String key,
@@ -65,8 +69,9 @@ public interface GetDataService {
     );
 
     @GET("videos")
-    Call<First> getMostPopular(
+    Call<HomeMostPopular> getMostPopular(
             @Query("part") String part,
+            @Query("fields") String fields,
             @Query("chart") String chart,
             @Query("key") String key,
             @Query("regionCode") String regionCode,

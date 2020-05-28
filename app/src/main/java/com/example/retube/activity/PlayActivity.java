@@ -21,8 +21,7 @@ import com.example.retube.Realm.ViewVideo;
 import com.example.retube.Retrofit.GetDataService;
 import com.example.retube.Retrofit.RetrofitInstance;
 import com.example.retube.adapter.CommentsAdapter;
-import com.example.retube.models.Home.First;
-import com.example.retube.models.VideoStats.VideoStats;
+import com.example.retube.models.Video;
 import com.example.retube.models.comments.Comment;
 import com.example.retube.models.comments.Replies;
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -101,12 +100,9 @@ public class PlayActivity extends YouTubeBaseActivity {
         videoid = intent.getExtras().getString("videoID"); /*String형*/
         title = findViewById(R.id.title);
         descTextView = findViewById(R.id.DescTextView);
-        title.setText(intent.getExtras().getString("title"));
-        descTextView.setText(intent.getExtras().getString("desc"));
 
         saveDBNoun(wiseNLUExample.getNoun(title.getText().toString()));
         saveDBUserData();
-
 
         String action = intent.getAction();
         String type = intent.getType();
@@ -121,17 +117,9 @@ public class PlayActivity extends YouTubeBaseActivity {
                 String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
                 videoid = sharedText.substring(sharedText.lastIndexOf("/") +1);
                 System.out.println("공유링크 :" + videoid);
-                getVideoTitle();
             }
 
-        }else{
-            if(intent.getExtras().getString("desc").equals("need")){
-                getVideoTitle();
-            }
         }
-
-
-
 
 
         youTubePlayerView = findViewById(R.id.youtubePlay);
@@ -234,59 +222,30 @@ public class PlayActivity extends YouTubeBaseActivity {
 
 
 
-    private void getVideoTitle() {
+    private void getVideoDetail() {
+
+
 
         GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
-        final Call<First> videoTitleRequest = dataService
-                .getVideoTitle("snippet",
-                        "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0",videoid);
-        videoTitleRequest.enqueue(new Callback<First>() {
+        final Call<Video> videoTitleRequest = dataService
+                .getPlayVideo("snippet,statistics",
+                        "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0","items(id,snippet(title,description,publishedAt,categoryId,channelId,channelTitle),statistics)",videoid);
+        videoTitleRequest.enqueue(new Callback<Video>() {
             @Override
-            public void onResponse(Call<First> call, Response<First> response) {
+            public void onResponse(Call<Video> call, Response<Video> response) {
 
                 if(response.isSuccessful()){
                     if(response.body()!=null){
                         title.setText(response.body().getItems().get(0).getSnippet().getTitle());
                         descTextView.setText(response.body().getItems().get(0).getSnippet().getDescription());
-                        saveDBCategory(Integer.parseInt(response.body().getItems().get(0).getSnippet().getCategoryId()));
-
-
-
-
-                    }else{
-                        System.out.println("실패");
-                    }
-                }else{
-                    System.out.println("실패dd");
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<First> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private void getVideoDetail() {
-
-        GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
-        Call<VideoStats> videoDetailRequest = dataService
-                .getVideoDetail("statistics", "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0",videoid);
-        videoDetailRequest.enqueue(new Callback<VideoStats>() {
-            @Override
-            public void onResponse(Call<VideoStats> call, Response<VideoStats> response) {
-
-                if(response.isSuccessful()){
-                    if(response.body()!=null){
-                        System.out.println("공유링크 :" + videoid);
                         viewCountAll = Integer.parseInt(response.body().getItems().get(0).getStatistics().getViewCount());
                         viewCount.setText("조회수 " + getNumlength(viewCountAll) +"회");
                         likeCount.setText(getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getLikeCount())));
                         dislikeCount.setText(getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getDislikeCount())));
                         commentNum.setText("댓글 " + getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getCommentCount()))) ;
 
+                        saveDBCategory(Integer.parseInt(response.body().getItems().get(0).getSnippet().getCategoryId()));
+
 
                     }else{
                         System.out.println("실패");
@@ -298,11 +257,13 @@ public class PlayActivity extends YouTubeBaseActivity {
             }
 
             @Override
-            public void onFailure(Call<VideoStats> call, Throwable t) {
+            public void onFailure(Call<Video> call, Throwable t) {
 
             }
         });
     }
+
+
 
 
     private void getCommentData() {
@@ -489,6 +450,7 @@ public class PlayActivity extends YouTubeBaseActivity {
         //단편
         if(categoryid == 42) categoryid = 18;
 
+        String categoryName = getCategoryName(categoryid);
 
         Realm realm = Realm.getDefaultInstance();//데이터 넣기(insert)
         Category category = realm.where(Category.class).equalTo("categoryId",categoryid)
@@ -513,6 +475,7 @@ public class PlayActivity extends YouTubeBaseActivity {
                     Category newCategory = realm.createObject(Category.class);
                     newCategory.setCategoryId(finalCategoryid);
                     newCategory.setCategoryCount(1);
+                    newCategory.setCategoryName(getCategoryName(finalCategoryid));
 
                 }
             });
@@ -520,6 +483,71 @@ public class PlayActivity extends YouTubeBaseActivity {
 
 
     }
+
+    private String getCategoryName(int id){
+
+        switch (id){
+            case 1:
+                return "영화&애니메이션";
+            case 2:
+                return "자동차";
+            case 10:
+                return "음악";
+            case 15:
+                return "동물";
+            case 17:
+                return "스포츠";
+            case 18:
+                return "단편영화";
+            case 19:
+                return "여행&이벤트";
+            case 20:
+                return "게임";
+            case 21:
+                return "브이로그";
+            case 22:
+                return "인물&블로그";
+            case 23:
+                return "코미디";
+            case 24:
+                return "엔터테인먼트";
+            case 25:
+                return "뉴스&정치";
+            case 26:
+                return "노하우&스타일";
+            case 27:
+                return "교육";
+            case 28:
+                return "과학&기술";
+            case 29:
+                return "비영리&사회운동";
+            case 32:
+                return "액션&모험";
+            case 33:
+                return "클래식";
+            case 35:
+                return "다큐멘터리";
+            case 36:
+                return "드라마";
+            case 37:
+                return "가족";
+            case 38:
+                return "외국";
+            case 39:
+                return "공포&스릴러";
+            case 40:
+                return "공상과학&판타지";
+            case 43:
+                return "예능";
+            case 44:
+                return "트레일러";
+            default:
+                return "영화&애니메이션";
+
+        }
+
+    }
+
 
     private void saveDBUserData() {
         Realm realm = Realm.getDefaultInstance();//데이터 넣기(insert)

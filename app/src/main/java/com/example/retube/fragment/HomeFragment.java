@@ -16,10 +16,8 @@ import com.example.retube.Retrofit.GetDataService;
 import com.example.retube.Retrofit.RetrofitInstance;
 import com.example.retube.activity.PlayActivity;
 import com.example.retube.adapter.HomeAdapter;
-import com.example.retube.models.Channel.ChannelList;
-import com.example.retube.models.Home.First;
-import com.example.retube.models.Home.Item;
-import com.example.retube.models.VideoStats.VideoStats;
+import com.example.retube.models.Channel;
+import com.example.retube.models.HomeMostPopular;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,9 +31,8 @@ public class HomeFragment extends Fragment {
 
     private HomeAdapter adapter;
     private LinearLayoutManager manager;
-    private List<Item> videoMostPopularList = new ArrayList<>();
-    private HashMap<Integer,ChannelList.Item> channelList = new HashMap<Integer, ChannelList.Item>();
-    private HashMap<Integer,Integer> viewCountList = new HashMap<Integer, Integer>();
+    private List<HomeMostPopular.Item> videoMostPopularList = new ArrayList<>();
+    private HashMap<Integer, Channel.Item> channelList = new HashMap<Integer, Channel.Item>();
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -47,7 +44,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         // Inflate the layout for this fragment
         RecyclerView rv = view.findViewById(R.id.recyclerView);
-        adapter = new HomeAdapter(getContext(),videoMostPopularList,channelList,viewCountList);
+        adapter = new HomeAdapter(getContext(),videoMostPopularList,channelList);
         manager = new LinearLayoutManager(getContext());
         rv.setAdapter(adapter);
         rv.setLayoutManager(manager);
@@ -63,8 +60,6 @@ public class HomeFragment extends Fragment {
             public void onItemClick(View v, int pos) {
 
                 Intent intent = new Intent(getActivity(), PlayActivity.class);
-                intent.putExtra("title",videoMostPopularList.get(pos).getSnippet().getTitle());
-                intent.putExtra("desc",videoMostPopularList.get(pos).getSnippet().getDescription());
                 intent.putExtra("videoID",videoMostPopularList.get(pos).getId());
                 startActivity(intent);
 
@@ -80,12 +75,12 @@ public class HomeFragment extends Fragment {
     private void getVideoDetail() {
 
         GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
-        final Call<First> videoDetailRequest = dataService
-                .getMostPopular("snippet", "mostPopular",
-                        "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0","KR",25);
-        videoDetailRequest.enqueue(new Callback<First>() {
+        final Call<HomeMostPopular> videoDetailRequest = dataService
+                .getMostPopular("snippet,statistics","items(id,snippet(title,thumbnails,publishedAt,channelId,channelTitle),statistics)",
+                        "mostPopular", "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0","KR",25);
+        videoDetailRequest.enqueue(new Callback<HomeMostPopular>() {
             @Override
-            public void onResponse(Call<First> call, Response<First> response) {
+            public void onResponse(Call<HomeMostPopular> call, Response<HomeMostPopular> response) {
 
                 if(response.isSuccessful()){
                     if(response.body()!=null){
@@ -103,7 +98,7 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<First> call, Throwable t) {
+            public void onFailure(Call<HomeMostPopular> call, Throwable t) {
 
             }
         });
@@ -117,30 +112,26 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void getViewCounts(){
-        for(int i=0;i<videoMostPopularList.size();i++){
-            getVeiwCount(videoMostPopularList.get(i).getId(),i);
-        }
-        System.out.println("조회수 불러오기 끝");
-    }
 
     private void getChannelThumb(String id, final int pos){
         GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
-        final Call<ChannelList> channelListRequest = dataService
+        final Call<Channel> channelListRequest = dataService
                 .getChannels("snippet", id,
                         "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0",10);
-        channelListRequest.enqueue(new Callback<ChannelList>() {
+        channelListRequest.enqueue(new Callback<Channel>() {
             @Override
-            public void onResponse(Call<ChannelList> call, Response<ChannelList> response) {
+            public void onResponse(Call<Channel> call, Response<Channel> response) {
 
                 if(response.isSuccessful()){
                     if(response.body()!=null){
 
                         System.out.println("이미지 불러오기 성공");
                         channelList.put(pos, response.body().getItems().get(0));
-                        if(pos == 24){
-                            getViewCounts();
-                        }
+
+                        adapter.notifyDataSetChanged();
+                        adapter.getItemCount();
+
+
                     }else{
                         System.out.println("실패");
                     }
@@ -151,40 +142,7 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ChannelList> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private void getVeiwCount(String id, final int pos) {
-
-        GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
-        Call<VideoStats> videoDetailRequest = dataService
-                .getVideoDetail("statistics", "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0",id);
-        videoDetailRequest.enqueue(new Callback<VideoStats>() {
-            @Override
-            public void onResponse(Call<VideoStats> call, Response<VideoStats> response) {
-
-                if(response.isSuccessful()){
-                    if(response.body()!=null){
-                        System.out.println("조회수" + pos);
-                        viewCountList.put(pos, Integer.parseInt(response.body().getItems().get(0).getStatistics().getViewCount()));
-                        if(pos == 24){
-                            adapter.notifyDataSetChanged();
-                            adapter.getItemCount();
-                        }
-                    }else{
-                        System.out.println("실패");
-                    }
-                }else{
-                    System.out.println("실패dd");
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<VideoStats> call, Throwable t) {
+            public void onFailure(Call<Channel> call, Throwable t) {
 
             }
         });

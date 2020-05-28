@@ -6,6 +6,15 @@ public class Category extends RealmObject {
 
     private int categoryId;
     private int categoryCount = 0;
+    private String categoryName;
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 
     public int getCategoryId() {
         return categoryId;

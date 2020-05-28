@@ -12,16 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.retube.R;
-import com.example.retube.models.Channel.ChannelList;
-import com.example.retube.models.Home.Item;
-import com.example.retube.models.VideoStats.VideoStats;
+import com.example.retube.models.Channel;
+import com.example.retube.models.HomeMostPopular.Item;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,8 +30,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
     private List<Item> videoList;
-    private HashMap<Integer, ChannelList.Item> chennelList = new HashMap<Integer, ChannelList.Item>();
-    private HashMap<Integer, Integer> viewCountList = new HashMap<Integer, Integer>();
+    private HashMap<Integer, Channel.Item> chennelList = new HashMap<Integer, Channel.Item>();
     private OnItemClickListener mListener = null;
     public interface OnItemClickListener
     {
@@ -47,12 +44,10 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
 
-    public HomeAdapter(Context context, List<Item> videoList,HashMap<Integer,ChannelList.Item> chennelList,
-                       HashMap<Integer,Integer> viewCountList) {
+    public HomeAdapter(Context context, List<Item> videoList,HashMap<Integer, Channel.Item> chennelList) {
         this.context = context;
         this.videoList = videoList;
         this.chennelList = chennelList;
-        this.viewCountList = viewCountList;
     }
 
     class YoutubeHolder extends RecyclerView.ViewHolder{
@@ -79,16 +74,15 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             });
         }
-        public void setData(Item data,ChannelList.Item ch,Integer viewCount){
+        public void setData(Item data, Channel.Item ch){
             String getTitle = data.getSnippet().getTitle();
-            System.out.println("시간" + data.getSnippet().getPublishedAt());
             String getSubTitle =  formatTimeString(data.getSnippet().getPublishedAt());
             String getThumb = data.getSnippet().getThumbnails().getHigh().getUrl();
-            String getchName = "";
-            String getViewCount = "";
+            String getchName = data.getSnippet().getChannelTitle();
+            String getViewCount = data.getStatistics().getViewCount();
             if(ch != null){
                 String getch = ch.getSnippet().getThumbnails().getHigh().getUrl();
-                 getchName = ch.getSnippet().getTitle();
+
                 Picasso.get()
                         .load(getch)
                         .placeholder(R.drawable.gray)
@@ -109,10 +103,6 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 chImg.setImageResource(R.drawable.gray);
             }
 
-            if(viewCount != null){
-                getViewCount = getNumlength(viewCount);
-
-            }
 
 
             title.setText(getTitle);
@@ -152,12 +142,12 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Item videoYT = videoList.get(position);
-        ChannelList.Item videochennel =  chennelList.get(position);
-        Integer viewCount = viewCountList.get(position);
+        Channel.Item videochennel =  chennelList.get(position);
+
 
 
         YoutubeHolder yth = (YoutubeHolder) holder;
-        yth.setData(videoYT,videochennel,viewCount);
+        yth.setData(videoYT,videochennel);
     }
 
     @Override

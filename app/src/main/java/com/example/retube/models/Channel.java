@@ -1,10 +1,10 @@
-package com.example.retube.models.Channel;
+package com.example.retube.models;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ChannelList {
+public class Channel {
 
     @SerializedName("kind")
     @Expose
