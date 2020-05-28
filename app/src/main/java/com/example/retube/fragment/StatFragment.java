@@ -10,26 +10,37 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.retube.Helper.MyValueFormatter;
 import com.example.retube.R;
 import com.example.retube.Realm.Category;
 import com.example.retube.Realm.Search;
 import com.example.retube.Realm.User;
+import com.example.retube.Realm.ViewChannel;
 import com.example.retube.Realm.ViewVideo;
+import com.example.retube.Retrofit.GetDataService;
+import com.example.retube.Retrofit.RetrofitInstance;
+import com.example.retube.adapter.StatChannelVPAdapter;
+import com.example.retube.models.Channel;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +51,12 @@ public class StatFragment extends Fragment {
     TextView timePercent, timeStatusText, weekPercent, weekStatusText;
     PieChart pieChart;
     Realm realm;
+
+    ViewPager viewPager;
+    StatChannelVPAdapter statChannelVPAdapter;
+    private HashMap<Integer, Channel.Item> channelList = new HashMap<Integer, Channel.Item>();
+    int count1 = 0, count2 = 0, count3 = 0;
+
 
     public StatFragment() {
         // Required empty public constructor
@@ -86,6 +103,8 @@ public class StatFragment extends Fragment {
 
         pieChart = view.findViewById(R.id.piechart);
 
+        viewPager = view.findViewById(R.id.channelViewPager);
+
         realm = Realm.getDefaultInstance();
 
         //전체 영상 감상수
@@ -109,6 +128,25 @@ public class StatFragment extends Fragment {
         //선호 카테고리 그래프 그리기
         setCategoryPieChart();
 
+
+        //선호 채널 뷰페이저
+        setChannelViewPager();
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
 
         //키워드
@@ -148,13 +186,85 @@ public class StatFragment extends Fragment {
         return view;
     }
 
+    private void setChannelViewPager() {
+
+        RealmResults<ViewChannel> viewChannels = realm.where(ViewChannel.class)
+                .sort("channelCount",Sort.DESCENDING)
+                .findAll();
+
+        List<Channel> channels = new ArrayList<>();
+
+        int num = viewChannels.size();
+
+        if(num > 0){
+            System.out.println("상위 채널 이미지 요청1");
+            count1 = viewChannels.get(0).getChannelCount();
+            getChannelThumb(viewChannels.get(0).getChannelId(),0);
+
+            if(num > 1){
+                System.out.println("상위 채널 이미지 요청2");
+                count2 = viewChannels.get(1).getChannelCount();
+                getChannelThumb(viewChannels.get(1).getChannelId(),1);
+
+                if(num > 2){
+                    System.out.println("상위 채널 이미지 요청3");
+                    count3 = viewChannels.get(2).getChannelCount();
+                    getChannelThumb(viewChannels.get(2).getChannelId(),2);
+
+                }
+            }
+        }
+
+
+    }
+
+    private void getChannelThumb(String id, final int pos){
+        GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
+        final Call<Channel> channelListRequest = dataService
+                .getChannels("snippet", id,
+                        "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0",10);
+        channelListRequest.enqueue(new Callback<Channel>() {
+            @Override
+            public void onResponse(Call<Channel> call, Response<Channel> response) {
+
+                if(response.isSuccessful()){
+                    if(response.body()!=null){
+
+                        System.out.println("상위 채널 이미지 불러오기 성공");
+                        channelList.put(pos, response.body().getItems().get(0));
+
+                        if(channelList.size() == 3) {
+
+                            statChannelVPAdapter = new StatChannelVPAdapter(channelList, getContext(), count1, count2, count3);
+                            viewPager.setAdapter(statChannelVPAdapter);
+                        }{
+                            //최소 3개의 데이터가 필요합니다.
+                        }
+
+                    }else{
+                        System.out.println("실패");
+                    }
+                }else{
+                    System.out.println("실패dd");
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Channel> call, Throwable t) {
+
+            }
+        });
+    }
+
+
     private void setCategoryPieChart() {
 
         pieChart.setRotationEnabled(false);
         pieChart.setUsePercentValues(true);
         pieChart.setDragDecelerationFrictionCoef(0.95f);
         pieChart.setDrawHoleEnabled(true);
-        pieChart.setHoleColor(Color.WHITE);
+        pieChart.setHoleColor(Color.TRANSPARENT);
         pieChart.setTransparentCircleRadius(50f);
         pieChart.setHoleRadius(40f);
 
@@ -167,27 +277,29 @@ public class StatFragment extends Fragment {
 
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
+        for (int c : ColorTemplate.LIBERTY_COLORS)
+            colors.add(c);
 
         if(categories.size() > 0){
 
             yValues.add(new PieEntry(categories.get(0).getCategoryCount(),categories.get(0).getCategoryName()));
-            colors.add(Color.rgb(209, 209, 209));
+           // colors.add(Color.rgb(93, 93, 100));
 
             if(categories.size() > 1){
                 yValues.add(new PieEntry(categories.get(1).getCategoryCount(),categories.get(1).getCategoryName()));
-                colors.add(Color.rgb(143, 177, 209));
+             //   colors.add(Color.rgb(77, 49, 95));
 
                 if(categories.size() > 2){
                     yValues.add(new PieEntry(categories.get(2).getCategoryCount(),categories.get(2).getCategoryName()));
-                    colors.add(Color.rgb(163, 127, 109));
+                 //   colors.add(Color.rgb(96, 67, 78));
 
                     if(categories.size() > 3){
                         yValues.add(new PieEntry(categories.get(3).getCategoryCount(),categories.get(3).getCategoryName()));
-                        colors.add(Color.rgb(193, 127, 169));
+                  //      colors.add(Color.rgb(69, 69, 88));
 
                         if(categories.size() > 4) {
                             yValues.add(new PieEntry(categories.get(4).getCategoryCount(), categories.get(4).getCategoryName()));
-                            colors.add(Color.rgb(63, 127, 129));
+                     //       colors.add(Color.rgb(84, 84, 97));
 
                         }
                     }
@@ -209,9 +321,8 @@ public class StatFragment extends Fragment {
         data.setValueFormatter(new MyValueFormatter("%"));
 
         pieChart.setData(data);
+        pieChart.setEntryLabelColor(R.color.colorPrimary);
         pieChart.getLegend().setEnabled(false);
-
-
     }
 
 

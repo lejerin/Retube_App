@@ -79,7 +79,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             String getSubTitle =  formatTimeString(data.getSnippet().getPublishedAt());
             String getThumb = data.getSnippet().getThumbnails().getHigh().getUrl();
             String getchName = data.getSnippet().getChannelTitle();
-            String getViewCount = data.getStatistics().getViewCount();
+            String getViewCount = getNumlength(Integer.parseInt(data.getStatistics().getViewCount()));
             if(ch != null){
                 String getch = ch.getSnippet().getThumbnails().getHigh().getUrl();
 

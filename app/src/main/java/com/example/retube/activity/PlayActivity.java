@@ -17,6 +17,7 @@ import com.example.retube.Helper.WiseNLUExample;
 import com.example.retube.R;
 import com.example.retube.Realm.Category;
 import com.example.retube.Realm.User;
+import com.example.retube.Realm.ViewChannel;
 import com.example.retube.Realm.ViewVideo;
 import com.example.retube.Retrofit.GetDataService;
 import com.example.retube.Retrofit.RetrofitInstance;
@@ -101,7 +102,7 @@ public class PlayActivity extends YouTubeBaseActivity {
         title = findViewById(R.id.title);
         descTextView = findViewById(R.id.DescTextView);
 
-        saveDBNoun(wiseNLUExample.getNoun(title.getText().toString()));
+
         saveDBUserData();
 
         String action = intent.getAction();
@@ -237,6 +238,7 @@ public class PlayActivity extends YouTubeBaseActivity {
                 if(response.isSuccessful()){
                     if(response.body()!=null){
                         title.setText(response.body().getItems().get(0).getSnippet().getTitle());
+                        saveDBNoun(wiseNLUExample.getNoun(response.body().getItems().get(0).getSnippet().getTitle()));
                         descTextView.setText(response.body().getItems().get(0).getSnippet().getDescription());
                         viewCountAll = Integer.parseInt(response.body().getItems().get(0).getStatistics().getViewCount());
                         viewCount.setText("조회수 " + getNumlength(viewCountAll) +"회");
@@ -245,7 +247,7 @@ public class PlayActivity extends YouTubeBaseActivity {
                         commentNum.setText("댓글 " + getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getCommentCount()))) ;
 
                         saveDBCategory(Integer.parseInt(response.body().getItems().get(0).getSnippet().getCategoryId()));
-
+                        saveDBChannel(response.body().getItems().get(0).getSnippet().getChannelId(),response.body().getItems().get(0).getSnippet().getChannelTitle());
 
                     }else{
                         System.out.println("실패");
@@ -262,7 +264,6 @@ public class PlayActivity extends YouTubeBaseActivity {
             }
         });
     }
-
 
 
 
@@ -438,6 +439,39 @@ public class PlayActivity extends YouTubeBaseActivity {
         return  String.valueOf(num);
 
     }
+
+    private void saveDBChannel(String channelId, String channelTitle) {
+
+        Realm realm = Realm.getDefaultInstance();//데이터 넣기(insert)
+        ViewChannel viewChannel = realm.where(ViewChannel.class).equalTo("channelId",channelId)
+                .findFirst();
+
+        if(viewChannel != null){
+                realm.executeTransaction(new Realm.Transaction() {
+                    @Override
+                    public void execute(Realm realm) {
+
+                        viewChannel.setChannelCount(viewChannel.getChannelCount() + 1);
+
+                    }
+                });
+
+
+        }else{
+
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+
+                    ViewChannel newViewChannel = realm.createObject(ViewChannel.class);
+                    newViewChannel.setChannelId(channelId);
+                    newViewChannel.setChannelCount(1);
+
+                }
+            });
+        }
+    }
+
 
     private void saveDBCategory(int categoryid){
 
@@ -642,13 +676,7 @@ public class PlayActivity extends YouTubeBaseActivity {
             }else{
                 realm.executeTransaction(new Realm.Transaction() { @Override public void execute(Realm realm) {
 
-                    Number maxId = realm.where(ViewVideo.class).max("id");
-                    // If there are no rows, currentId is null, so the next id must be 1
-                    // If currentId is not null, increment it by 1
-                    int nextId = (maxId == null) ? 1 : maxId.intValue() + 1;
-                    // User object created with the new Primary key
-
-                    ViewVideo search = realm.createObject(ViewVideo.class,nextId);
+                    ViewVideo search = realm.createObject(ViewVideo.class);
                     search.setNoun(list.get(finalI));
                     search.setCount(1);
 

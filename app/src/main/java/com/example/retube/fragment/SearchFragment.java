@@ -296,13 +296,7 @@ public class SearchFragment extends Fragment {
             }else{
                 realm.executeTransaction(new Realm.Transaction() { @Override public void execute(Realm realm) {
 
-                    Number maxId = realm.where(Search.class).max("id");
-                    // If there are no rows, currentId is null, so the next id must be 1
-                    // If currentId is not null, increment it by 1
-                    int nextId = (maxId == null) ? 1 : maxId.intValue() + 1;
-                    // User object created with the new Primary key
-
-                    Search search = realm.createObject(Search.class,nextId);
+                    Search search = realm.createObject(Search.class);
                     search.setNoun(list.get(finalI));
                     search.setCount(1);
 
