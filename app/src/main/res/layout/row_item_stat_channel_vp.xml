@@ -16,7 +16,7 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             app:civ_border_width="1dp"
-            app:civ_border_color="@color/gray"
+            app:civ_border_color="@color/divider"
             android:src="@drawable/gray"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="개의 영상을 시청하였습니다"
+                android:text=" 번 영상을 시청하였습니다"
                 android:textSize="16sp" />
         </LinearLayout>
 

@@ -1,17 +1,26 @@
 package com.example.retube.fragment;
 
 
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.retube.Helper.CircleIndicator;
 import com.example.retube.Helper.MyValueFormatter;
 import com.example.retube.R;
 import com.example.retube.Realm.Category;
@@ -57,6 +66,9 @@ public class StatFragment extends Fragment {
     private HashMap<Integer, Channel.Item> channelList = new HashMap<Integer, Channel.Item>();
     int count1 = 0, count2 = 0, count3 = 0;
 
+    boolean isPieChartShow = false;
+    ScrollView scrollView;
+
 
     public StatFragment() {
         // Required empty public constructor
@@ -101,9 +113,12 @@ public class StatFragment extends Fragment {
         weekPercent = view.findViewById(R.id.weekPercent);
         weekStatusText = view.findViewById(R.id.weekStatusText);
 
+        scrollView = view.findViewById(R.id.scrollView2);
         pieChart = view.findViewById(R.id.piechart);
 
         viewPager = view.findViewById(R.id.channelViewPager);
+        CircleIndicator circleIndicator = view.findViewById(R.id.indicator);
+
 
         realm = Realm.getDefaultInstance();
 
@@ -131,6 +146,10 @@ public class StatFragment extends Fragment {
 
         //선호 채널 뷰페이저
         setChannelViewPager();
+        viewPager.setClipToPadding(false);
+        viewPager.setPadding(40, 0, 40, 0);
+        viewPager.setPageMargin(getResources().getDisplayMetrics().widthPixels / -9);
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -139,6 +158,7 @@ public class StatFragment extends Fragment {
 
             @Override
             public void onPageSelected(int position) {
+                circleIndicator.selectDot(position);
 
             }
 
@@ -147,6 +167,11 @@ public class StatFragment extends Fragment {
 
             }
         });
+
+
+
+        circleIndicator.createDotPanel(3, R.drawable.indicator_dot_off, R.drawable.indicator_dot_on, 0);
+
 
 
         //키워드
@@ -179,11 +204,42 @@ public class StatFragment extends Fragment {
 
 
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            scrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
+                    if(checkPieChartShow()){
+                        if(!isPieChartShow){
+                            pieChart.animateY(1000, Easing.EaseInOutCubic); //애니메이션
+                        }
+                        isPieChartShow = true;
+                    }else{
+                        isPieChartShow = false;
+                    }
+
+                }
+            });
+        }
 
 
 
 
         return view;
+    }
+
+    private boolean checkPieChartShow(){
+        Rect scrollBounds = new Rect();
+        scrollView.getHitRect(scrollBounds);
+        if (pieChart.getLocalVisibleRect(scrollBounds)) {
+            // Any portion of the imageView, even a single pixel, is within the visible window
+            System.out.println("보임");
+            return true;
+        } else {
+            // NONE of the imageView is within the visible window
+            System.out.println("안보임");
+            return false;
+        }
     }
 
     private void setChannelViewPager() {
@@ -308,7 +364,7 @@ public class StatFragment extends Fragment {
         }
 
 
-        pieChart.animateY(1000, Easing.EaseInOutCubic); //애니메이션
+        //pieChart.animateY(1000, Easing.EaseInOutCubic); //애니메이션
 
         PieDataSet dataSet = new PieDataSet(yValues,"category");
         dataSet.setSliceSpace(3f);
@@ -323,6 +379,7 @@ public class StatFragment extends Fragment {
         pieChart.setData(data);
         pieChart.setEntryLabelColor(R.color.colorPrimary);
         pieChart.getLegend().setEnabled(false);
+        pieChart.getDescription().setEnabled(false);
     }
 
 

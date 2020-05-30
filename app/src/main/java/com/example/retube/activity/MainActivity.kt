@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
     private val homeFragment: HomeFragment = HomeFragment()
     private val statFragment: StatFragment =
         StatFragment()
-    private val profileFragment: ProfileFragment = ProfileFragment()
+  //  private val profileFragment: ProfileFragment = ProfileFragment()
     private val searchFragment: SearchFragment = SearchFragment()
     private lateinit var menuBawah: BottomNavigationView
 
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         menuBawah = findViewById(R.id.menu_bawah)
-        setFragment(statFragment)
+        setFragment(homeFragment)
 
 
         menuBawah.setSelectedItemId(R.id.menu_home)
@@ -47,11 +47,11 @@ class MainActivity : AppCompatActivity() {
                         //   getSupportActionBar().setTitle("Playlist");
                         true
                     }
-                    R.id.menu_profile -> {
-                        setFragment(profileFragment)
-                        //  getSupportActionBar().setTitle("Profile");
-                        true
-                    }
+//                    R.id.menu_profile -> {
+//                        setFragment(profileFragment)
+//                        //  getSupportActionBar().setTitle("Profile");
+//                        true
+//                    }
                     else -> {
                         setFragment(homeFragment)
                         //   getSupportActionBar().setTitle("Home");

@@ -124,4 +124,10 @@ public class StatChannelVPAdapter extends PagerAdapter {
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return (view == (View) object);
     }
+
+    @Override
+    public float getPageWidth(int position) {
+        return (0.95f);
+//        return super.getPageWidth(position);
+    }
 }

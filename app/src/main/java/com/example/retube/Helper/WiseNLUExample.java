@@ -202,13 +202,15 @@ public class WiseNLUExample {
 //                     인식된 개채명들 많이 노출된 순으로 출력 ( 최대 5개 )
                     System.out.println("");
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        nameEntities
-                                .stream()
-                                .limit(5)
-                                .forEach(nameEntity -> {
-                                    System.out.println("[개체명] " + nameEntity.text + " (" + nameEntity.count + ")");
-                                    noun.add(nameEntity.text);
-                                });
+                        if (nameEntities != null) {
+                            nameEntities
+                                    .stream()
+                                    .limit(5)
+                                    .forEach(nameEntity -> {
+                                        System.out.println("[개체명] " + nameEntity.text + " (" + nameEntity.count + ")");
+                                        noun.add(nameEntity.text);
+                                    });
+                        }
                     }
                 } catch (MalformedURLException e) {
                     e.printStackTrace();

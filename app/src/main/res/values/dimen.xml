@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="keword_very_large">22sp</dimen>
-    <dimen name="keword_large">19sp</dimen>
-    <dimen name="keword_regular">17sp</dimen>
-    <dimen name="keword_small">15sp</dimen>
-    <dimen name="keword_very_small">14sp</dimen>
+    <dimen name="keword_very_large">20sp</dimen>
+    <dimen name="keword_large">17sp</dimen>
+    <dimen name="keword_regular">15sp</dimen>
+    <dimen name="keword_small">13sp</dimen>
+    <dimen name="keword_very_small">11sp</dimen>
 </resources>

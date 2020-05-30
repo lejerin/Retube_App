@@ -230,7 +230,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textSize="14sp"
-                        android:text="에 감상을 하고" />
+                        android:text="에 시청을 하고" />
                 </LinearLayout>
 
                 <View
@@ -273,8 +273,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="14sp"
-                        android:text="에 감상을 하고" />
+                        android:text="에 시청을 하고"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <TextView
@@ -587,18 +587,28 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/piechart" />
 
+
                 <TextView
                     android:id="@+id/textView9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:textSize="18sp"
                     android:text="상위 선호 채널"
+                    android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view6" />
 
+
+                <com.example.retube.Helper.CircleIndicator
+                    android:id="@+id/indicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/channelViewPager"
@@ -609,12 +619,10 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView9">
+                    app:layout_constraintTop_toBottomOf="@+id/indicator">
 
 
                 </androidx.viewpager.widget.ViewPager>
-
-
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

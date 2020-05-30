@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -53,7 +55,7 @@ public class PlayActivity extends YouTubeBaseActivity {
 
     private String videoid;
 
-    private ProgressBar commentProgressBar;
+   // private ProgressBar commentProgressBar;
 
     private RecyclerView commentRecyclerView;
     private CommentsAdapter commentsAdapter;
@@ -62,15 +64,25 @@ public class PlayActivity extends YouTubeBaseActivity {
     private List<Comment.Item> commentsList = new ArrayList<>();
     private List<List<Replies.Item>> repliesList = new ArrayList<>();
 
+    private TextView findCommentNum;
+    private ConstraintLayout loadingLayout;
 
     //현재 선택 언어 숫자 : 디폴트 -한국어
     private int nowSelectedLanNum = 0;
-    //언어 선택 한국어, 영어, 일본어, 베트남어
+    //언어 선택 한국어, 영어, 일본어, 베트남어, 중국어 간체, 중국어 번체, 인도네시아어, 태국어, 독일어, 러시아어, 스페인어, 이탈리아어, 프랑스어
     private List<Comment.Item> koComments = new ArrayList<>();
     private List<Comment.Item> enComments = new ArrayList<>();
     private List<Comment.Item> jaComments = new ArrayList<>();
     private List<Comment.Item> viComments = new ArrayList<>();
-
+    private List<Comment.Item> zhCNComments = new ArrayList<>();
+    private List<Comment.Item> zhTWComments = new ArrayList<>();
+    private List<Comment.Item> idComments = new ArrayList<>();
+    private List<Comment.Item> thComments = new ArrayList<>();
+    private List<Comment.Item> deComments = new ArrayList<>();
+    private List<Comment.Item> ruComments = new ArrayList<>();
+    private List<Comment.Item> esComments = new ArrayList<>();
+    private List<Comment.Item> itComments = new ArrayList<>();
+    private List<Comment.Item> frComments = new ArrayList<>();
 
     //댓글 request
     Call<Comment.Model> commentsRequest;
@@ -129,7 +141,25 @@ public class PlayActivity extends YouTubeBaseActivity {
         likeCount = findViewById(R.id.likeCount);
         dislikeCount = findViewById(R.id.dislikeCount);
         commentNum = findViewById(R.id.commentNum);
-        commentProgressBar = findViewById(R.id.commentProgressBar);
+
+        findCommentNum = findViewById(R.id.findCommentNum);
+        loadingLayout = findViewById(R.id.loadingLayout);
+        Button stopGetCommentBtn = findViewById(R.id.stopGetCommentBtn);
+        stopGetCommentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                commentsRequest.cancel();
+                commentsAdapter.notifyDataSetChanged();
+                commentRecyclerView.smoothScrollBy(rvScrollX,rvScrollY);
+                //commentRecyclerView.smoothScrollToPosition(lastVisibleItemPosition + 1);
+                System.out.println(commentsList.size());
+
+                loadingLayout.setVisibility(View.GONE);
+            }
+        });
+
+
+
 
         moreBtn = findViewById(R.id.moreBtn);
         moreLayout = findViewById(R.id.moreLayout);
@@ -185,6 +215,7 @@ public class PlayActivity extends YouTubeBaseActivity {
             @Override
             public void onItemClick(View v, int position) {
                 System.out.println("갱신시작");
+                findCommentNum.setText("0개 댓글 찾음");
                 getCommentData();
             }
         }) ;
@@ -211,6 +242,33 @@ public class PlayActivity extends YouTubeBaseActivity {
                         break;
                     case 3:
                         commentsList.addAll(viComments);
+                        break;
+                    case 4:
+                        commentsList.addAll(zhCNComments);
+                        break;
+                    case 5:
+                        commentsList.addAll(zhTWComments);
+                        break;
+                    case 6:
+                        commentsList.addAll(idComments);
+                        break;
+                    case 7:
+                        commentsList.addAll(thComments);
+                        break;
+                    case 8:
+                        commentsList.addAll(deComments);
+                        break;
+                    case 9:
+                        commentsList.addAll(ruComments);
+                        break;
+                    case 10:
+                        commentsList.addAll(esComments);
+                        break;
+                    case 11:
+                        commentsList.addAll(itComments);
+                        break;
+                    case 12:
+                        commentsList.addAll(frComments);
                         break;
 
                 }
@@ -242,7 +300,11 @@ public class PlayActivity extends YouTubeBaseActivity {
                         descTextView.setText(response.body().getItems().get(0).getSnippet().getDescription());
                         viewCountAll = Integer.parseInt(response.body().getItems().get(0).getStatistics().getViewCount());
                         viewCount.setText("조회수 " + getNumlength(viewCountAll) +"회");
-                        likeCount.setText(getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getLikeCount())));
+                        if(response.body().getItems().get(0).getStatistics().getLikeCount() != null){
+                            likeCount.setText(getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getLikeCount())));
+                        }
+
+
                         dislikeCount.setText(getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getDislikeCount())));
                         commentNum.setText("댓글 " + getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getCommentCount()))) ;
 
@@ -269,7 +331,7 @@ public class PlayActivity extends YouTubeBaseActivity {
 
     private void getCommentData() {
         System.out.println("getCommentData() 시작");
-        commentProgressBar.setVisibility(View.VISIBLE);
+        loadingLayout.setVisibility(View.VISIBLE);
 
         GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
         commentsRequest = null;
@@ -282,6 +344,9 @@ public class PlayActivity extends YouTubeBaseActivity {
                 commentsRequest = dataService
                         .getCommentsData("snippet", videoid, "relevance",10, "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0");
             }else{
+
+                loadingLayout.setVisibility(View.GONE);
+                Toast.makeText(this,"더 이상 불러올 댓글이 없습니다",Toast.LENGTH_LONG).show();
                 return;
             }
         }else{
@@ -317,8 +382,9 @@ public class PlayActivity extends YouTubeBaseActivity {
                         System.out.println("repliesList" + repliesList.size());
 
 
-
+                        findCommentNum.setText(commentsList.size() - beforeListNum + "개 댓글 찾음");
                         if(commentsList.size() - beforeListNum < 10 && nextToken != null){
+
                             System.out.println("추가시도");
                             beforeAdd = true;
                             getCommentData();
@@ -333,24 +399,24 @@ public class PlayActivity extends YouTubeBaseActivity {
                             //commentRecyclerView.smoothScrollToPosition(lastVisibleItemPosition + 1);
                             System.out.println(commentsList.size());
 
-                            commentProgressBar.setVisibility(View.GONE);
+                            loadingLayout.setVisibility(View.GONE);
                         }
 
 
                     }else{
                         System.out.println("실패");
-                        commentProgressBar.setVisibility(View.GONE);
+                        loadingLayout.setVisibility(View.GONE);
                     }
                 }else{
                     System.out.println("댓글 불러오기 실패");
-                    commentProgressBar.setVisibility(View.GONE);
+                    loadingLayout.setVisibility(View.GONE);
                 }
 
             }
 
             @Override
             public void onFailure(Call<Comment.Model> call, Throwable t) {
-                commentProgressBar.setVisibility(View.GONE);
+                loadingLayout.setVisibility(View.GONE);
             }
         });
 
@@ -389,6 +455,50 @@ public class PlayActivity extends YouTubeBaseActivity {
                         case "vi":
                             if(nowSelectedLanNum == 3) list.add(item.get(i));
                             viComments.add(item.get(i));
+                            break;
+
+                        case "zh-CN":
+                            if(nowSelectedLanNum == 4) list.add(item.get(i));
+                            zhCNComments.add(item.get(i));
+                            break;
+
+                        case "zh-TW":
+                            if(nowSelectedLanNum == 5) list.add(item.get(i));
+                            zhTWComments.add(item.get(i));
+                            break;
+
+                        case "id":
+                            if(nowSelectedLanNum == 6) list.add(item.get(i));
+                            idComments.add(item.get(i));
+                            break;
+
+                        case "th":
+                            if(nowSelectedLanNum == 7) list.add(item.get(i));
+                            thComments.add(item.get(i));
+                            break;
+                        case "de":
+                            if(nowSelectedLanNum == 8) list.add(item.get(i));
+                            deComments.add(item.get(i));
+                            break;
+
+                        case "ru":
+                            if(nowSelectedLanNum == 9) list.add(item.get(i));
+                            ruComments.add(item.get(i));
+                            break;
+
+                        case "es":
+                            if(nowSelectedLanNum == 10) list.add(item.get(i));
+                            esComments.add(item.get(i));
+                            break;
+
+                        case "it":
+                            if(nowSelectedLanNum == 11) list.add(item.get(i));
+                            itComments.add(item.get(i));
+                            break;
+
+                        case "fr":
+                            if(nowSelectedLanNum == 12) list.add(item.get(i));
+                            frComments.add(item.get(i));
                             break;
 
                         default:

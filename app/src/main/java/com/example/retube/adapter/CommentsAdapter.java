@@ -218,34 +218,40 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                     if (mSelectedTransferData.get(realPosition, false) == true) {
                         if (mSelectedTransfer.get(realPosition, false) == true) {
+                            System.out.println("저장o숨김");
                             mSelectedTransfer.delete(realPosition);
                             transferText.setVisibility(View.GONE);
                         } else {
+                            System.out.println("저장o보여줌");
                             mSelectedTransfer.put(realPosition, true);
                             transferText.setVisibility(View.VISIBLE);
                         }
 
                     } else {
+                        System.out.println("저장x보여줌");
+                        transferText.setText("");
                         mSelectedTransferData.put(realPosition, true);
                         if (transferText.getText().equals("")) {
                             Thread thread = new Thread() {
                                 public void run() {
 
                                     String data = transferPapago.startTransfer(subtitle.getText().toString(), sourceTarget, "ko");
+                                    System.out.println("번역 갖고옴");
                                     transferText.setText(data);
+
                                     tranferHashMap.put(realPosition,data);
                             }
                             };
                             thread.start();
                             try {
                                 thread.join();
+                                transferText.setVisibility(View.VISIBLE);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
 
                         }
-                        transferText.setVisibility(View.VISIBLE);
-                        mSelectedTransfer.put(realPosition, true);
+
                     }
 
                 }
@@ -414,6 +420,33 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 break;
                             case 3:
                                 sourceTarget = "vi";
+                                break;
+                            case 4:
+                                sourceTarget = "zh-CN";
+                                break;
+                            case 5:
+                                sourceTarget = "zh-TW";
+                                break;
+                            case 6:
+                                sourceTarget = "id";
+                                break;
+                            case 7:
+                                sourceTarget = "th";
+                                break;
+                            case 8:
+                                sourceTarget = "de";
+                                break;
+                            case 9:
+                                sourceTarget = "ru";
+                                break;
+                            case 10:
+                                sourceTarget = "es";
+                                break;
+                            case 11:
+                                sourceTarget = "it";
+                                break;
+                            case 12:
+                                sourceTarget = "fr";
                                 break;
 
                         }
