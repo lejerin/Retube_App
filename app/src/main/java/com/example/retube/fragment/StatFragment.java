@@ -2,6 +2,7 @@ package com.example.retube.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
@@ -12,8 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -30,6 +34,8 @@ import com.example.retube.Realm.ViewChannel;
 import com.example.retube.Realm.ViewVideo;
 import com.example.retube.Retrofit.GetDataService;
 import com.example.retube.Retrofit.RetrofitInstance;
+import com.example.retube.activity.PlayActivity;
+import com.example.retube.activity.RecommendActivity;
 import com.example.retube.adapter.StatChannelVPAdapter;
 import com.example.retube.models.Channel;
 import com.github.mikephil.charting.animation.Easing;
@@ -40,7 +46,12 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -68,6 +79,10 @@ public class StatFragment extends Fragment {
 
     boolean isPieChartShow = false;
     ScrollView scrollView;
+
+    RealmResults<Search> searches = null;
+    RealmResults<ViewVideo> viewVideos = null;
+    Date today = new Date();
 
 
     public StatFragment() {
@@ -175,9 +190,125 @@ public class StatFragment extends Fragment {
 
 
         //키워드
-        RealmResults<Search> searches = realm.where(Search.class).sort("count", Sort.DESCENDING).findAll();
-        RealmResults<ViewVideo> viewVideos = realm.where(ViewVideo.class).sort("count", Sort.DESCENDING).findAll();
 
+        RadioGroup radioGroup = view.findViewById(R.id.radioGroup1);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+
+                switch (checkedId)
+                {
+                    case R.id.radioDay:
+                        searches  = realm.where(Search.class)
+                                .greaterThanOrEqualTo("date",stringToDate("00:00:00", today))
+                                .lessThanOrEqualTo("date",stringToDate("23:59:59", today))
+                                .sort("count", Sort.DESCENDING).findAll();
+                        break;
+                    case R.id.radioWeek:
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(new Date());
+                        cal.add(Calendar.DATE, -7);
+
+                        System.out.println("1주일전" + cal.getTime());
+
+                        searches  = realm.where(Search.class)
+                                .greaterThanOrEqualTo("date",stringToDate("00:00:00", cal.getTime()))
+                                .lessThanOrEqualTo("date",stringToDate("23:59:59",today))
+                                .sort("count", Sort.DESCENDING).findAll();
+                        break;
+                    case R.id.radioMonth:
+                        Calendar calMonth = Calendar.getInstance();
+                        calMonth.setTime(new Date());
+                        calMonth.add(Calendar.MONTH, -1);
+
+                        searches  = realm.where(Search.class)
+                                .greaterThanOrEqualTo("date",stringToDate("00:00:00",calMonth.getTime()))
+                                .lessThanOrEqualTo("date",stringToDate("23:59:59",today))
+                                .sort("count", Sort.DESCENDING).findAll();
+                        break;
+                    default:
+                        break;
+                }
+
+                for(int i=1;i<10;i++){
+                            if(i <= searches.size()){
+                                String text = searches.get(i-1).getNoun();
+                                if (text.length() > 5) {
+                                    text = text.substring(0, 5) + "..";
+                                }
+                                searchTexts.get(i-1).setVisibility(View.VISIBLE);
+                                searchTexts.get(i-1).setText(text);
+
+                            }else{
+                                searchTexts.get(i-1).setVisibility(View.INVISIBLE);
+                                searchTexts.get(i-1).setText("");
+                    }
+                }
+            }
+        });
+
+        RadioGroup radioGroup2 = view.findViewById(R.id.radioGroup2);
+        radioGroup2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+
+                switch (checkedId)
+                {
+                    case R.id.radioDay2:
+                        viewVideos  = realm.where(ViewVideo.class)
+                                .greaterThanOrEqualTo("date",stringToDate("00:00:00", today))
+                                .lessThanOrEqualTo("date",stringToDate("23:59:59", today))
+                                .sort("count", Sort.DESCENDING).findAll();
+                        break;
+                    case R.id.radioWeek2:
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(new Date());
+                        cal.add(Calendar.DATE, -7);
+
+                        viewVideos  = realm.where(ViewVideo.class)
+                                .greaterThanOrEqualTo("date",stringToDate("00:00:00", cal.getTime()))
+                                .lessThanOrEqualTo("date",stringToDate("23:59:59",today))
+                                .sort("count", Sort.DESCENDING).findAll();
+                        break;
+                    case R.id.radioMonth2:
+                        Calendar calMonth = Calendar.getInstance();
+                        calMonth.setTime(new Date());
+                        calMonth.add(Calendar.MONTH, -1);
+
+                        viewVideos  = realm.where(ViewVideo.class)
+                                .greaterThanOrEqualTo("date",stringToDate("00:00:00",calMonth.getTime()))
+                                .lessThanOrEqualTo("date",stringToDate("23:59:59",today))
+                                .sort("count", Sort.DESCENDING).findAll();
+                        break;
+                    default:
+                        break;
+                }
+
+                for(int i=1;i<10;i++){
+                    if(i <= viewVideos.size()){
+                        String text = viewVideos.get(i-1).getNoun();
+                        if (text.length() > 5) {
+                            text = text.substring(0, 5) + "..";
+                        }
+                        viewTexts.get(i-1).setVisibility(View.VISIBLE);
+                        viewTexts.get(i-1).setText(text);
+                    }else{
+                        viewTexts.get(i-1).setVisibility(View.INVISIBLE);
+                        viewTexts.get(i-1).setText("");
+                    }
+                }
+            }
+        });
+
+        //오늘 날짜 검색만
+        searches  = realm.where(Search.class)
+                .greaterThanOrEqualTo("date",stringToDate("00:00:00", today))
+                .lessThanOrEqualTo("date",stringToDate("23:59:59", today))
+                .sort("count", Sort.DESCENDING).findAll();
         for(int i=1;i<10;i++){
             if(i <= searches.size()){
                 String text = searches.get(i-1).getNoun();
@@ -185,11 +316,17 @@ public class StatFragment extends Fragment {
                     text = text.substring(0, 5) + "..";
                 }
                 searchTexts.get(i-1).setText(text);
+
             }else{
                 searchTexts.get(i-1).setVisibility(View.INVISIBLE);
             }
         }
 
+        //오늘 날짜 검색만
+        viewVideos  = realm.where(ViewVideo.class)
+                .greaterThanOrEqualTo("date",stringToDate("00:00:00", today))
+                .lessThanOrEqualTo("date",stringToDate("23:59:59", today))
+                .sort("count", Sort.DESCENDING).findAll();
         for(int i=1;i<10;i++){
             if(i <= viewVideos.size()){
                 String text = viewVideos.get(i-1).getNoun();
@@ -223,10 +360,47 @@ public class StatFragment extends Fragment {
         }
 
 
+        ImageButton shareSearchBtn = view.findViewById(R.id.shareSearch);
+        shareSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), RecommendActivity.class);
+                intent.putExtra("keyword1", searchTexts.get(0).getText().toString());
+                intent.putExtra("keyword2", searchTexts.get(1).getText().toString());
+                intent.putExtra("keyword3", searchTexts.get(2).getText().toString());
+                intent.putExtra("keyword4", searchTexts.get(3).getText().toString());
+                intent.putExtra("keyword5", searchTexts.get(4).getText().toString());
+                intent.putExtra("keyword6", searchTexts.get(5).getText().toString());
+                intent.putExtra("keyword7", searchTexts.get(6).getText().toString());
+                intent.putExtra("keyword8", searchTexts.get(7).getText().toString());
+                intent.putExtra("keyword9", searchTexts.get(8).getText().toString());
+                startActivity(intent);
+            }
+        });
+
+        ImageButton shareTagBtn = view.findViewById(R.id.shareTagBtn);
+        shareTagBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), RecommendActivity.class);
+                intent.putExtra("keyword1", viewTexts.get(0).getText().toString());
+                intent.putExtra("keyword2", viewTexts.get(1).getText().toString());
+                intent.putExtra("keyword3", viewTexts.get(2).getText().toString());
+                intent.putExtra("keyword4", viewTexts.get(3).getText().toString());
+                intent.putExtra("keyword5", viewTexts.get(4).getText().toString());
+                intent.putExtra("keyword6", viewTexts.get(5).getText().toString());
+                intent.putExtra("keyword7", viewTexts.get(6).getText().toString());
+                intent.putExtra("keyword8", viewTexts.get(7).getText().toString());
+                intent.putExtra("keyword9", viewTexts.get(8).getText().toString());
+                startActivity(intent);
+            }
+        });
 
 
         return view;
     }
+
+
 
     private boolean checkPieChartShow(){
         Rect scrollBounds = new Rect();
@@ -278,7 +452,7 @@ public class StatFragment extends Fragment {
         GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
         final Call<Channel> channelListRequest = dataService
                 .getChannels("snippet", id,
-                        "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0",10);
+                        getString(R.string.api_key),10);
         channelListRequest.enqueue(new Callback<Channel>() {
             @Override
             public void onResponse(Call<Channel> call, Response<Channel> response) {
@@ -333,29 +507,30 @@ public class StatFragment extends Fragment {
 
 
         ArrayList<Integer> colors = new ArrayList<Integer>();
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
+//        for (int c : ColorTemplate.LIBERTY_COLORS)
+//            colors.add(c);
 
         if(categories.size() > 0){
 
             yValues.add(new PieEntry(categories.get(0).getCategoryCount(),categories.get(0).getCategoryName()));
-           // colors.add(Color.rgb(93, 93, 100));
+            colors.add(Color.rgb(212, 223, 230));
 
             if(categories.size() > 1){
                 yValues.add(new PieEntry(categories.get(1).getCategoryCount(),categories.get(1).getCategoryName()));
-             //   colors.add(Color.rgb(77, 49, 95));
+                colors.add(Color.rgb(142, 192, 228));
 
                 if(categories.size() > 2){
                     yValues.add(new PieEntry(categories.get(2).getCategoryCount(),categories.get(2).getCategoryName()));
-                 //   colors.add(Color.rgb(96, 67, 78));
+
+                    colors.add(Color.rgb(202, 219, 233));
 
                     if(categories.size() > 3){
                         yValues.add(new PieEntry(categories.get(3).getCategoryCount(),categories.get(3).getCategoryName()));
-                  //      colors.add(Color.rgb(69, 69, 88));
+                        colors.add(Color.rgb(106, 175, 230));
 
                         if(categories.size() > 4) {
                             yValues.add(new PieEntry(categories.get(4).getCategoryCount(), categories.get(4).getCategoryName()));
-                     //       colors.add(Color.rgb(84, 84, 97));
+                            colors.add(Color.rgb(214, 236, 250));
 
                         }
                     }
@@ -443,6 +618,25 @@ public class StatFragment extends Fragment {
         }
 
 
+
+
     }
 
+    //time String -> Date
+    private Date stringToDate(String str, Date date){
+
+        SimpleDateFormat transFormat = new SimpleDateFormat("EE, MM월 dd일 yyyy년");
+        String ori = transFormat.format(date);
+
+        String from = ori  + " " + str;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EE, MM월 dd일 yyyy년 HH:mm:ss");
+
+        try {
+            return  dateFormat.parse(from);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return new Date();
+    }
 }

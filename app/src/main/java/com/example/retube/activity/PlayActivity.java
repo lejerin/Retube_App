@@ -3,9 +3,12 @@ package com.example.retube.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +54,7 @@ public class PlayActivity extends YouTubeBaseActivity {
 
     private WiseNLUExample wiseNLUExample = new WiseNLUExample();
 
-    private TextView viewCount,likeCount, dislikeCount, commentNum;
+    private TextView viewCount,likeCount, dislikeCount, commentNum,tags;
 
     private String videoid;
 
@@ -60,13 +63,13 @@ public class PlayActivity extends YouTubeBaseActivity {
     private RecyclerView commentRecyclerView;
     private CommentsAdapter commentsAdapter;
 
-    private String nextToken;
-    private List<Comment.Item> commentsList = new ArrayList<>();
-    private List<List<Replies.Item>> repliesList = new ArrayList<>();
 
     private TextView findCommentNum;
     private ConstraintLayout loadingLayout;
 
+
+    private String nextToken;
+    private List<Comment.Item> commentsList = new ArrayList<>();
     //현재 선택 언어 숫자 : 디폴트 -한국어
     private int nowSelectedLanNum = 0;
     //언어 선택 한국어, 영어, 일본어, 베트남어, 중국어 간체, 중국어 번체, 인도네시아어, 태국어, 독일어, 러시아어, 스페인어, 이탈리아어, 프랑스어
@@ -91,10 +94,9 @@ public class PlayActivity extends YouTubeBaseActivity {
     private int rvScrollX = 0;
     private int rvScrollY = 0;
 
-    private boolean firstCommentToken = false;
 
     private DetectPapago detectPapago = new DetectPapago();
-
+    private boolean firstCommentToken = false;
     private int beforeListNum = 0;
     private boolean beforeAdd = false;
 
@@ -103,6 +105,7 @@ public class PlayActivity extends YouTubeBaseActivity {
     private ImageView moreBtn;
     private boolean clickTitle = false;
     private int viewCountAll = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +116,7 @@ public class PlayActivity extends YouTubeBaseActivity {
         videoid = intent.getExtras().getString("videoID"); /*String형*/
         title = findViewById(R.id.title);
         descTextView = findViewById(R.id.DescTextView);
-
+        tags = findViewById(R.id.tagText);
 
         saveDBUserData();
 
@@ -144,6 +147,7 @@ public class PlayActivity extends YouTubeBaseActivity {
 
         findCommentNum = findViewById(R.id.findCommentNum);
         loadingLayout = findViewById(R.id.loadingLayout);
+
         Button stopGetCommentBtn = findViewById(R.id.stopGetCommentBtn);
         stopGetCommentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,12 +205,84 @@ public class PlayActivity extends YouTubeBaseActivity {
             }
         };
 
-        youTubePlayerView.initialize("AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0", onInitializedListener);
+        youTubePlayerView.initialize(getString(R.string.api_key), onInitializedListener);
 
-        System.out.println("ddd");
         getVideoDetail();
-        getCommentData();
+        getCommentData("relevance");
+        initAdapter("relevance");
 
+
+        ImageButton sortBtn = (ImageButton)findViewById(R.id.sortBtn);
+        sortBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                removeData();
+
+                //creating a popup menu
+                PopupMenu popup = new PopupMenu(PlayActivity.this, sortBtn);
+                //inflating menu from xml resource
+                popup.inflate(R.menu.sort_item);
+                //adding click listener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.relative:
+                                //handle menu1 click
+                                getCommentData("relevance");
+                                initAdapter("relevance");
+                                return true;
+                            case R.id.newest:
+                                getCommentData("time");
+                                initAdapter("time");
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                //displaying the popup
+                popup.show();
+            }
+        });
+
+
+    }
+
+
+    private void removeData(){
+        nextToken = null;
+        commentsList.clear();
+        nowSelectedLanNum = 0;
+        koComments.clear();
+        enComments.clear();
+        jaComments.clear();
+        viComments.clear();
+        zhCNComments.clear();
+        zhTWComments.clear();
+        idComments.clear();
+        thComments.clear();
+        deComments.clear();
+        ruComments.clear();
+        esComments.clear();
+        zhTWComments.clear();
+        itComments.clear();
+        frComments.clear();
+
+        findCommentNum.setText("0개 댓글 찾음");
+
+        rvScrollX = 0;
+        rvScrollY = 0;
+
+        firstCommentToken = false;
+        beforeListNum = 0;
+        beforeAdd = false;
+
+    }
+
+
+    private void initAdapter(String order){
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(PlayActivity.this);
         commentsAdapter = new CommentsAdapter(PlayActivity.this, commentsList);
         commentRecyclerView.setLayoutManager(layoutManager);
@@ -216,7 +292,7 @@ public class PlayActivity extends YouTubeBaseActivity {
             public void onItemClick(View v, int position) {
                 System.out.println("갱신시작");
                 findCommentNum.setText("0개 댓글 찾음");
-                getCommentData();
+                getCommentData(order);
             }
         }) ;
 
@@ -276,7 +352,6 @@ public class PlayActivity extends YouTubeBaseActivity {
 
             }
         });
-
     }
 
 
@@ -288,7 +363,7 @@ public class PlayActivity extends YouTubeBaseActivity {
         GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
         final Call<Video> videoTitleRequest = dataService
                 .getPlayVideo("snippet,statistics",
-                        "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0","items(id,snippet(title,description,publishedAt,categoryId,channelId,channelTitle),statistics)",videoid);
+                        getString(R.string.api_key),"items(id,snippet(title,description,publishedAt,categoryId,channelId,channelTitle,tags),statistics)",videoid);
         videoTitleRequest.enqueue(new Callback<Video>() {
             @Override
             public void onResponse(Call<Video> call, Response<Video> response) {
@@ -296,16 +371,58 @@ public class PlayActivity extends YouTubeBaseActivity {
                 if(response.isSuccessful()){
                     if(response.body()!=null){
                         title.setText(response.body().getItems().get(0).getSnippet().getTitle());
-                        saveDBNoun(wiseNLUExample.getNoun(response.body().getItems().get(0).getSnippet().getTitle()));
+
+                        List<String> tag = response.body().getItems().get(0).getSnippet().getTags();
+                        System.out.println("태그" + tag);
+                        if(tag != null && tag.size() > 0){
+                            //글자수 작은 것만
+                            List<String> shortTag = new ArrayList<>();
+                            for(int i=0;i<tag.size();i++){
+                                if(tag.get(i).length() < 6){
+                                    shortTag.add(tag.get(i));
+                                }
+                            }
+
+                            //태그를 3개만 저장하기 위해서
+                            if(shortTag.size() < 4){
+                                saveDBNoun(shortTag);
+                                for(int i=0;i<shortTag.size();i++){
+                                    tags.setText(tags.getText().toString() + " #" +shortTag.get(i));
+                                }
+                            }else{
+                                List<String> newList = new ArrayList<>();
+                                newList.add(shortTag.get(0));
+                                newList.add(shortTag.get(shortTag.size()/2));
+                                newList.add(shortTag.get(shortTag.size()-1));
+                                saveDBNoun(newList);
+                                for(int i=0;i<newList.size();i++){
+                                    tags.setText(tags.getText().toString() + " #" +newList.get(i));
+                                }
+                            }
+
+
+                        }else{
+                            tags.setVisibility(View.GONE);
+                        }
+
+                        //saveDBNoun(wiseNLUExample.getNoun(response.body().getItems().get(0).getSnippet().getTitle()));
+
+
                         descTextView.setText(response.body().getItems().get(0).getSnippet().getDescription());
                         viewCountAll = Integer.parseInt(response.body().getItems().get(0).getStatistics().getViewCount());
                         viewCount.setText("조회수 " + getNumlength(viewCountAll) +"회");
                         if(response.body().getItems().get(0).getStatistics().getLikeCount() != null){
                             likeCount.setText(getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getLikeCount())));
+                        }else{
+                            likeCount.setText("");
                         }
 
+                        if(response.body().getItems().get(0).getStatistics().getDislikeCount() != null){
+                            dislikeCount.setText(getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getDislikeCount())));
+                        }else{
+                            dislikeCount.setText("");
+                        }
 
-                        dislikeCount.setText(getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getDislikeCount())));
                         commentNum.setText("댓글 " + getNumlength(Integer.parseInt(response.body().getItems().get(0).getStatistics().getCommentCount()))) ;
 
                         saveDBCategory(Integer.parseInt(response.body().getItems().get(0).getSnippet().getCategoryId()));
@@ -329,7 +446,7 @@ public class PlayActivity extends YouTubeBaseActivity {
 
 
 
-    private void getCommentData() {
+    private void getCommentData(String order) {
         System.out.println("getCommentData() 시작");
         loadingLayout.setVisibility(View.VISIBLE);
 
@@ -342,7 +459,7 @@ public class PlayActivity extends YouTubeBaseActivity {
             if(firstCommentToken == false) {
                 firstCommentToken = true;
                 commentsRequest = dataService
-                        .getCommentsData("snippet", videoid, "relevance",10, "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0");
+                        .getCommentsData("snippet", videoid, order,10, getString(R.string.api_key));
             }else{
 
                 loadingLayout.setVisibility(View.GONE);
@@ -351,7 +468,7 @@ public class PlayActivity extends YouTubeBaseActivity {
             }
         }else{
             commentsRequest = dataService
-                    .getMoreCommentData("snippet",videoid, "relevance",nextToken,10, "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0");
+                    .getMoreCommentData("snippet",videoid, order,nextToken,10, getString(R.string.api_key));
 
 
         }
@@ -379,7 +496,7 @@ public class PlayActivity extends YouTubeBaseActivity {
 
                         commentsList.addAll(detectPapago(response.body().getItems()));
                         System.out.println("commentsList" + commentsList.size());
-                        System.out.println("repliesList" + repliesList.size());
+
 
 
                         findCommentNum.setText(commentsList.size() - beforeListNum + "개 댓글 찾음");
@@ -387,7 +504,7 @@ public class PlayActivity extends YouTubeBaseActivity {
 
                             System.out.println("추가시도");
                             beforeAdd = true;
-                            getCommentData();
+                            getCommentData(order);
 
                         }else{
                             System.out.println("추가시도xx");
@@ -527,7 +644,10 @@ public class PlayActivity extends YouTubeBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        commentsRequest.cancel();
+        if(commentsRequest!= null){
+            commentsRequest.cancel();
+        }
+
     }
 
     private String getNumlength(int num){
@@ -771,6 +891,7 @@ public class PlayActivity extends YouTubeBaseActivity {
     private void saveDBNoun(List<String> list){
         Realm realm = Realm.getDefaultInstance();//데이터 넣기(insert)
 
+
         for(int i=0;i<list.size();i++){
 
             int finalI = i;
@@ -781,6 +902,7 @@ public class PlayActivity extends YouTubeBaseActivity {
                     @Override
                     public void execute(Realm realm) {
                         isSearch.setCount(isSearch.getCount() + 1);
+                        isSearch.setDate(new Date());
                     }
                 });
             }else{
@@ -789,6 +911,7 @@ public class PlayActivity extends YouTubeBaseActivity {
                     ViewVideo search = realm.createObject(ViewVideo.class);
                     search.setNoun(list.get(finalI));
                     search.setCount(1);
+                    search.setDate(new Date());
 
                 }
                 } );
@@ -796,7 +919,6 @@ public class PlayActivity extends YouTubeBaseActivity {
 
 
         }
-
 
     }
 }

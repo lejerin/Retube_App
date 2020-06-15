@@ -76,6 +76,9 @@ public class Video {
         @SerializedName("categoryId")
         @Expose
         private String categoryId;
+        @SerializedName("tags")
+        @Expose
+        private List<String> tags = null;
 
         public String getPublishedAt() {
             return publishedAt;
@@ -123,6 +126,14 @@ public class Video {
 
         public void setCategoryId(String categoryId) {
             this.categoryId = categoryId;
+        }
+
+        public List<String> getTags() {
+            return tags;
+        }
+
+        public void setTags(List<String> tags) {
+            this.tags = tags;
         }
 
     }

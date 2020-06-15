@@ -77,7 +77,7 @@ public class HomeFragment extends Fragment {
         GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
         final Call<HomeMostPopular> videoDetailRequest = dataService
                 .getMostPopular("snippet,statistics","items(id,snippet(title,thumbnails,publishedAt,channelId,channelTitle),statistics)",
-                        "mostPopular", "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0","KR",25);
+                        "mostPopular", getString(R.string.api_key),"KR",25);
         videoDetailRequest.enqueue(new Callback<HomeMostPopular>() {
             @Override
             public void onResponse(Call<HomeMostPopular> call, Response<HomeMostPopular> response) {
@@ -117,7 +117,7 @@ public class HomeFragment extends Fragment {
         GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
         final Call<Channel> channelListRequest = dataService
                 .getChannels("snippet", id,
-                        "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0",10);
+                        getString(R.string.api_key),10);
         channelListRequest.enqueue(new Callback<Channel>() {
             @Override
             public void onResponse(Call<Channel> call, Response<Channel> response) {

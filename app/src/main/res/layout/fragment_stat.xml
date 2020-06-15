@@ -40,11 +40,11 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
-                    android:gravity="center_vertical"
                     android:id="@+id/linearLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -57,7 +57,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="100"
-                        android:textColor="@color/orange"
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary"
                         android:textSize="18sp" />
 
                     <TextView
@@ -118,8 +119,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="30%"
+                        android:textColor="@color/textPrimary"
+                        android:textStyle="bold"
                         android:textSize="18dp"
-                        android:textColor="@color/colorPrimary"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -155,8 +157,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="30%"
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary"
                         android:textSize="18dp"
-                        android:textColor="@color/colorPrimary"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -165,6 +168,55 @@
                         app:layout_constraintVertical_bias="0.3" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <RadioGroup
+                    android:id="@+id/radioGroup1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
+                    app:layout_constraintStart_toStartOf="@+id/constraintLayout2"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+                    <RadioButton
+                        android:id="@+id/radioDay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/rbtn_selector"
+                        android:button="@null"
+                        android:checked="true"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="오늘"
+                        android:textColor="@drawable/rbtn_textcolor_selector" />
+
+                    <RadioButton
+                        android:id="@+id/radioWeek"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/rbtn_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="일주일"
+                        android:textColor="@drawable/rbtn_textcolor_selector" />
+
+                    <RadioButton
+                        android:id="@+id/radioMonth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/rbtn_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="한달"
+                        android:textColor="@drawable/rbtn_textcolor_selector" />
+                </RadioGroup>
 
                 <TextView
                     android:id="@+id/textView2"
@@ -213,24 +265,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="14sp"
-                        android:text="주로 " />
+                        android:text="주로 "
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/weekStatusText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="14sp"
-                        android:textColor="@color/colorPrimary"
-                        android:text="주중" />
+                        android:text="주중"
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="14sp"
-                        android:text="에 시청을 하고" />
+                        android:text="에 시청을 하고"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <View
@@ -257,17 +310,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="14sp"
-                        android:text="주로 " />
+                        android:text="주로 "
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/timeStatusText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="14sp"
-                        android:textColor="@color/colorPrimary"
-                        android:text="새벽" />
+                        android:text="새벽"
+                        android:textStyle="bold"
+                        android:textColor="@color/textPrimary"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -282,8 +336,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:textSize="14sp"
                     android:text="있습니다"
+                    android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
                     app:layout_constraintStart_toStartOf="@+id/linearLayout2"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
@@ -299,16 +353,17 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2">
+                    app:layout_constraintTop_toBottomOf="@+id/radioGroup1">
 
                     <TextView
                         android:id="@+id/search_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_very_large"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.51"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.293" />
@@ -317,7 +372,7 @@
                         android:id="@+id/search_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_very_large"
                         app:layout_constraintBottom_toBottomOf="@+id/search_7"
                         app:layout_constraintEnd_toStartOf="@+id/search_1"
@@ -328,7 +383,7 @@
                         android:id="@+id/search_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_large"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/search_1"
@@ -340,7 +395,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="16dp"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_regular"
                         app:layout_constraintEnd_toStartOf="@+id/search_1"
                         app:layout_constraintHorizontal_bias="0.598"
@@ -352,7 +407,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_regular"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/search_3"
@@ -363,11 +418,11 @@
                         android:id="@+id/search_6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_small"
                         app:layout_constraintBottom_toTopOf="@+id/search_3"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.584"
+                        app:layout_constraintHorizontal_bias="0.38"
                         app:layout_constraintStart_toEndOf="@+id/search_1"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.581" />
@@ -377,7 +432,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/search_2"
@@ -388,7 +443,7 @@
                         android:id="@+id/search_8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_very_small"
                         app:layout_constraintBottom_toTopOf="@+id/search_7"
                         app:layout_constraintEnd_toStartOf="@+id/search_2"
@@ -401,7 +456,7 @@
                         android:id="@+id/search_9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_very_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -409,6 +464,18 @@
                         app:layout_constraintStart_toEndOf="@+id/search_5"
                         app:layout_constraintTop_toBottomOf="@+id/search_3"
                         app:layout_constraintVertical_bias="0.703" />
+
+                    <ImageButton
+                        android:id="@+id/shareSearch"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:background="#00000000"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/share"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
@@ -416,12 +483,63 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="선호 시청 키워드"
+                    android:text="선호 태그 키워드"
                     android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
+
+                <RadioGroup
+                    android:id="@+id/radioGroup2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="@+id/constraintLayout4"
+                    app:layout_constraintStart_toStartOf="@+id/constraintLayout4"
+                    app:layout_constraintTop_toBottomOf="@+id/textView12">
+
+                    <RadioButton
+                        android:id="@+id/radioDay2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/rbtn_selector"
+                        android:button="@null"
+                        android:checked="true"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="오늘"
+                        android:textColor="@drawable/rbtn_textcolor_selector" />
+
+                    <RadioButton
+                        android:id="@+id/radioWeek2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/rbtn_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="일주일"
+                        android:textColor="@drawable/rbtn_textcolor_selector" />
+
+                    <RadioButton
+                        android:id="@+id/radioMonth2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/rbtn_selector"
+                        android:button="@null"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="한달"
+                        android:textColor="@drawable/rbtn_textcolor_selector" />
+                </RadioGroup>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout4"
@@ -433,50 +551,51 @@
                     android:background="@drawable/rect_rounded_white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView12">
+                    app:layout_constraintTop_toBottomOf="@+id/radioGroup2">
 
                     <TextView
                         android:id="@+id/view_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_very_large"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.315"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.41000003" />
 
                     <TextView
                         android:id="@+id/view_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_very_large"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/view_7"
-                        app:layout_constraintHorizontal_bias="0.62"
+                        app:layout_constraintHorizontal_bias="0.33"
                         app:layout_constraintStart_toEndOf="@+id/view_4" />
 
                     <TextView
                         android:id="@+id/view_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_large"
                         app:layout_constraintBottom_toTopOf="@+id/view_2"
                         app:layout_constraintEnd_toStartOf="@+id/view_6"
                         app:layout_constraintStart_toEndOf="@+id/view_1"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.39" />
+                        app:layout_constraintVertical_bias="0.19" />
 
                     <TextView
                         android:id="@+id/view_9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_very_small"
                         app:layout_constraintEnd_toStartOf="@+id/view_3"
                         app:layout_constraintStart_toEndOf="@+id/view_5"
@@ -487,7 +606,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_regular"
                         app:layout_constraintBottom_toTopOf="@+id/view_1"
                         app:layout_constraintStart_toStartOf="parent"
@@ -497,21 +616,21 @@
                         android:id="@+id/view_6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:text="TextView"
+                        android:layout_marginEnd="12dp"
+                        android:text=""
                         android:textSize="@dimen/keword_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.069" />
+                        app:layout_constraintVertical_bias="0.44" />
 
                     <TextView
                         android:id="@+id/view_7"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginEnd="24dp"
                         android:layout_marginBottom="8dp"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -520,11 +639,11 @@
                         android:id="@+id/view_8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_very_small"
                         app:layout_constraintBottom_toTopOf="@+id/view_7"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.76"
+                        app:layout_constraintHorizontal_bias="0.42"
                         app:layout_constraintStart_toEndOf="@+id/view_1"
                         app:layout_constraintTop_toBottomOf="@+id/view_6"
                         app:layout_constraintVertical_bias="0.65" />
@@ -535,10 +654,22 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:layout_marginBottom="20dp"
-                        android:text="TextView"
+                        android:text=""
                         android:textSize="@dimen/keword_large"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
+
+                    <ImageButton
+                        android:id="@+id/shareTagBtn"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:background="#00000000"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/share"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
@@ -556,8 +687,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:textSize="18sp"
                     android:text="상위 선호 카테고리"
+                    android:textSize="18sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
@@ -574,7 +705,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView">
 
                 </com.github.mikephil.charting.charts.PieChart>
-
 
 
                 <View

@@ -32,6 +32,7 @@ import com.example.retube.models.Search.Searchs;
 import com.example.retube.models.VideoStats.VideoStats;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -122,6 +123,7 @@ public class SearchFragment extends Fragment {
                     case EditorInfo.IME_ACTION_SEARCH:
 
                         hideKeyboard(getActivity());
+                        startNum = 0;
                         videoSearchList.clear();
                         viewCountList.clear();
                         firstCommentToken = false;
@@ -148,6 +150,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 hideKeyboard(getActivity());
+                startNum = 0;
                 videoSearchList.clear();
                 viewCountList.clear();
                 firstCommentToken = false;
@@ -184,14 +187,14 @@ public class SearchFragment extends Fragment {
                 firstCommentToken = true;
                 videoDetailRequest= dataService
                         .getSerchVideo("snippet", 30, "relevance", "video",
-                                input,"none","AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0");
+                                input,"none",getString(R.string.api_key));
             }else{
                 return;
             }
         }else{
             videoDetailRequest= dataService
                     .getMoreSerchVideo("snippet", nextToken,30, "relevance", "video",
-                            input,"none","AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0");
+                            input,"none",getString(R.string.api_key));
             more = true;
         }
 
@@ -245,7 +248,7 @@ public class SearchFragment extends Fragment {
 
         GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
         Call<VideoStats> videoDetailRequest = dataService
-                .getVideoDetail("statistics", "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0",id);
+                .getVideoDetail("statistics", getString(R.string.api_key),id);
         videoDetailRequest.enqueue(new Callback<VideoStats>() {
             @Override
             public void onResponse(Call<VideoStats> call, Response<VideoStats> response) {
@@ -290,6 +293,7 @@ public class SearchFragment extends Fragment {
                     @Override
                     public void execute(Realm realm) {
                         isSearch.setCount(isSearch.getCount() + 1);
+                        isSearch.setDate(new Date());
                     }
                 });
             }else{
@@ -298,6 +302,7 @@ public class SearchFragment extends Fragment {
                     Search search = realm.createObject(Search.class);
                     search.setNoun(list.get(finalI));
                     search.setCount(1);
+                    search.setDate(new Date());
 
                 }
                 } );

@@ -7,7 +7,6 @@ import com.example.retube.R
 
 import com.example.retube.fragment.HomeFragment
 import com.example.retube.fragment.StatFragment
-import com.example.retube.fragment.ProfileFragment
 import com.example.retube.fragment.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 

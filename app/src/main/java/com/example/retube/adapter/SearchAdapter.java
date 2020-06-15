@@ -178,7 +178,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 } else if ((diffTime /= 30) < 12) {
                     msg = (diffTime) + "달 전";
                 } else {
-                    msg = (diffTime) + "년 전";
+                    msg = ((diffTime) /12) + "년 전";
                 }
                 return msg;
 

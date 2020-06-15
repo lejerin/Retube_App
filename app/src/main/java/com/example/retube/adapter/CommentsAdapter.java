@@ -25,7 +25,11 @@ import com.example.retube.models.comments.Replies;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -281,7 +285,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
                             Call<Replies> repliesRequest = null;
                             repliesRequest = dataService
-                                    .getRepliesData("snippet", commentsList.get(realPosition).getId(), 10, "AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0");
+                                    .getRepliesData("snippet", commentsList.get(realPosition).getId(), 10, context.getString(R.string.api_key));
 
                             repliesRequest.enqueue(new retrofit2.Callback<Replies>() {
                                 @Override
@@ -351,7 +355,10 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             String getRecommentCount = data.getSnippet().getTotalReplyCount().toString();
             String getlikeCount = data.getSnippet().getTopLevelComment().getSnippet().getLikeCount().toString();
 
-            title.setText(getTitle);
+            String getTime = data.getSnippet().getTopLevelComment().getSnippet().getPublishedAt();
+
+
+            title.setText(getTitle +  " \u00b7 " +  formatTimeString(getTime));
             subtitle.setText(getSubTitle);
             likeNum.setText(getlikeCount);
             messageNum.setText(getRecommentCount);
@@ -386,6 +393,51 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         }
     }
+
+
+    private String formatTimeString(String str){
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+
+            ZonedDateTime dateTime = ZonedDateTime.parse(str + "[Europe/London]");
+
+            String a = dateTime.getYear()+"-"+dateTime.getMonthValue() + "-"+ dateTime.getDayOfMonth() +
+                    " " + dateTime.getHour() + ":" + dateTime.getMinute() + ":" + dateTime.getSecond();
+            SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            try {
+                Date to = transFormat.parse(a);
+                long regTime = to.getTime();
+                long curTime = new Date().getTime() - 9*60*60*1000;
+
+                long diffTime = (curTime - regTime) / 1000;
+                String msg = null;
+                if (diffTime < 60) {
+                    msg = "방금 전";
+                } else if ((diffTime /= 60) < 60) {
+                    msg = diffTime + "분 전";
+                } else if ((diffTime /= 60) < 24) {
+                    msg = (diffTime) + "시간 전";
+                } else if ((diffTime /= 24) < 30) {
+                    msg = (diffTime) + "일 전";
+                } else if ((diffTime /= 30) < 12) {
+                    msg = (diffTime) + "달 전";
+                } else {
+                    msg = (diffTime) + "년 전";
+                }
+                return msg;
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+
+
+
+        return "";
+    }
+
 
     private class HeaderViewHolder extends RecyclerView.ViewHolder {
 

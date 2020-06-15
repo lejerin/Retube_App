@@ -1,31 +1,4 @@
 <resources>
     <string name="app_name">Retube</string>
-
-<!--    <string name="category1">영화&amp;애니메이션</string>-->
-<!--    <string name="category2">자동차</string>-->
-<!--    <string name="category10">음악</string>-->
-<!--    <string name="category15">애완동물&amp;동물</string>-->
-<!--    <string name="category17">스포츠</string>-->
-<!--    <string name="category18">단편영화</string>-->
-<!--    <string name="category19">여행&amp;이벤트</string>-->
-<!--    <string name="category20">게임</string>-->
-<!--    <string name="category21">브이로그</string>-->
-<!--    <string name="category22">인물&amp;블로그</string>-->
-<!--    <string name="category23">코미디</string>-->
-<!--    <string name="category24">엔터테인먼트</string>-->
-<!--    <string name="category25">뉴스&amp;정치</string>-->
-<!--    <string name="category26">노하우&amp;스타일</string>-->
-<!--    <string name="category27">교육</string>-->
-<!--    <string name="category28">과학&amp;기술</string>-->
-<!--    <string name="category29">비영리&amp;사회운동</string>-->
-<!--    <string name="category32">액션&amp;모험</string>-->
-<!--    <string name="category33">클래식</string>-->
-<!--    <string name="category35">다큐멘터리</string>-->
-<!--    <string name="category36">드라마</string>-->
-<!--    <string name="category37">가족</string>-->
-<!--    <string name="category38">외국</string>-->
-<!--    <string name="category39">공포&amp;스릴러</string>-->
-<!--    <string name="category40">공상과학&amp;판타지</string>-->
-<!--    <string name="category43">예능</string>-->
-<!--    <string name="category44">트레일러</string>-->
+    <string name="api_key">AIzaSyDuonNu-jgqpkjZvMq8Y_RKQHF6KmfeZ0g</string>
 </resources>
