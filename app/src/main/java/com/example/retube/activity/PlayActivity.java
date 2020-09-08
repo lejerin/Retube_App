@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,18 +17,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.retube.Helper.DetectPapago;
-import com.example.retube.Helper.WiseNLUExample;
 import com.example.retube.R;
 import com.example.retube.Realm.Category;
 import com.example.retube.Realm.User;
 import com.example.retube.Realm.ViewChannel;
 import com.example.retube.Realm.ViewVideo;
-import com.example.retube.Retrofit.GetDataService;
-import com.example.retube.Retrofit.RetrofitInstance;
+import com.example.retube.data.GetDataService;
+import com.example.retube.data.network.RetrofitInstance;
 import com.example.retube.adapter.CommentsAdapter;
 import com.example.retube.models.Video;
 import com.example.retube.models.comments.Comment;
-import com.example.retube.models.comments.Replies;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -52,13 +49,9 @@ public class PlayActivity extends YouTubeBaseActivity {
     private YouTubePlayerView youTubePlayerView;
     private YouTubePlayer.OnInitializedListener onInitializedListener;
 
-    private WiseNLUExample wiseNLUExample = new WiseNLUExample();
-
     private TextView viewCount,likeCount, dislikeCount, commentNum,tags;
 
     private String videoid;
-
-   // private ProgressBar commentProgressBar;
 
     private RecyclerView commentRecyclerView;
     private CommentsAdapter commentsAdapter;

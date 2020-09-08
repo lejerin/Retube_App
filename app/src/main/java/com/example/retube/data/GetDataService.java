@@ -1,4 +1,4 @@
-package com.example.retube.Retrofit;
+package com.example.retube.data;
 
 import com.example.retube.models.Channel;
 import com.example.retube.models.HomeMostPopular;
@@ -67,16 +67,16 @@ public interface GetDataService {
             @Query("key") String key,
             @Query("maxResults") int maxResults
     );
-
-    @GET("videos")
-    Call<HomeMostPopular> getMostPopular(
-            @Query("part") String part,
-            @Query("fields") String fields,
-            @Query("chart") String chart,
-            @Query("key") String key,
-            @Query("regionCode") String regionCode,
-            @Query("maxResults") int maxResults
-    );
+//
+//    @GET("videos")
+//    Call<HomeMostPopular> getMostPopular(
+//            @Query("part") String part,
+//            @Query("fields") String fields,
+//            @Query("chart") String chart,
+//            @Query("key") String key,
+//            @Query("regionCode") String regionCode,
+//            @Query("maxResults") int maxResults
+//    );
 
     @GET("search")
     Call<Searchs> getSerchVideo(
@@ -100,5 +100,7 @@ public interface GetDataService {
             @Query("safeSearch") String safeSearch,
             @Query("key") String key
     );
+
+
 
 }

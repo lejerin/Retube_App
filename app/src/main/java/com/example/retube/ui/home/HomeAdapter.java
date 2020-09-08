@@ -1,4 +1,4 @@
-package com.example.retube.adapter;
+package com.example.retube.ui.home;
 
 import android.content.Context;
 import android.util.Log;
@@ -81,24 +81,28 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             String getchName = data.getSnippet().getChannelTitle();
             String getViewCount = getNumlength(Integer.parseInt(data.getStatistics().getViewCount()));
             if(ch != null){
-                String getch = ch.getSnippet().getThumbnails().getHigh().getUrl();
 
-                Picasso.get()
-                        .load(getch)
-                        .placeholder(R.drawable.gray)
-                        .fit()
-                        .centerCrop()
-                        .into(chImg, new Callback() {
-                            @Override
-                            public void onSuccess() {
-                                Log.d(TAG, "Thumbnail success");
-                            }
+                if(ch.getSnippet() != null){
+                    String getch = ch.getSnippet().getThumbnails().getHigh().getUrl();
 
-                            @Override
-                            public void onError(Exception e) {
-                                Log.d(TAG, "Thumbnail error");
-                            }
-                        });
+                    Picasso.get()
+                            .load(getch)
+                            .placeholder(R.drawable.gray)
+                            .fit()
+                            .centerCrop()
+                            .into(chImg, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d(TAG, "Thumbnail success");
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    Log.d(TAG, "Thumbnail error");
+                                }
+                            });
+                }
+
             }else{
                 chImg.setImageResource(R.drawable.gray);
             }

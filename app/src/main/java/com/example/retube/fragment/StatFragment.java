@@ -1,22 +1,16 @@
 package com.example.retube.fragment;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -32,21 +26,17 @@ import com.example.retube.Realm.Search;
 import com.example.retube.Realm.User;
 import com.example.retube.Realm.ViewChannel;
 import com.example.retube.Realm.ViewVideo;
-import com.example.retube.Retrofit.GetDataService;
-import com.example.retube.Retrofit.RetrofitInstance;
-import com.example.retube.activity.PlayActivity;
+import com.example.retube.data.GetDataService;
+import com.example.retube.data.network.RetrofitInstance;
 import com.example.retube.activity.RecommendActivity;
 import com.example.retube.adapter.StatChannelVPAdapter;
 import com.example.retube.models.Channel;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

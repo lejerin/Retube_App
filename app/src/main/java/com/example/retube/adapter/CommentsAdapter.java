@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.retube.Helper.TransferPapago;
 import com.example.retube.R;
-import com.example.retube.Retrofit.GetDataService;
-import com.example.retube.Retrofit.RetrofitInstance;
+import com.example.retube.data.GetDataService;
+import com.example.retube.data.network.RetrofitInstance;
 import com.example.retube.models.comments.Comment;
 import com.example.retube.models.comments.Replies;
 import com.squareup.picasso.Callback;

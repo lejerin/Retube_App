@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import com.example.retube.R;
-import com.example.retube.Retrofit.GetDataService;
-import com.example.retube.Retrofit.RetrofitInstance;
+import com.example.retube.data.GetDataService;
+import com.example.retube.data.network.RetrofitInstance;
 import com.example.retube.adapter.SearchAdapter;
 import com.example.retube.models.Search.Item;
 import com.example.retube.models.Search.Searchs;
