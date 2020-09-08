@@ -28,6 +28,7 @@ class HomeViewModel(
         )
 
     }
+
     private val _list = HashMap<Int, Channel.Item>()
     private val _channels = MutableLiveData<HashMap<Int, Channel.Item>>()
     val chennels : LiveData<HashMap<Int, Channel.Item>>
@@ -38,9 +39,7 @@ class HomeViewModel(
             { repository.getChannelData(part, id, key, maxResults) },
             {
                 if (it != null) {
-                    System.out.println("요청")
                     _list.put(num,it.items.get(0))
-
                     _channels.value = _list
                 }
             }
