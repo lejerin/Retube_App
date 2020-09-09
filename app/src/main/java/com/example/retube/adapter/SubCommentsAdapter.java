@@ -1,12 +1,10 @@
 package com.example.retube.adapter;
 
 import android.content.Context;
-import android.print.PageRange;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,8 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.retube.R;
-import com.example.retube.models.comments.Comment;
-import com.example.retube.models.comments.Replies;
+import com.example.retube.data.models.comments.Replies;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 

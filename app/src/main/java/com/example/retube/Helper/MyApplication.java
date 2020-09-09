@@ -1,10 +1,9 @@
 package com.example.retube.Helper;
 
-import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
 
-import com.example.retube.Realm.User;
+import com.example.retube.data.Realm.User;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -1,9 +1,9 @@
 package com.example.retube.data.network
 
-import com.example.retube.models.Channel
-import com.example.retube.models.HomeMostPopular
-import com.example.retube.models.search.Searchs
-import com.example.retube.models.VideoStats.VideoStats
+import com.example.retube.data.models.Channel
+import com.example.retube.data.models.HomeMostPopular
+import com.example.retube.data.models.search.Searchs
+import com.example.retube.data.models.VideoStats.VideoStats
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

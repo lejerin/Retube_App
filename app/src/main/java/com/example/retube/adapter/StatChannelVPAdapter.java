@@ -12,12 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.example.retube.R;
-import com.example.retube.models.Channel;
+import com.example.retube.data.models.Channel;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
-import java.util.List;
 
 import static android.content.ContentValues.TAG;
 

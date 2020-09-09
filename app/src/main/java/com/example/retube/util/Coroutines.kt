@@ -1,6 +1,5 @@
 package com.example.retube.util
 
-import com.example.retube.models.HomeMostPopular
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

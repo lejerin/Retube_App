@@ -1,6 +1,4 @@
-package com.example.retube.Realm;
-
-import java.util.Date;
+package com.example.retube.data.Realm;
 
 import io.realm.RealmObject;
 

@@ -1,4 +1,4 @@
-package com.example.retube.models;
+package com.example.retube.data.models;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;

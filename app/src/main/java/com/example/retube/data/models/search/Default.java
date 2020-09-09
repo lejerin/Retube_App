@@ -1,9 +1,9 @@
-package com.example.retube.models.search;
+package com.example.retube.data.models.search;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Medium {
+public class Default {
 
 @SerializedName("url")
 @Expose

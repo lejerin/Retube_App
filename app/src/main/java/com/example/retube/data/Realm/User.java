@@ -1,4 +1,4 @@
-package com.example.retube.Realm;
+package com.example.retube.data.Realm;
 
 import io.realm.RealmObject;
 

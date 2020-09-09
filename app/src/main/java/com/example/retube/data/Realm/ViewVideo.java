@@ -1,9 +1,8 @@
-package com.example.retube.Realm;
+package com.example.retube.data.Realm;
 
 import java.util.Date;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 public class ViewVideo extends RealmObject {
 

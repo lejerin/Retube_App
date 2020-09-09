@@ -1,7 +1,7 @@
 package com.example.retube.ui.search
 
+import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,16 +14,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.retube.R
+import com.example.retube.activity.PlayActivity
 import com.example.retube.data.network.YoutubeApi
 import com.example.retube.data.repositories.YoutubeRepository
 import com.example.retube.databinding.FragmentSearchBinding
-import com.example.retube.models.search.Item
-import com.example.retube.ui.home.RecyclerViewClickListener
-import kotlinx.android.synthetic.main.fragment_home.*
+import com.example.retube.data.models.search.Item
+import com.example.retube.ui.RecyclerViewClickListener
+import com.example.retube.util.LinearLayoutManagerWrapper
 import kotlinx.android.synthetic.main.fragment_search.*
 
 
-class SearchFragment : Fragment(), RecyclerViewClickListener {
+class SearchFragment : Fragment(),
+    RecyclerViewClickListener {
 
     private lateinit var factory: SearchViewModelFactory
     private lateinit var viewModel: SearchViewModel
@@ -31,11 +33,13 @@ class SearchFragment : Fragment(), RecyclerViewClickListener {
     private val videoSearchList: MutableList<Item> = mutableListOf()
     private val viewCountList = HashMap<Int, Int>()
 
-    private var isLoading: Boolean = false
-    lateinit var layoutManager : LinearLayoutManager
-    var handler: Handler = Handler()
+
+    lateinit var layoutManager : LinearLayoutManagerWrapper
+    private var lastVisibleItemPosition = 0
 
     private lateinit var binding: FragmentSearchBinding
+
+    private var startNum = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,10 +56,13 @@ class SearchFragment : Fragment(), RecyclerViewClickListener {
         //검색 버튼 클릭 -> 데이터 불러오기
         //데이터 갖고온 뒤 조회수 불러오기
         //스크롤 시 다음 쿼리 요청
-        layoutManager = LinearLayoutManager(requireContext())
+
+        layoutManager = LinearLayoutManagerWrapper(context, LinearLayoutManager.VERTICAL, false)
         rc_search.layoutManager = layoutManager
         rc_search.setHasFixedSize(true)
-        rc_search.adapter = SearchAdapter(videoSearchList,viewCountList)
+        rc_search.adapter = SearchAdapter(videoSearchList,viewCountList, this)
+
+
 
         val api = YoutubeApi()
         val repository =
@@ -65,9 +72,12 @@ class SearchFragment : Fragment(), RecyclerViewClickListener {
 
         binding.searchViewModel = viewModel
 
+
+
         binding.searchText.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             when (actionId) {
                 EditorInfo.IME_ACTION_SEARCH -> {
+                    videoSearchList.clear()
                    viewModel.find(v)
                 }
                 else -> return@OnEditorActionListener false
@@ -75,20 +85,25 @@ class SearchFragment : Fragment(), RecyclerViewClickListener {
             true
         })
 
+        binding.checkBtn.setOnClickListener{
+            videoSearchList.clear()
+        }
+
 
         viewModel.searchdatas.observe(viewLifecycleOwner, Observer { searches ->
-
-            videoSearchList.clear()
+            (rc_search.adapter!! as SearchAdapter).setIsNext(viewModel.nextToken)
             videoSearchList.addAll(searches)
-            rc_search.adapter!!.notifyDataSetChanged()
+            rc_search.adapter!!.notifyItemRangeInserted(startNum,videoSearchList.size-1)
+            startNum = videoSearchList.size
             getViewCount()
 
         })
 
         viewModel.viewCount.observe(viewLifecycleOwner, Observer { viewCount ->
             viewCountList.clear()
-            viewCountList.putAll(viewCount)
-            rc_search.adapter!!.notifyDataSetChanged()
+            viewCountList.put(viewCount.num, viewCount.count)
+            System.out.println("갱신" + viewCount.num)
+            rc_search.adapter!!.notifyItemChanged(viewCount.num)
         })
 
         addScrollerListener()
@@ -103,23 +118,26 @@ class SearchFragment : Fragment(), RecyclerViewClickListener {
 
     override fun onRecyclerViewItemClick(view: View, pos: Int) {
 
-    }
+        System.out.println("클릭")
+        val intent = Intent(activity, PlayActivity::class.java)
+        intent.putExtra("videoID", videoSearchList[pos].id.videoId)
+        startActivity(intent)
+
+        }
+
+
 
     private fun addScrollerListener()
     {
-        //attaches scrollListener with RecyclerView
-        rc_search.addOnScrollListener(object : RecyclerView.OnScrollListener()
-        {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int)
-            {
+        rc_search.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (!isLoading)
-                {
-                    if (layoutManager.findLastCompletelyVisibleItemPosition() == videoSearchList.size - 1)
-                    {
-                        viewModel.findMore(binding.searchText)
-                        isLoading = true
-                    }
+                lastVisibleItemPosition =
+                    (recyclerView.layoutManager as LinearLayoutManager?)!!.findLastCompletelyVisibleItemPosition()
+                val itemTotalCount = recyclerView.adapter!!.itemCount - 1
+                if (lastVisibleItemPosition === itemTotalCount) {
+                    //비디오 추가 갱신할 때
+                    viewModel.findMore(binding.searchText)
                 }
             }
         })

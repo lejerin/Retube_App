@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.retube.data.repositories.YoutubeRepository
-import com.example.retube.models.Channel
-import com.example.retube.models.search.Item
+import com.example.retube.data.models.search.Item
+import com.example.retube.data.models.viewCount
 import com.example.retube.util.Coroutines
 import kotlinx.coroutines.Job
 
@@ -22,13 +22,13 @@ class SearchViewModel(
 
     fun find(view: View){
         view.hideKeyboard()
-        getSearchDatas("snippet", 5, "relevance", "video",
-            newSearchText,"none","AIzaSyDuonNu-jgqpkjZvMq8Y_RKQHF6KmfeZ0g")
+        getSearchDatas("snippet", 10, "relevance", "video",
+            newSearchText,"none","AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0")
     }
     fun findMore(view: View){
         if(nextToken != null){
-            getMoreSearchDatas("snippet", nextToken!! , 5, "relevance", "video",
-                newSearchText,"none","AIzaSyDuonNu-jgqpkjZvMq8Y_RKQHF6KmfeZ0g")
+            getMoreSearchDatas("snippet", nextToken!! , 10, "relevance", "video",
+                newSearchText,"none","AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0")
         }
     }
 
@@ -58,17 +58,21 @@ class SearchViewModel(
         job = Coroutines.ioThenMain(
             { repository.getMoreSearchData(part, pageToken, maxResults, order, type, q, safeSearch, key) },
             {
+
                 nextToken = it?.nextPageToken
-                _searchdatas.value!!.addAll(it!!.items)
+//                val arr = _searchdatas.value
+//                arr?.addAll(it!!.items)
+//                _searchdatas.value = arr
+                _searchdatas.value = it!!.items
+                System.out.println("loading more" + _searchdatas.value!!.size)
             }
         )
     }
 
     //조회수 불러오기
 
-    private val _list = HashMap<Int, Int>()
-    private val _viewCount = MutableLiveData<HashMap<Int, Int>>()
-    val viewCount : LiveData<HashMap<Int, Int>>
+    private val _viewCount = MutableLiveData<viewCount>()
+    val viewCount : LiveData<viewCount>
         get() = _viewCount
 
     fun getViewCountDatas(part: String,  key: String, id: String, num: Int){
@@ -76,8 +80,7 @@ class SearchViewModel(
             { repository.getViewDetailData(part, key, id) },
             {
                 if (it != null) {
-                    _list.put(num,  it.items[0].statistics.viewCount.toInt())
-                    _viewCount.value = _list
+                    _viewCount.value = viewCount(num, it.items[0].statistics.viewCount.toInt())
                 }
             }
         )

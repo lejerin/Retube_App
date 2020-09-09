@@ -1,4 +1,4 @@
-package com.example.retube.models.VideoStats;
+package com.example.retube.data.models.VideoStats;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

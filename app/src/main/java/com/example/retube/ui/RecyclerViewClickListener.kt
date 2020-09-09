@@ -1,4 +1,4 @@
-package com.example.retube.ui.home
+package com.example.retube.ui
 
 import android.view.View
 

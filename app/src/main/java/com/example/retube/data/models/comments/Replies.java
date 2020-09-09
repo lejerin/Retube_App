@@ -1,11 +1,57 @@
-package com.example.retube.models.comments;
+package com.example.retube.data.models.comments;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class Comment {
+
+public class Replies {
+
+    @SerializedName("kind")
+    @Expose
+    private String kind;
+    @SerializedName("etag")
+    @Expose
+    private String etag;
+    @SerializedName("pageInfo")
+    @Expose
+    private PageInfo pageInfo;
+    @SerializedName("items")
+    @Expose
+    private List<Item> items = null;
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
+
+    public String getEtag() {
+        return etag;
+    }
+
+    public void setEtag(String etag) {
+        this.etag = etag;
+    }
+
+    public PageInfo getPageInfo() {
+        return pageInfo;
+    }
+
+    public void setPageInfo(PageInfo pageInfo) {
+        this.pageInfo = pageInfo;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
 
     public class AuthorChannelId {
 
@@ -72,82 +118,12 @@ public class Comment {
 
     }
 
-    public class Model {
-
-        @SerializedName("kind")
-        @Expose
-        private String kind;
-        @SerializedName("etag")
-        @Expose
-        private String etag;
-        @SerializedName("nextPageToken")
-        @Expose
-        private String nextPageToken;
-        @SerializedName("pageInfo")
-        @Expose
-        private PageInfo pageInfo;
-        @SerializedName("items")
-        @Expose
-        private List<Item> items = null;
-
-        public String getKind() {
-            return kind;
-        }
-
-        public void setKind(String kind) {
-            this.kind = kind;
-        }
-
-        public String getnextPageToken() {
-            return nextPageToken;
-        }
-
-        public void setnextPageToken(String nextPageToken) {
-            this.nextPageToken = nextPageToken;
-        }
-
-        public String getEtag() {
-            return etag;
-        }
-
-        public void setEtag(String etag) {
-            this.etag = etag;
-        }
-
-        public PageInfo getPageInfo() {
-            return pageInfo;
-        }
-
-        public void setPageInfo(PageInfo pageInfo) {
-            this.pageInfo = pageInfo;
-        }
-
-        public List<Item> getItems() {
-            return items;
-        }
-
-        public void setItems(List<Item> items) {
-            this.items = items;
-        }
-
-    }
 
     public class PageInfo {
 
-        @SerializedName("totalResults")
-        @Expose
-        private Integer totalResults;
         @SerializedName("resultsPerPage")
         @Expose
         private Integer resultsPerPage;
-
-        public Integer getTotalResults() {
-            return totalResults;
-        }
-
-        public void setTotalResults(Integer totalResults) {
-            this.totalResults = totalResults;
-        }
 
         public Integer getResultsPerPage() {
             return resultsPerPage;
@@ -161,66 +137,6 @@ public class Comment {
 
     public class Snippet {
 
-        @SerializedName("videoId")
-        @Expose
-        private String videoId;
-        @SerializedName("topLevelComment")
-        @Expose
-        private TopLevelComment topLevelComment;
-        @SerializedName("canReply")
-        @Expose
-        private Boolean canReply;
-        @SerializedName("totalReplyCount")
-        @Expose
-        private Integer totalReplyCount;
-        @SerializedName("isPublic")
-        @Expose
-        private Boolean isPublic;
-
-        public String getVideoId() {
-            return videoId;
-        }
-
-        public void setVideoId(String videoId) {
-            this.videoId = videoId;
-        }
-
-        public TopLevelComment getTopLevelComment() {
-            return topLevelComment;
-        }
-
-        public void setTopLevelComment(TopLevelComment topLevelComment) {
-            this.topLevelComment = topLevelComment;
-        }
-
-        public Boolean getCanReply() {
-            return canReply;
-        }
-
-        public void setCanReply(Boolean canReply) {
-            this.canReply = canReply;
-        }
-
-        public Integer getTotalReplyCount() {
-            return totalReplyCount;
-        }
-
-        public void setTotalReplyCount(Integer totalReplyCount) {
-            this.totalReplyCount = totalReplyCount;
-        }
-
-        public Boolean getIsPublic() {
-            return isPublic;
-        }
-
-        public void setIsPublic(Boolean isPublic) {
-            this.isPublic = isPublic;
-        }
-
-    }
-
-    public class Snippet_ {
-
         @SerializedName("authorDisplayName")
         @Expose
         private String authorDisplayName;
@@ -233,15 +149,15 @@ public class Comment {
         @SerializedName("authorChannelId")
         @Expose
         private AuthorChannelId authorChannelId;
-        @SerializedName("videoId")
-        @Expose
-        private String videoId;
         @SerializedName("textDisplay")
         @Expose
         private String textDisplay;
         @SerializedName("textOriginal")
         @Expose
         private String textOriginal;
+        @SerializedName("parentId")
+        @Expose
+        private String parentId;
         @SerializedName("canRate")
         @Expose
         private Boolean canRate;
@@ -290,14 +206,6 @@ public class Comment {
             this.authorChannelId = authorChannelId;
         }
 
-        public String getVideoId() {
-            return videoId;
-        }
-
-        public void setVideoId(String videoId) {
-            this.videoId = videoId;
-        }
-
         public String getTextDisplay() {
             return textDisplay;
         }
@@ -312,6 +220,14 @@ public class Comment {
 
         public void setTextOriginal(String textOriginal) {
             this.textOriginal = textOriginal;
+        }
+
+        public String getParentId() {
+            return parentId;
+        }
+
+        public void setParentId(String parentId) {
+            this.parentId = parentId;
         }
 
         public Boolean getCanRate() {
@@ -355,53 +271,7 @@ public class Comment {
         }
 
     }
-
-    public class TopLevelComment {
-
-        @SerializedName("kind")
-        @Expose
-        private String kind;
-        @SerializedName("etag")
-        @Expose
-        private String etag;
-        @SerializedName("id")
-        @Expose
-        private String id;
-        @SerializedName("snippet")
-        @Expose
-        private Snippet_ snippet;
-
-        public String getKind() {
-            return kind;
-        }
-
-        public void setKind(String kind) {
-            this.kind = kind;
-        }
-
-        public String getEtag() {
-            return etag;
-        }
-
-        public void setEtag(String etag) {
-            this.etag = etag;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public Snippet_ getSnippet() {
-            return snippet;
-        }
-
-        public void setSnippet(Snippet_ snippet) {
-            this.snippet = snippet;
-        }
-
-    }
 }
+
+
+

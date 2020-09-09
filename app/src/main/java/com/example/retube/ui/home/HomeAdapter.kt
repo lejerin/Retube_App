@@ -6,8 +6,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.retube.R
 import com.example.retube.databinding.RowItemHomeBinding
-import com.example.retube.models.Channel
-import com.example.retube.models.HomeMostPopular
+import com.example.retube.data.models.Channel
+import com.example.retube.data.models.HomeMostPopular
+import com.example.retube.ui.RecyclerViewClickListener
 import com.example.retube.util.Converter
 
 class HomeAdapter (
@@ -43,7 +44,7 @@ class HomeAdapter (
         holder.recyclerviewMovieBinding.channelUri = url
 
 
-        holder.recyclerviewMovieBinding.root.setOnClickListener {
+        holder.recyclerviewMovieBinding.homeView.setOnClickListener {
             listener.onRecyclerViewItemClick(holder.recyclerviewMovieBinding.homeView , position)
         }
 

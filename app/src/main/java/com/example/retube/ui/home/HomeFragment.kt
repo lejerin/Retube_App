@@ -13,13 +13,14 @@ import com.example.retube.R
 import com.example.retube.activity.PlayActivity
 import com.example.retube.data.network.YoutubeApi
 import com.example.retube.data.repositories.YoutubeRepository
-import com.example.retube.models.Channel
-import com.example.retube.models.HomeMostPopular
+import com.example.retube.data.models.Channel
+import com.example.retube.data.models.HomeMostPopular
+import com.example.retube.ui.RecyclerViewClickListener
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.row_item_home.*
 
 
-class HomeFragment : Fragment() , RecyclerViewClickListener{
+class HomeFragment : Fragment() ,
+    RecyclerViewClickListener {
 
     private lateinit var factory: HomeViewModelFactory
     private lateinit var viewModel: HomeViewModel
@@ -77,13 +78,11 @@ class HomeFragment : Fragment() , RecyclerViewClickListener{
 
     override fun onRecyclerViewItemClick(view: View, pos: Int) {
 
-        when(view){
-            home_view -> {
+
                 val intent = Intent(activity, PlayActivity::class.java)
                 intent.putExtra("videoID", videoMostPopularList[pos].id)
                 startActivity(intent)
-            }
-        }
+
 
     }
 

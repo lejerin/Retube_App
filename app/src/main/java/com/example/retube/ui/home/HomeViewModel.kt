@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.retube.data.repositories.YoutubeRepository
-import com.example.retube.models.Channel
-import com.example.retube.models.HomeMostPopular
+import com.example.retube.data.models.Channel
+import com.example.retube.data.models.HomeMostPopular
 import com.example.retube.util.Coroutines
 import kotlinx.coroutines.Job
 

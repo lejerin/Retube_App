@@ -1,11 +1,11 @@
 package com.example.retube.data;
 
-import com.example.retube.models.Channel;
-import com.example.retube.models.search.Searchs;
-import com.example.retube.models.Video;
-import com.example.retube.models.VideoStats.VideoStats;
-import com.example.retube.models.comments.Comment;
-import com.example.retube.models.comments.Replies;
+import com.example.retube.data.models.Channel;
+import com.example.retube.data.models.search.Searchs;
+import com.example.retube.data.models.Video;
+import com.example.retube.data.models.VideoStats.VideoStats;
+import com.example.retube.data.models.comments.Comment;
+import com.example.retube.data.models.comments.Replies;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

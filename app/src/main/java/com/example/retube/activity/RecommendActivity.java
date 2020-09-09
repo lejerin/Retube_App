@@ -12,9 +12,9 @@ import android.widget.ImageButton;
 import com.example.retube.R;
 import com.example.retube.data.GetDataService;
 import com.example.retube.data.network.RetrofitInstance;
-import com.example.retube.models.search.Item;
-import com.example.retube.models.search.Searchs;
-import com.example.retube.models.VideoStats.VideoStats;
+import com.example.retube.data.models.search.Item;
+import com.example.retube.data.models.search.Searchs;
+import com.example.retube.data.models.VideoStats.VideoStats;
 
 import java.util.ArrayList;
 import java.util.HashMap;
