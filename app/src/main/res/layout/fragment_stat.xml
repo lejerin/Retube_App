@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/statBackground"
-    tools:context=".fragment.StatFragment">
+    tools:context=".ui.stat.StatFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -731,7 +731,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/view6" />
 
 
-                <com.example.retube.Helper.CircleIndicator
+                <com.example.retube.helper.CircleIndicator
                     android:id="@+id/indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

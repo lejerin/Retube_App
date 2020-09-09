@@ -10,12 +10,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.retube.R
-import com.example.retube.activity.PlayActivity
 import com.example.retube.data.network.YoutubeApi
 import com.example.retube.data.repositories.YoutubeRepository
 import com.example.retube.data.models.Channel
 import com.example.retube.data.models.HomeMostPopular
 import com.example.retube.ui.RecyclerViewClickListener
+import com.example.retube.ui.play.PlayActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 
 

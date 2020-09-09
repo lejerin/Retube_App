@@ -1,4 +1,4 @@
-package com.example.retube.fragment;
+package com.example.retube.ui.stat;
 
 
 import android.content.Intent;
@@ -18,8 +18,8 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.retube.Helper.CircleIndicator;
-import com.example.retube.Helper.MyValueFormatter;
+import com.example.retube.helper.CircleIndicator;
+import com.example.retube.helper.MyValueFormatter;
 import com.example.retube.R;
 import com.example.retube.data.Realm.Category;
 import com.example.retube.data.Realm.RealmSearch;
@@ -28,8 +28,6 @@ import com.example.retube.data.Realm.ViewChannel;
 import com.example.retube.data.Realm.ViewVideo;
 import com.example.retube.data.GetDataService;
 import com.example.retube.data.network.RetrofitInstance;
-import com.example.retube.activity.RecommendActivity;
-import com.example.retube.adapter.StatChannelVPAdapter;
 import com.example.retube.data.models.Channel;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;

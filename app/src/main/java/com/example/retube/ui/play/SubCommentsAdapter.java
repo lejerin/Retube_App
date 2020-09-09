@@ -1,4 +1,4 @@
-package com.example.retube.adapter;
+package com.example.retube.ui.play;
 
 import android.content.Context;
 import android.util.Log;

@@ -6,7 +6,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.retube.Helper.WiseNLUExample
+import com.example.retube.helper.WiseNLUExample
 import com.example.retube.data.Realm.RealmSearch
 import com.example.retube.data.models.search.Item
 import com.example.retube.data.models.viewCount

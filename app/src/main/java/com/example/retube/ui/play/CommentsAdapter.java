@@ -1,4 +1,4 @@
-package com.example.retube.adapter;
+package com.example.retube.ui.play;
 
 import android.content.Context;
 import android.util.Log;
@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.retube.Helper.TransferPapago;
+import com.example.retube.helper.TransferPapago;
 import com.example.retube.R;
 import com.example.retube.data.GetDataService;
 import com.example.retube.data.network.RetrofitInstance;

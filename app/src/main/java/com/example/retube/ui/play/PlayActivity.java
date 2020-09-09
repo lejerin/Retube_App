@@ -1,4 +1,5 @@
-package com.example.retube.activity;
+package com.example.retube.ui.play;
+
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.retube.Helper.DetectPapago;
+import com.example.retube.helper.DetectPapago;
 import com.example.retube.R;
 import com.example.retube.data.Realm.Category;
 import com.example.retube.data.Realm.User;
@@ -24,7 +25,6 @@ import com.example.retube.data.Realm.ViewChannel;
 import com.example.retube.data.Realm.ViewVideo;
 import com.example.retube.data.GetDataService;
 import com.example.retube.data.network.RetrofitInstance;
-import com.example.retube.adapter.CommentsAdapter;
 import com.example.retube.data.models.Video;
 import com.example.retube.data.models.comments.Comment;
 import com.google.android.youtube.player.YouTubeBaseActivity;
@@ -670,14 +670,14 @@ public class PlayActivity extends YouTubeBaseActivity {
                 .findFirst();
 
         if(viewChannel != null){
-                realm.executeTransaction(new Realm.Transaction() {
-                    @Override
-                    public void execute(Realm realm) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
 
-                        viewChannel.setChannelCount(viewChannel.getChannelCount() + 1);
+                    viewChannel.setChannelCount(viewChannel.getChannelCount() + 1);
 
-                    }
-                });
+                }
+            });
 
 
         }else{
@@ -815,7 +815,7 @@ public class PlayActivity extends YouTubeBaseActivity {
                 user.setViewCount(user.getViewCount() + 1);
                 int v = 0;
                 try {
-                     v = viewTime();
+                    v = viewTime();
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -915,4 +915,5 @@ public class PlayActivity extends YouTubeBaseActivity {
 
     }
 }
+
 

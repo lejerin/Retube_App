@@ -1,4 +1,4 @@
-package com.example.retube.activity;
+package com.example.retube.ui.stat;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
