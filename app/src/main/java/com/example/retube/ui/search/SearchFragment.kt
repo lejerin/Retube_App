@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.retube.R
 import com.example.retube.activity.PlayActivity
+import com.example.retube.data.models.search.Item
 import com.example.retube.data.network.YoutubeApi
 import com.example.retube.data.repositories.YoutubeRepository
 import com.example.retube.databinding.FragmentSearchBinding
-import com.example.retube.data.models.search.Item
 import com.example.retube.ui.RecyclerViewClickListener
 import com.example.retube.util.LinearLayoutManagerWrapper
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -142,6 +142,7 @@ class SearchFragment : Fragment(),
             }
         })
     }
+
 
 
 }

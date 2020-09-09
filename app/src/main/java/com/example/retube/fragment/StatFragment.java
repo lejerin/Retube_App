@@ -22,7 +22,7 @@ import com.example.retube.Helper.CircleIndicator;
 import com.example.retube.Helper.MyValueFormatter;
 import com.example.retube.R;
 import com.example.retube.data.Realm.Category;
-import com.example.retube.data.Realm.Search;
+import com.example.retube.data.Realm.RealmSearch;
 import com.example.retube.data.Realm.User;
 import com.example.retube.data.Realm.ViewChannel;
 import com.example.retube.data.Realm.ViewVideo;
@@ -70,7 +70,7 @@ public class StatFragment extends Fragment {
     boolean isPieChartShow = false;
     ScrollView scrollView;
 
-    RealmResults<Search> searches = null;
+    RealmResults<RealmSearch> searches = null;
     RealmResults<ViewVideo> viewVideos = null;
     Date today = new Date();
 
@@ -191,7 +191,7 @@ public class StatFragment extends Fragment {
                 switch (checkedId)
                 {
                     case R.id.radioDay:
-                        searches  = realm.where(Search.class)
+                        searches  = realm.where(RealmSearch.class)
                                 .greaterThanOrEqualTo("date",stringToDate("00:00:00", today))
                                 .lessThanOrEqualTo("date",stringToDate("23:59:59", today))
                                 .sort("count", Sort.DESCENDING).findAll();
@@ -203,7 +203,7 @@ public class StatFragment extends Fragment {
 
                         System.out.println("1주일전" + cal.getTime());
 
-                        searches  = realm.where(Search.class)
+                        searches  = realm.where(RealmSearch.class)
                                 .greaterThanOrEqualTo("date",stringToDate("00:00:00", cal.getTime()))
                                 .lessThanOrEqualTo("date",stringToDate("23:59:59",today))
                                 .sort("count", Sort.DESCENDING).findAll();
@@ -213,7 +213,7 @@ public class StatFragment extends Fragment {
                         calMonth.setTime(new Date());
                         calMonth.add(Calendar.MONTH, -1);
 
-                        searches  = realm.where(Search.class)
+                        searches  = realm.where(RealmSearch.class)
                                 .greaterThanOrEqualTo("date",stringToDate("00:00:00",calMonth.getTime()))
                                 .lessThanOrEqualTo("date",stringToDate("23:59:59",today))
                                 .sort("count", Sort.DESCENDING).findAll();
@@ -295,7 +295,7 @@ public class StatFragment extends Fragment {
         });
 
         //오늘 날짜 검색만
-        searches  = realm.where(Search.class)
+        searches  = realm.where(RealmSearch.class)
                 .greaterThanOrEqualTo("date",stringToDate("00:00:00", today))
                 .lessThanOrEqualTo("date",stringToDate("23:59:59", today))
                 .sort("count", Sort.DESCENDING).findAll();

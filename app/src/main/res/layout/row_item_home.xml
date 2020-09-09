@@ -8,7 +8,7 @@
         <import type="android.view.View" />
         <variable
             name="home"
-            type="com.example.retube.models.HomeMostPopular.Item" />
+            type="com.example.retube.data.models.HomeMostPopular.Item" />
         <variable
             name="subtitle"
             type="String" />

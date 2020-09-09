@@ -4,7 +4,7 @@ import java.util.Date;
 
 import io.realm.RealmObject;
 
-public class Search extends RealmObject {
+public class RealmSearch extends RealmObject {
 
 
     private String noun;

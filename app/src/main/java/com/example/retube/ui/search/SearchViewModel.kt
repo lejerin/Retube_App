@@ -6,11 +6,17 @@ import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.retube.data.repositories.YoutubeRepository
+import com.example.retube.Helper.WiseNLUExample
+import com.example.retube.data.Realm.RealmSearch
 import com.example.retube.data.models.search.Item
 import com.example.retube.data.models.viewCount
+import com.example.retube.data.repositories.YoutubeRepository
 import com.example.retube.util.Coroutines
+import io.realm.Realm
 import kotlinx.coroutines.Job
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class SearchViewModel(
     private val repository: YoutubeRepository
@@ -19,9 +25,11 @@ class SearchViewModel(
     private lateinit var job: Job
 
     var newSearchText = ""
+    private val wiseNLUExample = WiseNLUExample()
 
     fun find(view: View){
         view.hideKeyboard()
+        saveNoun((wiseNLUExample.getNoun(newSearchText)))
         getSearchDatas("snippet", 10, "relevance", "video",
             newSearchText,"none","AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0")
     }
@@ -84,6 +92,29 @@ class SearchViewModel(
                 }
             }
         )
+    }
+
+    fun saveNoun(list: List<String>){
+        val realm: Realm = Realm.getDefaultInstance()
+
+        for (i in 0..list.size-1){
+            val isRealmSearch: RealmSearch? =
+                realm.where(RealmSearch::class.java).equalTo("noun", list[i]).findFirst()
+            if (isRealmSearch != null){
+                realm.executeTransaction {
+                    isRealmSearch.setCount(isRealmSearch.getCount() + 1)
+                    isRealmSearch.setDate(Date())
+                }
+            }else{
+                realm.executeTransaction { realm ->
+                    val search: RealmSearch = realm.createObject(RealmSearch::class.java)
+                    search.setNoun(list[i])
+                    search.setCount(1)
+                    search.setDate(Date())
+                }
+            }
+        }
+
     }
 
 
