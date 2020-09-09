@@ -1,8 +1,7 @@
 package com.example.retube.data;
 
 import com.example.retube.models.Channel;
-import com.example.retube.models.HomeMostPopular;
-import com.example.retube.models.Search.Searchs;
+import com.example.retube.models.search.Searchs;
 import com.example.retube.models.Video;
 import com.example.retube.models.VideoStats.VideoStats;
 import com.example.retube.models.comments.Comment;
@@ -67,16 +66,6 @@ public interface GetDataService {
             @Query("key") String key,
             @Query("maxResults") int maxResults
     );
-//
-//    @GET("videos")
-//    Call<HomeMostPopular> getMostPopular(
-//            @Query("part") String part,
-//            @Query("fields") String fields,
-//            @Query("chart") String chart,
-//            @Query("key") String key,
-//            @Query("regionCode") String regionCode,
-//            @Query("maxResults") int maxResults
-//    );
 
     @GET("search")
     Call<Searchs> getSerchVideo(

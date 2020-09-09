@@ -12,9 +12,8 @@ import android.widget.ImageButton;
 import com.example.retube.R;
 import com.example.retube.data.GetDataService;
 import com.example.retube.data.network.RetrofitInstance;
-import com.example.retube.adapter.SearchAdapter;
-import com.example.retube.models.Search.Item;
-import com.example.retube.models.Search.Searchs;
+import com.example.retube.models.search.Item;
+import com.example.retube.models.search.Searchs;
 import com.example.retube.models.VideoStats.VideoStats;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class RecommendActivity extends AppCompatActivity {
 
     private List<Item> videoSearchList = new ArrayList<>();
     RecyclerView rv;
-    private SearchAdapter adapter;
+//    private SearchAdapter adapter;
     private LinearLayoutManager manager;
     private HashMap<Integer,Integer> viewCountList = new HashMap<Integer, Integer>();
     private int startNum = 0;
@@ -52,21 +51,21 @@ public class RecommendActivity extends AppCompatActivity {
         String keyword9 = intent.getExtras().getString("keyword9");
 
         rv = findViewById(R.id.rc_recyclerView);
-        adapter = new SearchAdapter(RecommendActivity.this,videoSearchList,viewCountList);
-        manager = new LinearLayoutManager(RecommendActivity.this);
-        rv.setAdapter(adapter);
-        rv.setLayoutManager(manager);
-
-        adapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View v, int pos) {
-
-                Intent intent = new Intent(RecommendActivity.this, PlayActivity.class);
-                intent.putExtra("videoID",videoSearchList.get(pos).getId().getVideoId());
-                startActivity(intent);
-
-            }
-        });
+//        adapter = new SearchAdapter(RecommendActivity.this,videoSearchList,viewCountList);
+//        manager = new LinearLayoutManager(RecommendActivity.this);
+//        rv.setAdapter(adapter);
+//        rv.setLayoutManager(manager);
+//
+//        adapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(View v, int pos) {
+//
+//                Intent intent = new Intent(RecommendActivity.this, PlayActivity.class);
+//                intent.putExtra("videoID",videoSearchList.get(pos).getId().getVideoId());
+//                startActivity(intent);
+//
+//            }
+//        });
 
 
 
@@ -111,7 +110,7 @@ public class RecommendActivity extends AppCompatActivity {
                     if(response.body()!=null){
 
                         videoSearchList.addAll(response.body().getItems());
-                        System.out.println("성공"+adapter.getItemCount());
+
                         getViewCounts();
                        // adapter.notifyDataSetChanged();
 
@@ -158,7 +157,7 @@ public class RecommendActivity extends AppCompatActivity {
                         viewCountList.put(pos, Integer.parseInt(response.body().getItems().get(0).getStatistics().getViewCount()));
 
 
-                        adapter.notifyDataSetChanged();
+                //        adapter.notifyDataSetChanged();
 
 //                        if(pos == videoSearchList.size()-1){
 //

@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment
 import com.example.retube.R
 
 import com.example.retube.fragment.StatFragment
-import com.example.retube.fragment.SearchFragment
 import com.example.retube.ui.home.HomeFragment
+import com.example.retube.ui.search.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {

@@ -18,4 +18,26 @@ class YoutubeRepository (
             api.getChannels(part,id,key,maxResults)
         }
 
+    //search
+    suspend fun getSearchData(part: String, maxResults: Int, order: String, type: String, q: String,
+                              safeSearch: String, key: String)
+            = apiRequest {
+        api.getSerchVideo(part, maxResults, order, type, q, safeSearch, key)
+
+    }
+
+    suspend fun getMoreSearchData(part: String, pageToken: String, maxResults: Int, order: String, type: String, q: String,
+                              safeSearch: String, key: String)
+            = apiRequest {
+        api.getMoreSerchVideo(part, pageToken, maxResults, order, type, q, safeSearch, key)
+
+    }
+
+    //조회수
+    suspend fun getViewDetailData(part: String, key: String, id: String)
+            = apiRequest {
+        api.getVideoDetail(part, key, id)
+
+    }
+
 }

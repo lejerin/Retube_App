@@ -44,7 +44,6 @@ class HomeFragment : Fragment() , RecyclerViewClickListener{
         rc_home.setHasFixedSize(true)
         rc_home.adapter = HomeAdapter(videoMostPopularList,channelList,this)
 
-
         val api = YoutubeApi()
         val repository =
             YoutubeRepository(api)
@@ -80,7 +79,6 @@ class HomeFragment : Fragment() , RecyclerViewClickListener{
 
         when(view){
             home_view -> {
-                System.out.println("시작")
                 val intent = Intent(activity, PlayActivity::class.java)
                 intent.putExtra("videoID", videoMostPopularList[pos].id)
                 startActivity(intent)
