@@ -4,12 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-<!--    <data>-->
-<!--        <variable-->
-<!--            name="PlayViewModel"-->
-<!--            type="com.example.retube.ui.search.SearchViewModel" />-->
+    <data>
+        <variable
+            name="PlayViewModel"
+            type="lej.happy.retube.ui.play.PlayViewModel" />
 
-<!--    </data>-->
+    </data>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,23 +17,14 @@
     android:layout_height="match_parent">
 
 
-<!--    <kr.co.prnd.YouTubePlayerView-->
-<!--        android:id="@+id/youtubePlay"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"  />-->
+        <FrameLayout
+            android:id="@+id/youtubePlay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"  />
 
-    <view
-        android:id="@+id/youtubePlay"
-        class="com.google.android.youtube.player.YouTubePlayerView"
-        id="@+id/view3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView2"
@@ -119,9 +110,9 @@
                 android:layout_marginTop="8dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/like"
-                android:tint="@color/gray"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/moreLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/moreLayout"
+                app:tint="@color/gray" />
 
             <TextView
                 android:id="@+id/likeCount"
@@ -141,7 +132,6 @@
                 android:layout_marginTop="8dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/dislike"
-                android:tint="@color/gray"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView2"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toTopOf="@+id/imageView2" />

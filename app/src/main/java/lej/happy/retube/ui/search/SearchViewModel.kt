@@ -68,9 +68,6 @@ class SearchViewModel(
             {
 
                 nextToken = it?.nextPageToken
-//                val arr = _searchdatas.value
-//                arr?.addAll(it!!.items)
-//                _searchdatas.value = arr
                 _searchdatas.value = it!!.items
                 System.out.println("loading more" + _searchdatas.value!!.size)
             }

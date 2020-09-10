@@ -13,12 +13,134 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import lej.happy.retube.data.models.comments.Comment;
 
 public class DetectPapago {
 
-    public String startDetect(String text) {
+    //현재 선택 언어 숫자 : 디폴트 -한국어
+    private int nowSelectedLanNum = 0;
+    //언어 선택 한국어, 영어, 일본어, 베트남어, 중국어 간체, 중국어 번체, 인도네시아어, 태국어, 독일어, 러시아어, 스페인어, 이탈리아어, 프랑스어
+    private List<Comment.Item> koComments = new ArrayList<>();
+    private List<Comment.Item> enComments = new ArrayList<>();
+    private List<Comment.Item> jaComments = new ArrayList<>();
+    private List<Comment.Item> viComments = new ArrayList<>();
+    private List<Comment.Item> zhCNComments = new ArrayList<>();
+    private List<Comment.Item> zhTWComments = new ArrayList<>();
+    private List<Comment.Item> idComments = new ArrayList<>();
+    private List<Comment.Item> thComments = new ArrayList<>();
+    private List<Comment.Item> deComments = new ArrayList<>();
+    private List<Comment.Item> ruComments = new ArrayList<>();
+    private List<Comment.Item> esComments = new ArrayList<>();
+    private List<Comment.Item> itComments = new ArrayList<>();
+    private List<Comment.Item> frComments = new ArrayList<>();
+
+
+    public List<Comment.Item> analyzeList(List<Comment.Item> item){
+
+        List<Comment.Item> list = new ArrayList<>();
+
+        Thread thread = new Thread()
+        {
+            public void run() {
+                for (int i = 0; i < item.size(); i++) {
+
+                    String before = item.get(i).getSnippet().getTopLevelComment().getSnippet().getTextOriginal();
+                    String code = startDetect(before);
+
+                    switch (code){
+                        case "ko":
+                            if(nowSelectedLanNum == 0) list.add(item.get(i));
+                            koComments.add(item.get(i));
+                            break;
+
+                        case "en":
+                            if(nowSelectedLanNum == 1) list.add(item.get(i));
+                            enComments.add(item.get(i));
+                            break;
+
+                        case "ja":
+                            if(nowSelectedLanNum == 2) list.add(item.get(i));
+                            jaComments.add(item.get(i));
+                            break;
+
+                        case "vi":
+                            if(nowSelectedLanNum == 3) list.add(item.get(i));
+                            viComments.add(item.get(i));
+                            break;
+
+                        case "zh-CN":
+                            if(nowSelectedLanNum == 4) list.add(item.get(i));
+                            zhCNComments.add(item.get(i));
+                            break;
+
+                        case "zh-TW":
+                            if(nowSelectedLanNum == 5) list.add(item.get(i));
+                            zhTWComments.add(item.get(i));
+                            break;
+
+                        case "id":
+                            if(nowSelectedLanNum == 6) list.add(item.get(i));
+                            idComments.add(item.get(i));
+                            break;
+
+                        case "th":
+                            if(nowSelectedLanNum == 7) list.add(item.get(i));
+                            thComments.add(item.get(i));
+                            break;
+                        case "de":
+                            if(nowSelectedLanNum == 8) list.add(item.get(i));
+                            deComments.add(item.get(i));
+                            break;
+
+                        case "ru":
+                            if(nowSelectedLanNum == 9) list.add(item.get(i));
+                            ruComments.add(item.get(i));
+                            break;
+
+                        case "es":
+                            if(nowSelectedLanNum == 10) list.add(item.get(i));
+                            esComments.add(item.get(i));
+                            break;
+
+                        case "it":
+                            if(nowSelectedLanNum == 11) list.add(item.get(i));
+                            itComments.add(item.get(i));
+                            break;
+
+                        case "fr":
+                            if(nowSelectedLanNum == 12) list.add(item.get(i));
+                            frComments.add(item.get(i));
+                            break;
+
+                        default:
+                            break;
+                    }
+
+
+
+
+                }
+
+            }
+        };
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+
+        return list;
+    }
+
+    private String startDetect(String text) {
          String clientId = "WpsgWfnfde9g6DQukZui";//애플리케이션 클라이언트 아이디값";
          String clientSecret = "CgL9FauIu0";//애플리케이션 클라이언트 시크릿값";
 
@@ -45,6 +167,42 @@ public class DetectPapago {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public List<Comment.Item> getLanList(int newSelectedLanNum){
+        nowSelectedLanNum = newSelectedLanNum;
+        switch (nowSelectedLanNum){
+            case 0:
+                //한국어
+                return koComments;
+            case 1:
+                return enComments;
+            case 2:
+                return (jaComments);
+            case 3:
+                return (viComments);
+            case 4:
+                return (zhCNComments);
+            case 5:
+                return (zhTWComments);
+            case 6:
+                return idComments;
+            case 7:
+                return (thComments);
+            case 8:
+                return (deComments);
+            case 9:
+                return (ruComments);
+            case 10:
+                return (esComments);
+            case 11:
+                return (itComments);
+            case 12:
+                return (frComments);
+
+        }
+
+        return koComments;
     }
 
     private String post(String apiUrl, Map<String, String> requestHeaders, String text){

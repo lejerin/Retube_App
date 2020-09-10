@@ -32,24 +32,7 @@ public interface GetDataService {
     );
 
 
-    @GET("commentThreads")
-    Call<Comment.Model> getCommentsData(
-            @Query("part") String part,
-            @Query("videoId") String videoId,
-            @Query("order") String order,
-            @Query("maxResults") int maxResults,
-            @Query("key") String key
-    );
 
-    @GET("commentThreads")
-    Call<Comment.Model> getMoreCommentData(
-            @Query("part") String part,
-            @Query("videoId") String videoId,
-            @Query("order") String order,
-            @Query("pageToken") String pageToken,
-            @Query("maxResults") int maxResults,
-            @Query("key") String key
-    );
 
 
     @GET("videos")

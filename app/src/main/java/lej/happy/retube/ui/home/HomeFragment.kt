@@ -28,8 +28,7 @@ class HomeFragment : Fragment() ,
     private val videoMostPopularList: MutableList<HomeMostPopular.Item> = mutableListOf()
     private var channelList: HashMap<Int, Channel.Item> = HashMap<Int, Channel.Item>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)

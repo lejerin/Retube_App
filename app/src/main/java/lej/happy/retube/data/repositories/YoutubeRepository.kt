@@ -40,4 +40,18 @@ class YoutubeRepository (
 
     }
 
+    //댓글
+    suspend fun getCommentData(part: String,  videoId: String, order: String, maxResults: Int, key: String)
+            = apiRequest {
+        api.getCommentsData(part, videoId, order, maxResults, key)
+
+    }
+
+    suspend fun getMoreCommentData(part: String,  videoId: String, order: String, pageToken: String,
+                                   maxResults: Int, key: String)
+            = apiRequest {
+        api.getMoreCommentData(part, videoId, order, pageToken, maxResults, key)
+
+    }
+
 }
