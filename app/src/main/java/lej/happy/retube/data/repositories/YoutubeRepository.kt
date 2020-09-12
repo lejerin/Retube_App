@@ -59,5 +59,11 @@ class YoutubeRepository (
             = apiRequest {
         api.getRepliesData(part, videoId , maxResults , key)
     }
+    
+    //비디오 자세한 정보
+    suspend fun getDetailVideo(part: String, key: String, fields: String, id: String)
+        = apiRequest {
+        api.getPlayVideo(part, key, fields, id)
+    }
 
 }

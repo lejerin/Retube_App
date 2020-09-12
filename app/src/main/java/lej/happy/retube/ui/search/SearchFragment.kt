@@ -33,7 +33,6 @@ class SearchFragment : Fragment(),
     private val videoSearchList: MutableList<Item> = mutableListOf()
     private val viewCountList = HashMap<Int, Int>()
 
-
     lateinit var layoutManager : LinearLayoutManagerWrapper
     private var lastVisibleItemPosition = 0
 

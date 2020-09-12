@@ -40,6 +40,23 @@ public class DetectPapago {
     private List<Comment.Item> frComments = new ArrayList<>();
 
 
+    public void removeData(){
+        koComments.clear();
+        enComments.clear();
+        jaComments.clear();
+        viComments.clear();
+        zhCNComments.clear();
+        zhTWComments.clear();
+        idComments.clear();
+        thComments.clear();
+        deComments.clear();
+        ruComments.clear();
+        esComments.clear();
+        zhTWComments.clear();
+        itComments.clear();
+        frComments.clear();
+    }
+
     public List<Comment.Item> analyzeList(List<Comment.Item> item){
 
         List<Comment.Item> list = new ArrayList<>();

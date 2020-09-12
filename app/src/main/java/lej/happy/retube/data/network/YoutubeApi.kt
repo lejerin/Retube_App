@@ -2,6 +2,7 @@ package lej.happy.retube.data.network
 
 import lej.happy.retube.data.models.Channel
 import lej.happy.retube.data.models.HomeMostPopular
+import lej.happy.retube.data.models.Video
 import lej.happy.retube.data.models.VideoStats.VideoStats
 import lej.happy.retube.data.models.comments.Comment
 import lej.happy.retube.data.models.comments.Replies
@@ -94,6 +95,16 @@ interface YoutubeApi {
         @Query("maxResults") maxResults: Int,
         @Query("key") key: String
     ): Response<Replies>
+
+
+    //플레이 비디오 자세한 정보
+    @GET("videos")
+    suspend fun getPlayVideo(
+        @Query("part") part: String,
+        @Query("key") key: String,
+        @Query("fields") fields: String,
+        @Query("id") id: String
+    ): Response<Video>
 
 
     companion object{

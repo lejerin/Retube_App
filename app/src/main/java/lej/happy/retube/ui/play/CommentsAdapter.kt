@@ -91,8 +91,6 @@ class CommentsAdapter (
 
             binding.commentdata = data
             binding.title = title
-//            binding.playViewModel = viewModel
-//            binding.pos = position-1
 
 
             //한글이면 번역보기 없애기
@@ -115,9 +113,9 @@ class CommentsAdapter (
 
 
             holder.recyclerviewMovieBinding.recommentBtn.setOnClickListener {
-                //다이얼로그 프래그먼트 만들기
+
                 listener.onRecyclerViewItemClick(holder.recyclerviewMovieBinding.recommentBtn, position-1)
-              //  viewModel.getRepliesDatas("snippet", data.id, 10, key, position-1)
+
             }
 
 

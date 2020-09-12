@@ -14,15 +14,6 @@ import retrofit2.http.Query;
 public interface GetDataService {
 
 
-    @GET("videos")
-    Call<Video> getPlayVideo(
-            @Query("part") String part,
-            @Query("key") String key,
-            @Query("fields") String fields,
-            @Query("id") String id
-    );
-
-
 
     @GET("videos")
     Call<VideoStats> getVideoDetail(
