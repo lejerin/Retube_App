@@ -4,6 +4,7 @@ import lej.happy.retube.data.models.Channel
 import lej.happy.retube.data.models.HomeMostPopular
 import lej.happy.retube.data.models.VideoStats.VideoStats
 import lej.happy.retube.data.models.comments.Comment
+import lej.happy.retube.data.models.comments.Replies
 import lej.happy.retube.data.models.search.Searchs
 import retrofit2.Call
 import retrofit2.Response
@@ -84,6 +85,15 @@ interface YoutubeApi {
         @Query("maxResults") maxResults: Int,
         @Query("key") key: String
     ): Response<Comment.Model>
+
+    //대댓글
+    @GET("comments")
+    suspend fun getRepliesData(
+        @Query("part") part: String,
+        @Query("parentId") videoId: String,
+        @Query("maxResults") maxResults: Int,
+        @Query("key") key: String
+    ): Response<Replies>
 
 
     companion object{

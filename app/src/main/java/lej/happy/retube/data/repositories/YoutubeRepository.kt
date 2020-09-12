@@ -54,4 +54,10 @@ class YoutubeRepository (
 
     }
 
+    //대댓글
+    suspend fun getRepliesData(part: String, videoId: String, maxResults: Int, key: String)
+            = apiRequest {
+        api.getRepliesData(part, videoId , maxResults , key)
+    }
+
 }

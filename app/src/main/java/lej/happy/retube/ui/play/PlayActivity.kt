@@ -17,10 +17,11 @@ import lej.happy.retube.data.models.comments.Comment
 import lej.happy.retube.data.network.YoutubeApi
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.databinding.ActivityPlayBinding
+import lej.happy.retube.ui.RecyclerViewClickListener
 import lej.happy.retube.util.LinearLayoutManagerWrapper
 
 
-class PlayActivity : AppCompatActivity() {
+class PlayActivity : AppCompatActivity() , RecyclerViewClickListener {
 
 
     private lateinit var factory: PlayViewModelFactory
@@ -46,7 +47,7 @@ class PlayActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManagerWrapper(this@PlayActivity, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = CommentsAdapter(this@PlayActivity, commentsList)
+        recyclerView.adapter = CommentsAdapter(commentsList, this)
 
         //영상 재생
         videoInit()
@@ -55,11 +56,14 @@ class PlayActivity : AppCompatActivity() {
         viewModel.commentsList.observe(this, Observer { newComment ->
 
             commentsList.addAll(newComment)
-            System.out.println("dd" + newComment.size )
             (recyclerView.adapter as CommentsAdapter).notifyDataSetChanged()
             loadingLayout.setVisibility(View.INVISIBLE)
 
         })
+
+//        viewModel.repliseList.observe(this, Observer { change ->
+//            recyclerView.adapter!!.notifyItemChanged(change.num + 1)
+//        })
 
     }
 
@@ -83,5 +87,10 @@ class PlayActivity : AppCompatActivity() {
             YoutubePlayFragment(videoid)
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.add(R.id.youtubePlay, newFragment).commit()
+    }
+
+    override fun onRecyclerViewItemClick(view: View, pos: Int) {
+        //프래그먼트 만들기
+        commentsList[pos].id
     }
 }

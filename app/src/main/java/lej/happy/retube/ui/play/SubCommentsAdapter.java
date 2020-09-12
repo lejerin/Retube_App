@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import lej.happy.retube.R;
@@ -26,7 +27,6 @@ import static android.content.ContentValues.TAG;
 
 public class SubCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context context;
     private List<Replies.Item> commentsList;
 
     private static final int TYPE_HEADER = 0;
@@ -35,8 +35,7 @@ public class SubCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private int allRepliesNum;
 
-    public SubCommentsAdapter(Context context, List<Replies.Item> videoDetailsList, int allRepliesNum) {
-        this.context = context;
+    public SubCommentsAdapter(List<Replies.Item> videoDetailsList, int allRepliesNum) {
         this.commentsList = videoDetailsList;
         this.allRepliesNum = allRepliesNum;
     }
@@ -48,8 +47,12 @@ public class SubCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         if (viewType == TYPE_ITEM) {
-            View view = LayoutInflater.from(context).inflate(R.layout.row_item_replies_comment, parent, false);
-            return new YoutubeHolder(view);
+            return new YoutubeHolder(DataBindingUtil.inflate(
+                    LayoutInflater.from(parent.getContext()),
+                    R.layout.row_item_replies_comment,
+                    parent,
+                    false
+            ).getRoot());
         }
         if(viewType == TYPE_HEADER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_item_replies_header, parent, false);
@@ -213,5 +216,9 @@ public class SubCommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             moreText = view.findViewById(R.id.moreCommentBtn);
 
         }
+    }
+
+    public void submitList(List<Replies.Item> data){
+        this.commentsList = data;
     }
 }

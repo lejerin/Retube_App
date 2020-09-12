@@ -23,17 +23,6 @@ public interface GetDataService {
     );
 
 
-    @GET("comments")
-    Call<Replies> getRepliesData(
-            @Query("part") String part,
-            @Query("parentId") String videoId,
-            @Query("maxResults") int maxResults,
-            @Query("key") String key
-    );
-
-
-
-
 
     @GET("videos")
     Call<VideoStats> getVideoDetail(

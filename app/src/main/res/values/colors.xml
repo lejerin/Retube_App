@@ -9,4 +9,5 @@
     <color name="divider">#EDEDED</color>
     <color name="statBackground">#FAFAFA</color>
     <color name="orange">#FFAC00</color>
+    <color name="transparent">#00000000</color>
 </resources>
