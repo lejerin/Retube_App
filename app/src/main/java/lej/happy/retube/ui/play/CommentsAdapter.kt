@@ -3,6 +3,7 @@ package lej.happy.retube.ui.play
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import lej.happy.retube.R
@@ -22,6 +23,7 @@ class CommentsAdapter (
         private const val VIEW_TYPE_DATA = 0;
         private const val VIEW_TYPE_PROGRESS = 1;
     }
+
 
     private var isNext : String? = null
     public fun setIsNext(str: String?){
@@ -45,7 +47,7 @@ class CommentsAdapter (
         }
         VIEW_TYPE_PROGRESS ->
         {//inflates progressbar layout
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.progress,parent,false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.row_item_footer,parent,false)
             ProgressViewHolder(view)
         }
         else -> throw IllegalArgumentException("Different View type")
@@ -76,13 +78,25 @@ class CommentsAdapter (
             }
         }
 
+        if( holder is ProgressViewHolder){
+
+            holder.moreCommentBtn.setOnClickListener {
+                listener.onRecyclerViewItemClick(holder.moreCommentBtn, -9)
+            }
+
+        }
+
     }
 
     inner class CommentsViewHolder(
         val recyclerviewMovieBinding: RowItemCommentBinding
     ) : RecyclerView.ViewHolder(recyclerviewMovieBinding.root)
 
-    inner class ProgressViewHolder(
-        itemView: View
-    ) : RecyclerView.ViewHolder(itemView)
+    inner class ProgressViewHolder(view: View) :
+        RecyclerView.ViewHolder(view) {
+        val moreCommentBtn: TextView = view.findViewById(R.id.moreCommentBtn)
+
+    }
+
+
 }

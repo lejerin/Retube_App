@@ -1,5 +1,6 @@
 package lej.happy.retube.ui.play
 
+import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -10,7 +11,8 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnScrollChangedListener
 import android.widget.AdapterView
 import android.widget.PopupMenu
-import android.widget.Toast
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -46,6 +48,7 @@ class CommentsFragment(val videoid: String) : Fragment(),
     private var lastVisibleItemPosition = 0
 
     private lateinit var binding: FragmentCommentsBinding
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -86,14 +89,12 @@ class CommentsFragment(val videoid: String) : Fragment(),
 
             //태그
             //db에 저장
-
             setData(videoData)
-
 
         })
 
         //댓글 불러오기
-        isLoding = true
+        onLodingDialog()
         viewModel.getCommentDatas(videoid, order,getString(R.string.api_key))
         viewModel.commentsList.observe(viewLifecycleOwner, Observer { newComment ->
 
@@ -109,24 +110,24 @@ class CommentsFragment(val videoid: String) : Fragment(),
             }
 
             isSetNum = false
-            isLoding = false
+            offLodingDialog()
 
         })
 
-        moreLayout.setOnClickListener(this)
-        sortBtn.setOnClickListener(this)
 
-        scrollView.viewTreeObserver.addOnScrollChangedListener(OnScrollChangedListener {
-            val view = scrollView.getChildAt(scrollView.childCount - 1) as View
-            val diff: Int = view.bottom - (scrollView.height + scrollView.scrollY)
-            System.out.println("바닥" + diff + "is Loding" + isLoding)
-            if (diff == 0 && !isLoding) {
-                viewModel.getCommentDatas(videoid, order,getString(R.string.api_key))
-            }
+        viewModel.findCount.observe(viewLifecycleOwner, Observer { newCount ->
+            binding.findCommentNum.text = newCount.toString() + "개 댓글을 찾았습니다"
+
         })
+
+        binding.moreLayout.setOnClickListener(this)
+        binding.sortBtn.setOnClickListener(this)
+        binding.stopGetCommentBtn.setOnClickListener(this)
+
 
         spinner2.setOnTouchListener(OnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_UP) {
+                offLodingDialog()
               viewModel.jobCancle()
             }
             false
@@ -140,6 +141,7 @@ class CommentsFragment(val videoid: String) : Fragment(),
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
+                onLodingDialog()
                 commentsList.clear()
                 isSetNum = true
                 viewModel.setSelectedLan(position)
@@ -149,6 +151,8 @@ class CommentsFragment(val videoid: String) : Fragment(),
     }
 
     private fun setData(video: Video){
+
+        System.out.println("데이터 설정")
 
         val data = video.items.get(0)
 
@@ -170,7 +174,14 @@ class CommentsFragment(val videoid: String) : Fragment(),
 
     override fun onRecyclerViewItemClick(view: View, pos: Int) {
 
-        (activity as PlayActivity).setRepliesFragment(commentsList[pos])
+        if(pos == -9){
+            System.out.println("바닥 요청")
+                onLodingDialog()
+                viewModel.getCommentDatas(videoid, order,getString(R.string.api_key))
+        }else{
+            (activity as PlayActivity).setRepliesFragment(commentsList[pos])
+        }
+
 
     }
 
@@ -184,6 +195,10 @@ class CommentsFragment(val videoid: String) : Fragment(),
             }
             sortBtn -> {
                 setSortBtn()
+            }
+            stopGetCommentBtn -> {
+                offLodingDialog()
+                viewModel.jobCancle()
             }
         }
     }
@@ -211,9 +226,7 @@ class CommentsFragment(val videoid: String) : Fragment(),
     }
 
     private fun setSortBtn(){
-        lastVisibleItemPosition = 0
-        commentsList.clear()
-        viewModel.resetCommentData()
+
 
         //creating a popup menu
         val popup = PopupMenu(context, sortBtn)
@@ -224,13 +237,21 @@ class CommentsFragment(val videoid: String) : Fragment(),
                 R.id.relative -> {
                     //handle menu1 click
                     order = "relevance"
-                    isLoding = true
+                    isSetNum = true
+                    lastVisibleItemPosition = 0
+                    commentsList.clear()
+                    viewModel.resetCommentData()
+                    onLodingDialog()
                     viewModel.getCommentDatas(videoid, order,getString(R.string.api_key))
                     true
                 }
                 R.id.newest -> {
                     order = "time"
-                    isLoding = true
+                    isSetNum = true
+                    lastVisibleItemPosition = 0
+                    commentsList.clear()
+                    viewModel.resetCommentData()
+                    onLodingDialog()
                     viewModel.getCommentDatas(videoid, order,getString(R.string.api_key))
                     true
                 }
@@ -239,6 +260,21 @@ class CommentsFragment(val videoid: String) : Fragment(),
         }
         popup.show()
     }
+
+
+    private fun onLodingDialog(){
+        isLoding = true
+        binding.findCommentNum.text = "0개 댓글을 찾았습니다"
+        binding.loadingLayout.visibility = View.VISIBLE
+
+    }
+
+    private fun offLodingDialog(){
+        isLoding = false
+        binding.loadingLayout.visibility = View.GONE
+    }
+
+
 
 
 

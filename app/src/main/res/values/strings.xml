@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Retube</string>
-    <string name="api_key">AIzaSyDuonNu-jgqpkjZvMq8Y_RKQHF6KmfeZ0g</string>
+    <string name="api_key">AIzaSyDDy3bLYFNDyZP7E5C4u8TZ_60F_BpL5J0</string>
     <string name="replies_count">답글 %s개</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
