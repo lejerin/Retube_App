@@ -3,9 +3,15 @@ package lej.happy.retube.ui.play
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import android.view.ViewTreeObserver.OnScrollChangedListener
+import android.widget.AdapterView
 import android.widget.PopupMenu
+import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -16,41 +22,62 @@ import lej.happy.retube.data.models.Video
 import lej.happy.retube.data.models.comments.Comment
 import lej.happy.retube.data.network.YoutubeApi
 import lej.happy.retube.data.repositories.YoutubeRepository
+import lej.happy.retube.databinding.FragmentCommentsBinding
 import lej.happy.retube.ui.RecyclerViewClickListener
 import lej.happy.retube.util.Converter
+import lej.happy.retube.util.LinearLayoutManagerWrapper
 
 
-class CommentsFragment(val videoid: String) : Fragment() , RecyclerViewClickListener,
-    View.OnClickListener {
+class CommentsFragment(val videoid: String) : Fragment(),
+    RecyclerViewClickListener , View.OnClickListener {
 
     private lateinit var factory: PlayViewModelFactory
     private lateinit var viewModel: PlayViewModel
 
-    private val commentsList: MutableList<Comment.Item> = ArrayList()
+    private val commentsList: MutableList<Comment.Item> = mutableListOf()
+    private var order = "relevance"
+
     private var clickTitle = false
     private var allcount = 0
-    private var order = "relevance"
+    private var isLoding = false
+    private var isSetNum = false
+
+    lateinit var layoutManager : LinearLayoutManagerWrapper
+    private var lastVisibleItemPosition = 0
+
+    private lateinit var binding: FragmentCommentsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_comments, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_comments, container, false)
+        binding.lifecycleOwner = this
+        return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.setHasFixedSize(true)
-        recyclerView.adapter = CommentsAdapter(commentsList,this)
+        //검색 버튼 클릭 -> 데이터 불러오기
+        //데이터 갖고온 뒤 조회수 불러오기
+        //스크롤 시 다음 쿼리 요청
+
+        layoutManager = LinearLayoutManagerWrapper(context, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.setHasFixedSize(false)
+        recyclerView.adapter = CommentsAdapter(commentsList, this)
+
+
 
         val api = YoutubeApi()
         val repository =
             YoutubeRepository(api)
         factory = PlayViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(PlayViewModel::class.java)
+
+        binding.playViewModel = viewModel
+
 
         //비디오 정보 가져오기
         viewModel.getDetailVideo("snippet,statistics",
@@ -59,24 +86,66 @@ class CommentsFragment(val videoid: String) : Fragment() , RecyclerViewClickList
 
             //태그
             //db에 저장
+
             setData(videoData)
 
 
         })
 
         //댓글 불러오기
+        isLoding = true
         viewModel.getCommentDatas(videoid, order,getString(R.string.api_key))
         viewModel.commentsList.observe(viewLifecycleOwner, Observer { newComment ->
 
+
+            (recyclerView.adapter as CommentsAdapter).setIsNext(viewModel.nextToken)
+            val postionstart = commentsList.size +1
             commentsList.addAll(newComment)
-            (recyclerView.adapter as CommentsAdapter).notifyDataSetChanged()
+
+            if(isSetNum){
+                recyclerView.adapter!!.notifyDataSetChanged()
+            }else{
+                recyclerView.adapter!!.notifyItemRangeInserted(postionstart, commentsList.size)
+            }
+
+            isSetNum = false
+            isLoding = false
 
         })
 
         moreLayout.setOnClickListener(this)
         sortBtn.setOnClickListener(this)
 
+        scrollView.viewTreeObserver.addOnScrollChangedListener(OnScrollChangedListener {
+            val view = scrollView.getChildAt(scrollView.childCount - 1) as View
+            val diff: Int = view.bottom - (scrollView.height + scrollView.scrollY)
+            System.out.println("바닥" + diff + "is Loding" + isLoding)
+            if (diff == 0 && !isLoding) {
+                viewModel.getCommentDatas(videoid, order,getString(R.string.api_key))
+            }
+        })
 
+        spinner2.setOnTouchListener(OnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+              viewModel.jobCancle()
+            }
+            false
+        })
+
+
+        spinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
+                commentsList.clear()
+                isSetNum = true
+                viewModel.setSelectedLan(position)
+            }
+
+        }
     }
 
     private fun setData(video: Video){
@@ -96,6 +165,27 @@ class CommentsFragment(val videoid: String) : Fragment() , RecyclerViewClickList
 
         commentNum.text = "댓글 " + Converter.getNumlength(data.statistics.commentCount)
 
+    }
+
+
+    override fun onRecyclerViewItemClick(view: View, pos: Int) {
+
+        (activity as PlayActivity).setRepliesFragment(commentsList[pos])
+
+    }
+
+
+
+    override fun onClick(v: View?) {
+        when(v){
+
+            moreLayout -> {
+                clickMoreLayout()
+            }
+            sortBtn -> {
+                setSortBtn()
+            }
+        }
     }
 
     private fun clickMoreLayout(){
@@ -121,6 +211,7 @@ class CommentsFragment(val videoid: String) : Fragment() , RecyclerViewClickList
     }
 
     private fun setSortBtn(){
+        lastVisibleItemPosition = 0
         commentsList.clear()
         viewModel.resetCommentData()
 
@@ -133,11 +224,13 @@ class CommentsFragment(val videoid: String) : Fragment() , RecyclerViewClickList
                 R.id.relative -> {
                     //handle menu1 click
                     order = "relevance"
+                    isLoding = true
                     viewModel.getCommentDatas(videoid, order,getString(R.string.api_key))
                     true
                 }
                 R.id.newest -> {
                     order = "time"
+                    isLoding = true
                     viewModel.getCommentDatas(videoid, order,getString(R.string.api_key))
                     true
                 }
@@ -148,21 +241,5 @@ class CommentsFragment(val videoid: String) : Fragment() , RecyclerViewClickList
     }
 
 
-    override fun onRecyclerViewItemClick(view: View, pos: Int) {
 
-        (activity as PlayActivity).setRepliesFragment(commentsList[pos])
-
-    }
-
-    override fun onClick(v: View?) {
-        when(v){
-
-            moreLayout -> {
-                clickMoreLayout()
-            }
-            sortBtn -> {
-                setSortBtn()
-            }
-        }
-    }
 }

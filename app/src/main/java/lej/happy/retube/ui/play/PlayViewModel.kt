@@ -24,13 +24,14 @@ class PlayViewModel(
     val commentsList : LiveData<List<Comment.Item>>
         get() = _commentsList
 
-    private var nextToken: String? = null
+    var nextToken: String? = null
     private var firstCommentToken = true
 
     private val list: MutableList<Comment.Item> = ArrayList()
     private var isAdd = false
 
     fun resetCommentData(){
+        list.clear()
         detectPapago.removeData()
         isAdd = false
         nextToken = null
@@ -40,6 +41,9 @@ class PlayViewModel(
     fun getCommentDatas(videoId: String, order: String, key: String){
 
         if(!isAdd) list.clear()
+        System.out.println("요청")
+
+        job.cancel()
 
         job = Coroutines.ioThenMain(
             {
@@ -65,6 +69,7 @@ class PlayViewModel(
                 //총 10개 이상 될 때 까지 반복
                 if(list.size >= 10){
                     _commentsList.value = list
+                    System.out.println("요청결과 " + list.size)
                     isAdd = false
                 }else{
                     isAdd = true
@@ -74,6 +79,17 @@ class PlayViewModel(
             }
         )
 
+    }
+
+    fun jobCancle(){
+        job.cancel()
+        _commentsList.value = list
+        isAdd = false
+    }
+
+
+    fun setSelectedLan(num: Int){
+        _commentsList.value = detectPapago.getLanList(num);
     }
 
 
