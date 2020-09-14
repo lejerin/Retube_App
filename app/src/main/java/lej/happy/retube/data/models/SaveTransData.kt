@@ -4,7 +4,6 @@ import lej.happy.retube.data.models.comments.Replies
 
 //댓글 있는지, 댓글 선택했는지, 번역 있는지, 번역 선택했는지, 댓글 리스트, 번역 리스트
 data class SaveTransData(
-    var isSaveTrans: Boolean = false,
     var isSelectTrans: Boolean = false,
     val transText: String = ""
 )

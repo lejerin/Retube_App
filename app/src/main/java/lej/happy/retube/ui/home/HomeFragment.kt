@@ -50,7 +50,7 @@ class HomeFragment : Fragment() ,
         factory = HomeViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
         viewModel.getHomeDatas("snippet,statistics","items(id,snippet(title,thumbnails,publishedAt,channelId,channelTitle),statistics)",
-            "mostPopular", getString(R.string.api_key),"KR",3)
+            "mostPopular", getString(R.string.api_key),"KR",20)
         viewModel.homedatas.observe(viewLifecycleOwner, Observer { home ->
 
             videoMostPopularList.clear()

@@ -3,7 +3,7 @@ package lej.happy.retube.ui.play
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import lej.happy.retube.data.repositories.YoutubeRepository
-import lej.happy.retube.ui.search.SearchViewModel
+import lej.happy.retube.ui.play.comments.CommentsViewModel
 
 
 class PlayViewModelFactory(
@@ -11,7 +11,7 @@ class PlayViewModelFactory(
 ) : ViewModelProvider.NewInstanceFactory(){
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return PlayViewModel(repository) as T
+        return CommentsViewModel(repository) as T
     }
 
 }

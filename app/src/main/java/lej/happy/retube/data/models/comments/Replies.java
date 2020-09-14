@@ -8,6 +8,18 @@ import java.util.List;
 
 public class Replies {
 
+    @SerializedName("nextPageToken")
+    @Expose
+    private String nextPageToken;
+
+    public String getNextPageToken() {
+        return nextPageToken;
+    }
+
+    public void setNextPageToken(String nextPageToken) {
+        this.nextPageToken = nextPageToken;
+    }
+
     @SerializedName("kind")
     @Expose
     private String kind;

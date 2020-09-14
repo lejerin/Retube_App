@@ -9,6 +9,9 @@
         <variable
             name="repliesdata"
             type="lej.happy.retube.data.models.comments.Replies.Item" />
+        <variable
+            name="title"
+            type="String" />
     </data>
 
 
@@ -24,6 +27,7 @@
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            app:image="@{repliesdata.snippet.authorProfileImageUrl}"
             android:id="@+id/commentImg"
             android:layout_marginTop="10dp"
             android:layout_width="30dp"
@@ -42,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:textSize="13dp"
                 android:layout_height="wrap_content"
-                android:text="Title" />
+                android:text="@{title}" />
 
             <TextView
                 android:id="@+id/comment"
@@ -50,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Sub" />
+                android:text="@{repliesdata.snippet.textDisplay}" />
 
 
             <LinearLayout
@@ -60,24 +64,24 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:tint="@color/gray"
                     android:src="@drawable/like"
                     android:layout_width="15dp"
-                    android:layout_height="15dp"/>
+                    android:layout_height="15dp"
+                    app:tint="@color/gray" />
 
                 <TextView
                     android:layout_marginLeft="5dp"
                     android:id="@+id/commentLikeNum"
-                    android:text="0"
+                    android:text="@{repliesdata.snippet.likeCount.toString()}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <ImageView
-                    android:tint="@color/gray"
                     android:layout_marginLeft="15dp"
                     android:src="@drawable/dislike"
                     android:layout_width="15dp"
-                    android:layout_height="15dp"/>
+                    android:layout_height="15dp"
+                    app:tint="@color/gray" />
 
                 <TextView
                     android:layout_marginLeft="5dp"

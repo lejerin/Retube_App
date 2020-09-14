@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import lej.happy.retube.R
 import lej.happy.retube.data.models.comments.Comment
+import lej.happy.retube.ui.play.comments.CommentsFragment
 import lej.happy.retube.ui.play.replies.RepliesFragment
 
 
@@ -24,7 +25,8 @@ class PlayActivity : AppCompatActivity() {
         videoInit()
 
         //댓글 프래그먼트
-        val commentFragment: Fragment = CommentsFragment(videoid)
+        val commentFragment: Fragment =
+            CommentsFragment(videoid)
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.add(R.id.comment_layout, commentFragment).commit()
 

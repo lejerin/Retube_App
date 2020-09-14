@@ -25,7 +25,7 @@ class SearchAdapter (
     }
 
     private var isNext : String? = null
-    public fun setIsNext(str: String?){
+    fun setIsNext(str: String?){
         isNext = str
     }
 

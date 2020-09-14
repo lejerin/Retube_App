@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import lej.happy.retube.R
 import lej.happy.retube.data.models.comments.Replies
-import lej.happy.retube.ui.play.replies.SubCommentsAdapter
+
 
 @BindingAdapter("image")
 fun loadImageview(view : ImageView, url: String){
@@ -23,15 +23,14 @@ fun loadImageview(view : ImageView, url: String){
 @BindingAdapter("listData")
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<Replies.Item>?){
     if(data != null){
-        if(recyclerView.adapter == null){
-            recyclerView.adapter =
-                SubCommentsAdapter(
-                    data,
-                    data.size
-                )
-        }
-        val adapter = recyclerView.adapter as SubCommentsAdapter
-        adapter.submitList(data)
+//        if(recyclerView.adapter == null){
+//            recyclerView.adapter =
+//                RepliesAdapter(
+//                    data
+//                )
+//        }
+//        val adapter = recyclerView.adapter as RepliesAdapter
+//        adapter.submitList(data)
     }
 
 }

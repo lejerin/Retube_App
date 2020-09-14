@@ -1,6 +1,5 @@
-package lej.happy.retube.ui.play
+package lej.happy.retube.ui.play.comments
 
-import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -8,11 +7,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnScrollChangedListener
 import android.widget.AdapterView
 import android.widget.PopupMenu
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -26,6 +22,8 @@ import lej.happy.retube.data.network.YoutubeApi
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.databinding.FragmentCommentsBinding
 import lej.happy.retube.ui.RecyclerViewClickListener
+import lej.happy.retube.ui.play.PlayActivity
+import lej.happy.retube.ui.play.PlayViewModelFactory
 import lej.happy.retube.util.Converter
 import lej.happy.retube.util.LinearLayoutManagerWrapper
 
@@ -34,7 +32,7 @@ class CommentsFragment(val videoid: String) : Fragment(),
     RecyclerViewClickListener , View.OnClickListener {
 
     private lateinit var factory: PlayViewModelFactory
-    private lateinit var viewModel: PlayViewModel
+    private lateinit var viewModel: CommentsViewModel
 
     private val commentsList: MutableList<Comment.Item> = mutableListOf()
     private var order = "relevance"
@@ -42,7 +40,7 @@ class CommentsFragment(val videoid: String) : Fragment(),
     private var clickTitle = false
     private var allcount = 0
     private var isLoding = false
-    private var isSetNum = false
+    private var isSetNum = true
 
     lateinit var layoutManager : LinearLayoutManagerWrapper
     private var lastVisibleItemPosition = 0
@@ -69,7 +67,8 @@ class CommentsFragment(val videoid: String) : Fragment(),
         layoutManager = LinearLayoutManagerWrapper(context, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(false)
-        recyclerView.adapter = CommentsAdapter(commentsList, this)
+        recyclerView.adapter =
+            CommentsAdapter(commentsList, this)
 
 
 
@@ -77,7 +76,7 @@ class CommentsFragment(val videoid: String) : Fragment(),
         val repository =
             YoutubeRepository(api)
         factory = PlayViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory).get(PlayViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory).get(CommentsViewModel::class.java)
 
         binding.playViewModel = viewModel
 
@@ -98,19 +97,22 @@ class CommentsFragment(val videoid: String) : Fragment(),
         viewModel.getCommentDatas(videoid, order,getString(R.string.api_key))
         viewModel.commentsList.observe(viewLifecycleOwner, Observer { newComment ->
 
+            if(newComment.size >= 8){
 
-            (recyclerView.adapter as CommentsAdapter).setIsNext(viewModel.nextToken)
-            val postionstart = commentsList.size +1
-            commentsList.addAll(newComment)
+                System.out.println("데이터 갱신")
+                (recyclerView.adapter as CommentsAdapter).setIsNext(viewModel.nextToken)
+                val postionstart = commentsList.size +1
+                commentsList.addAll(newComment)
 
-            if(isSetNum){
-                recyclerView.adapter!!.notifyDataSetChanged()
-            }else{
-                recyclerView.adapter!!.notifyItemRangeInserted(postionstart, commentsList.size)
+                if(isSetNum){
+                    recyclerView.adapter!!.notifyDataSetChanged()
+                }else{
+                    recyclerView.adapter!!.notifyItemRangeInserted(postionstart, commentsList.size)
+                }
+
+                isSetNum = false
+                offLodingDialog()
             }
-
-            isSetNum = false
-            offLodingDialog()
 
         })
 
@@ -144,6 +146,7 @@ class CommentsFragment(val videoid: String) : Fragment(),
                 onLodingDialog()
                 commentsList.clear()
                 isSetNum = true
+                (recyclerView.adapter as CommentsAdapter).setSourceTarget(position)
                 viewModel.setSelectedLan(position)
             }
 
@@ -272,6 +275,7 @@ class CommentsFragment(val videoid: String) : Fragment(),
     private fun offLodingDialog(){
         isLoding = false
         binding.loadingLayout.visibility = View.GONE
+        System.out.println("숨기기")
     }
 
 

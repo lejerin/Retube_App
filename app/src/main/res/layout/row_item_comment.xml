@@ -9,12 +9,6 @@
         <variable
             name="commentdata"
             type="lej.happy.retube.data.models.comments.Comment.Item" />
-<!--        <variable-->
-<!--            name="playViewModel"-->
-<!--            type="lej.happy.retube.ui.play.PlayViewModel" />-->
-<!--        <variable-->
-<!--            name="pos"-->
-<!--            type="int" />-->
         <variable
             name="title"
             type="String" />
@@ -80,7 +74,6 @@
                 android:layout_marginTop="5dp" />
 
 
-
             <LinearLayout
                 android:layout_marginVertical="5dp"
                 android:orientation="horizontal"
@@ -89,10 +82,10 @@
 
                 <ImageView
                     android:layout_marginTop="1dp"
-                    android:tint="@color/gray"
                     android:src="@drawable/like"
                     android:layout_width="15dp"
-                    android:layout_height="15dp"/>
+                    android:layout_height="15dp"
+                    app:tint="@color/gray" />
 
                 <TextView
                     android:layout_marginLeft="5dp"
@@ -103,11 +96,11 @@
 
                 <ImageView
                     android:layout_marginTop="3dp"
-                    android:tint="@color/gray"
                     android:layout_marginLeft="15dp"
                     android:src="@drawable/dislike"
                     android:layout_width="15dp"
-                    android:layout_height="15dp"/>
+                    android:layout_height="15dp"
+                    app:tint="@color/gray" />
 
                 <TextView
                     android:layout_marginLeft="5dp"
@@ -118,11 +111,11 @@
 
                 <ImageView
                     android:layout_marginTop="3dp"
-                    android:tint="@color/gray"
                     android:layout_marginLeft="15dp"
                     android:src="@drawable/message"
                     android:layout_width="15dp"
-                    android:layout_height="15dp"/>
+                    android:layout_height="15dp"
+                    app:tint="@color/gray" />
 
                 <TextView
                     android:layout_marginLeft="5dp"

@@ -7,7 +7,7 @@
     <data>
         <variable
             name="PlayViewModel"
-            type="lej.happy.retube.ui.play.PlayViewModel" />
+            type="lej.happy.retube.ui.play.comments.CommentsViewModel" />
 
     </data>
 

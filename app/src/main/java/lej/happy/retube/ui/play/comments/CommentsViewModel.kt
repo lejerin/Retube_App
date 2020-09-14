@@ -1,20 +1,18 @@
-package lej.happy.retube.ui.play
+package lej.happy.retube.ui.play.comments
 
-import android.os.Handler
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
 import lej.happy.retube.data.models.Video
 import lej.happy.retube.data.models.comments.Comment
-import lej.happy.retube.data.models.viewCount
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.helper.DetectPapago
 import lej.happy.retube.util.Coroutines
 import java.util.*
 
 
-class PlayViewModel(
+class CommentsViewModel(
     private val repository: YoutubeRepository
 ) : ViewModel() {
 
@@ -58,14 +56,12 @@ class PlayViewModel(
             {
 
                 nextToken = it?.getnextPageToken()
-
                 //언어 체크 한 뒤 배열에 넣기
                 CoroutineScope(Job() + Dispatchers.Main).launch(Dispatchers.Default) {
                     async {
                         list.addAll(detectPapago.analyzeList(it?.items))
                     }.await()
                     withContext(Dispatchers.Main) {
-                        // some UI thread work for when the background work is done
                         _findCount.value = list.size
                         //총 8개 이상 될 때 까지 반복
                         if(list.size >= 8){
@@ -102,9 +98,9 @@ class PlayViewModel(
     }
 
     fun setSelectedLan(num: Int){
+        list.clear()
         _commentsList.value = detectPapago.getLanList(num);
     }
-
 
 
     private val _videoInfo = MutableLiveData<Video>()
@@ -112,12 +108,10 @@ class PlayViewModel(
         get() = _videoInfo
 
     fun getDetailVideo(part: String, key: String, fields: String, id: String){
-        System.out.println("출력")
 
         job = Coroutines.ioThenMainWithNum(
             { repository.getDetailVideo(part, key, fields, id) },
             {
-
                 if (it != null) {
                     _videoInfo.value = it
                 }

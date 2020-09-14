@@ -88,6 +88,7 @@ interface YoutubeApi {
     ): Response<Comment.Model>
 
     //대댓글
+
     @GET("comments")
     suspend fun getRepliesData(
         @Query("part") part: String,
@@ -96,6 +97,14 @@ interface YoutubeApi {
         @Query("key") key: String
     ): Response<Replies>
 
+    @GET("comments")
+    suspend fun getMoreRepliesData(
+        @Query("part") part: String,
+        @Query("pageToken") pageToken: String,
+        @Query("parentId") videoId: String,
+        @Query("maxResults") maxResults: Int,
+        @Query("key") key: String
+    ): Response<Replies>
 
     //플레이 비디오 자세한 정보
     @GET("videos")
