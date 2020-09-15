@@ -5,10 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import lej.happy.retube.R
 
-import lej.happy.retube.ui.stat.StatFragment
 import lej.happy.retube.ui.home.HomeFragment
 import lej.happy.retube.ui.search.SearchFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import lej.happy.retube.ui.statistic.StatFragment
 
 class MainActivity : AppCompatActivity() {
     private val homeFragment: HomeFragment = HomeFragment()

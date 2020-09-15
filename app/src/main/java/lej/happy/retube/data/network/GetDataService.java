@@ -19,13 +19,7 @@ public interface GetDataService {
             @Query("id") String id
     );
 
-    @GET("channels")
-    Call<Channel> getChannels(
-            @Query("part") String part,
-            @Query("id") String id,
-            @Query("key") String key,
-            @Query("maxResults") int maxResults
-    );
+
 
     @GET("search")
     Call<Searches> getSerchVideo(

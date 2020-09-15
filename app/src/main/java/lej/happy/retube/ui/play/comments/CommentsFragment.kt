@@ -81,14 +81,28 @@ class CommentsFragment(val videoid: String) : Fragment(),
         binding.playViewModel = viewModel
 
 
+        viewModel.saveUserData()
+
         //비디오 정보 가져오기
         viewModel.getDetailVideo("snippet,statistics",
             getString(R.string.api_key), "items(id,snippet(title,description,publishedAt,categoryId,channelId,channelTitle,tags),statistics)",videoid)
         viewModel.videoInfo.observe(viewLifecycleOwner, Observer { videoData ->
 
-            //태그
             //db에 저장
             setData(videoData)
+
+        })
+
+        //태그 정보 가져오기
+        viewModel.tag.observe(viewLifecycleOwner, Observer { tags ->
+
+            if(!tags.isNullOrEmpty()){
+                for (i in tags.indices) {
+                    binding.tagText.text = binding.tagText.text.toString() + " #" + tags[i]
+                }
+            }else{
+                binding.tagText.visibility = View.GONE
+            }
 
         })
 
@@ -99,7 +113,6 @@ class CommentsFragment(val videoid: String) : Fragment(),
 
             if(newComment.size >= 8){
 
-                System.out.println("데이터 갱신")
                 (recyclerView.adapter as CommentsAdapter).setIsNext(viewModel.nextToken)
                 val postionstart = commentsList.size +1
                 commentsList.addAll(newComment)
@@ -155,8 +168,6 @@ class CommentsFragment(val videoid: String) : Fragment(),
 
     private fun setData(video: Video){
 
-        System.out.println("데이터 설정")
-
         val data = video.items.get(0)
 
         title.text = data.snippet.title
@@ -178,7 +189,6 @@ class CommentsFragment(val videoid: String) : Fragment(),
     override fun onRecyclerViewItemClick(view: View, pos: Int) {
 
         if(pos == -9){
-            System.out.println("바닥 요청")
                 onLodingDialog()
                 viewModel.getCommentDatas(videoid, order,getString(R.string.api_key))
         }else{
@@ -275,7 +285,6 @@ class CommentsFragment(val videoid: String) : Fragment(),
     private fun offLodingDialog(){
         isLoding = false
         binding.loadingLayout.visibility = View.GONE
-        System.out.println("숨기기")
     }
 
 

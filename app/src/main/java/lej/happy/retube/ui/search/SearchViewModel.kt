@@ -7,14 +7,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import lej.happy.retube.helper.WiseNLUExample
-import lej.happy.retube.data.models.Realm.RealmSearch
-import lej.happy.retube.data.models.youtube.ViewCount
+import lej.happy.retube.data.models.ViewCount
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.util.Coroutines
-import io.realm.Realm
 import kotlinx.coroutines.Job
 import lej.happy.retube.data.models.youtube.Searches
-import java.util.*
+import lej.happy.retube.util.RealmUtil
 import kotlin.collections.ArrayList
 
 
@@ -96,25 +94,8 @@ class SearchViewModel(
     }
 
     fun saveNoun(list: List<String>){
-        val realm: Realm = Realm.getDefaultInstance()
 
-        for (i in 0..list.size-1){
-            val isRealmSearch: RealmSearch? =
-                realm.where(RealmSearch::class.java).equalTo("noun", list[i]).findFirst()
-            if (isRealmSearch != null){
-                realm.executeTransaction {
-                    isRealmSearch.setCount(isRealmSearch.getCount() + 1)
-                    isRealmSearch.setDate(Date())
-                }
-            }else{
-                realm.executeTransaction { realm ->
-                    val search: RealmSearch = realm.createObject(RealmSearch::class.java)
-                    search.setNoun(list[i])
-                    search.setCount(1)
-                    search.setDate(Date())
-                }
-            }
-        }
+        RealmUtil.saveSearchNoun(list)
 
     }
 

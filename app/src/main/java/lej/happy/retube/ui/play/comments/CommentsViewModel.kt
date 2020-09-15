@@ -9,6 +9,7 @@ import lej.happy.retube.data.models.youtube.Comments
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.helper.DetectPapago
 import lej.happy.retube.util.Coroutines
+import lej.happy.retube.util.RealmUtil
 import java.util.*
 
 
@@ -37,7 +38,7 @@ class CommentsViewModel(
     fun getCommentDatas(videoId: String, order: String, key: String){
 
         if(!isAdd) list.clear()
-        System.out.println("요청")
+
         job = Coroutines.ioThenMain(
             {
                 if(nextToken != null){
@@ -113,12 +114,32 @@ class CommentsViewModel(
             { repository.getDetailVideo(part, key, fields, id) },
             {
                 if (it != null) {
+                    saveData(it)
                     _videoInfo.value = it
                 }
             }
         )
     }
 
+
+
+    private var _tag = MutableLiveData<List<String>?>()
+    val tag : LiveData<List<String>?>
+        get() = _tag
+
+    private fun saveData(data: Video) {
+
+        //태그 저장
+        _tag.value = RealmUtil.calTag(data.items[0].snippet.tags)
+        //카테고리 저장
+        RealmUtil.saveCategory(data.items[0].snippet.categoryId)
+        RealmUtil.saveChannel(data.items[0].snippet.channelId)
+    }
+
+
+    fun saveUserData(){
+        RealmUtil.saveViewTimeCount()
+    }
 
 
     override fun onCleared() {

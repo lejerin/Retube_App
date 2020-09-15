@@ -1,4 +1,4 @@
-package lej.happy.retube.ui.stat;
+package lej.happy.retube.ui.statistic;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;

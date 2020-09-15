@@ -8,7 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
 import lej.happy.retube.R
-import lej.happy.retube.data.models.youtube.SaveTransData
+import lej.happy.retube.data.models.SaveTransData
 import lej.happy.retube.data.models.youtube.Comments
 import lej.happy.retube.databinding.RowItemCommentBinding
 import lej.happy.retube.helper.TransferPapago

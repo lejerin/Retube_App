@@ -1,4 +1,4 @@
-package lej.happy.retube.data.models.youtube
+package lej.happy.retube.data.models
 
 data class ViewCount(
     val num: Int,
