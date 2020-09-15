@@ -8,7 +8,7 @@
         <import type="android.view.View" />
         <variable
             name="repliesdata"
-            type="lej.happy.retube.data.models.comments.Replies.Item" />
+            type="lej.happy.retube.data.models.youtube.Replies.Item" />
         <variable
             name="title"
             type="String" />

@@ -1,13 +1,6 @@
 package lej.happy.retube.data.network
 
-import lej.happy.retube.data.models.Channel
-import lej.happy.retube.data.models.HomeMostPopular
-import lej.happy.retube.data.models.Video
-import lej.happy.retube.data.models.VideoStats.VideoStats
-import lej.happy.retube.data.models.comments.Comment
-import lej.happy.retube.data.models.comments.Replies
-import lej.happy.retube.data.models.search.Searchs
-import retrofit2.Call
+import lej.happy.retube.data.models.youtube.*
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -45,7 +38,7 @@ interface YoutubeApi {
         @Query("q") q: String,
         @Query("safeSearch") safeSearch: String,
         @Query("key") key: String
-    ): Response<Searchs>
+    ): Response<Searches>
 
     @GET("search")
     suspend fun getMoreSerchVideo(
@@ -57,7 +50,7 @@ interface YoutubeApi {
         @Query("q") q: String,
         @Query("safeSearch") safeSearch: String,
         @Query("key") key: String
-    ): Response<Searchs>
+    ): Response<Searches>
 
     @GET("videos")
     suspend fun getVideoDetail(
@@ -74,7 +67,7 @@ interface YoutubeApi {
         @Query("order") order: String,
         @Query("maxResults") maxResults: Int,
         @Query("key") key: String
-    ): Response<Comment.Model>
+    ): Response<Comments.Model>
 
 
     @GET("commentThreads")
@@ -85,7 +78,7 @@ interface YoutubeApi {
         @Query("pageToken") pageToken: String,
         @Query("maxResults") maxResults: Int,
         @Query("key") key: String
-    ): Response<Comment.Model>
+    ): Response<Comments.Model>
 
     //대댓글
 

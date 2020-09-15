@@ -10,11 +10,10 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import lej.happy.retube.R;
+import lej.happy.retube.data.models.youtube.Searches;
+import lej.happy.retube.data.models.youtube.VideoStats;
 import lej.happy.retube.data.network.GetDataService;
 import lej.happy.retube.data.network.RetrofitInstance;
-import lej.happy.retube.data.models.search.Item;
-import lej.happy.retube.data.models.search.Searchs;
-import lej.happy.retube.data.models.VideoStats.VideoStats;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +25,7 @@ import retrofit2.Response;
 
 public class RecommendActivity extends AppCompatActivity {
 
-    private List<Item> videoSearchList = new ArrayList<>();
+    private List<Searches.Items> videoSearchList = new ArrayList<>();
     RecyclerView rv;
 //    private SearchAdapter adapter;
     private LinearLayoutManager manager;
@@ -95,16 +94,16 @@ public class RecommendActivity extends AppCompatActivity {
 
 
         GetDataService dataService = RetrofitInstance.getRetrofit().create((GetDataService.class));
-        Call<Searchs> videoDetailRequest = null;
+        Call<Searches> videoDetailRequest = null;
 
         videoDetailRequest= dataService
                         .getSerchVideo("snippet", 5, "relevance", "video",
                                 input,"none",getString(R.string.api_key));
 
 
-        videoDetailRequest.enqueue(new Callback<Searchs>() {
+        videoDetailRequest.enqueue(new Callback<Searches>() {
             @Override
-            public void onResponse(Call<Searchs> call, Response<Searchs> response) {
+            public void onResponse(Call<Searches> call, Response<Searches> response) {
 
                 if(response.isSuccessful()){
                     if(response.body()!=null){
@@ -124,7 +123,7 @@ public class RecommendActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Searchs> call, Throwable t) {
+            public void onFailure(Call<Searches> call, Throwable t) {
 
             }
         });
@@ -154,7 +153,7 @@ public class RecommendActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     if(response.body()!=null){
                         System.out.println("검색 조회수" + pos);
-                        viewCountList.put(pos, Integer.parseInt(response.body().getItems().get(0).getStatistics().getViewCount()));
+                        viewCountList.put(pos, response.body().getItems().get(0).getStatistics().getViewCount());
 
 
                 //        adapter.notifyDataSetChanged();

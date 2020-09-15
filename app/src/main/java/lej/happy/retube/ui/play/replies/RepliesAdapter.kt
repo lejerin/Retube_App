@@ -6,11 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.*
 import lej.happy.retube.R
-import lej.happy.retube.data.models.SaveTransData
-import lej.happy.retube.data.models.comments.Replies
-import lej.happy.retube.databinding.RowItemCommentBinding
+import lej.happy.retube.data.models.youtube.Replies
 import lej.happy.retube.databinding.RowItemRepliesCommentBinding
 import lej.happy.retube.ui.RecyclerViewClickListener
 import lej.happy.retube.util.Converter

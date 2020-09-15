@@ -9,22 +9,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_comments.*
 import kotlinx.android.synthetic.main.fragment_replies.*
 import lej.happy.retube.R
-import lej.happy.retube.data.models.comments.Comment
-import lej.happy.retube.data.models.comments.Replies
+import lej.happy.retube.data.models.youtube.Comments
+import lej.happy.retube.data.models.youtube.Replies
 import lej.happy.retube.data.network.YoutubeApi
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.databinding.FragmentRepliesBinding
 import lej.happy.retube.ui.RecyclerViewClickListener
 import lej.happy.retube.ui.play.PlayActivity
-import lej.happy.retube.ui.play.comments.CommentsAdapter
 import lej.happy.retube.util.Converter
-import java.util.*
 import kotlin.collections.ArrayList
 
-class RepliesFragment(val comment: Comment.Item) : Fragment() , RecyclerViewClickListener {
+class RepliesFragment(val comment: Comments.Item) : Fragment() , RecyclerViewClickListener {
 
     private lateinit var factory: RepliesViewModelFactory
     private lateinit var viewModel: RepliesViewModel

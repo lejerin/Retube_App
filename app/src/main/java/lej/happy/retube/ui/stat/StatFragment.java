@@ -37,13 +37,13 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 import lej.happy.retube.R;
+import lej.happy.retube.data.models.youtube.Channel;
 import lej.happy.retube.data.network.GetDataService;
-import lej.happy.retube.data.Realm.Category;
-import lej.happy.retube.data.Realm.RealmSearch;
-import lej.happy.retube.data.Realm.User;
-import lej.happy.retube.data.Realm.ViewChannel;
-import lej.happy.retube.data.Realm.ViewVideo;
-import lej.happy.retube.data.models.Channel;
+import lej.happy.retube.data.models.Realm.Category;
+import lej.happy.retube.data.models.Realm.RealmSearch;
+import lej.happy.retube.data.models.Realm.User;
+import lej.happy.retube.data.models.Realm.ViewChannel;
+import lej.happy.retube.data.models.Realm.ViewVideo;
 import lej.happy.retube.data.network.RetrofitInstance;
 import lej.happy.retube.helper.MyValueFormatter;
 import retrofit2.Call;
@@ -62,7 +62,7 @@ public class StatFragment extends Fragment {
 
     ViewPager viewPager;
     StatChannelVPAdapter statChannelVPAdapter;
-    private HashMap<Integer, Channel.Item> channelList = new HashMap<Integer, Channel.Item>();
+    private HashMap<Integer, Channel.Items> channelList = new HashMap<Integer, Channel.Items>();
     int count1 = 0, count2 = 0, count3 = 0;
 
     boolean isPieChartShow = false;

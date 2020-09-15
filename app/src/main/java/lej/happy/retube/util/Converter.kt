@@ -54,8 +54,7 @@ object Converter {
         }
 
 
-    fun getNumlength(value: String): String {
-        val num  = value.toInt()
+    fun getNumlength(num: Int): String {
 
         var length = (Math.log10(num.toDouble()) + 1).toInt()
         if (length == 4) {

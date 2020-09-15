@@ -12,7 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import lej.happy.retube.R;
-import lej.happy.retube.data.models.Channel;
+import lej.happy.retube.data.models.youtube.Channel;
+
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -22,12 +23,12 @@ import static android.content.ContentValues.TAG;
 
 public class StatChannelVPAdapter extends PagerAdapter {
 
-    private HashMap<Integer, Channel.Item> channels = new HashMap<Integer, Channel.Item>();
+    private HashMap<Integer, Channel.Items> channels = new HashMap<Integer, Channel.Items>();
     private Context mContext = null;
 
     private int count1 = 0, count2 = 0, count3 = 0;
 
-    public StatChannelVPAdapter(HashMap<Integer, Channel.Item> channels, Context context, int count1, int count2, int count3) {
+    public StatChannelVPAdapter(HashMap<Integer, Channel.Items> channels, Context context, int count1, int count2, int count3) {
         this.channels = channels;
         this.mContext = context;
         this.count1 = count1;

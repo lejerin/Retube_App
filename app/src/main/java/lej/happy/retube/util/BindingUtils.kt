@@ -5,7 +5,7 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import lej.happy.retube.R
-import lej.happy.retube.data.models.comments.Replies
+import lej.happy.retube.data.models.youtube.Replies
 
 
 @BindingAdapter("image")

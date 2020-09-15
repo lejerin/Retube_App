@@ -16,8 +16,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_comments.*
 import lej.happy.retube.R
-import lej.happy.retube.data.models.Video
-import lej.happy.retube.data.models.comments.Comment
+import lej.happy.retube.data.models.youtube.Video
+import lej.happy.retube.data.models.youtube.Comments
 import lej.happy.retube.data.network.YoutubeApi
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.databinding.FragmentCommentsBinding
@@ -34,7 +34,7 @@ class CommentsFragment(val videoid: String) : Fragment(),
     private lateinit var factory: PlayViewModelFactory
     private lateinit var viewModel: CommentsViewModel
 
-    private val commentsList: MutableList<Comment.Item> = mutableListOf()
+    private val commentsList: MutableList<Comments.Item> = mutableListOf()
     private var order = "relevance"
 
     private var clickTitle = false
@@ -220,7 +220,7 @@ class CommentsFragment(val videoid: String) : Fragment(),
             title.maxLines = 2
             title.ellipsize = TextUtils.TruncateAt.END
             DescTextView.visibility = View.GONE
-            viewCount.text = "조회수 " + Converter.getNumlength(allcount.toString()) +"회"
+            viewCount.text = "조회수 " + Converter.getNumlength(allcount) +"회"
 
         }
 

@@ -1,4 +1,4 @@
-package lej.happy.retube.data.Realm;
+package lej.happy.retube.data.models.Realm;
 
 import java.util.Date;
 

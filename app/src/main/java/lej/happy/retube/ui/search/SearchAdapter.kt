@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import lej.happy.retube.R
+import lej.happy.retube.data.models.youtube.Searches
 import lej.happy.retube.databinding.RowItemSearchBinding
-import lej.happy.retube.data.models.search.Item
 import lej.happy.retube.ui.RecyclerViewClickListener
 import lej.happy.retube.util.Converter
 
 
 class SearchAdapter (
-    private val videoList : List<Item>,
+    private val videoList : List<Searches.Items>,
     private val viewCountList : HashMap<Int, Int>,
     private val listener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
@@ -70,7 +70,7 @@ class SearchAdapter (
 //        + " \u00b7 " + Converter.getNumlength(videoList[position].statistics.viewCount) + "회"
 
             if(viewCountList.get(position) != null){
-                holder.recyclerviewMovieBinding.date +=  " \u00b7 " + Converter.getNumlength(viewCountList[position].toString()) + "회"
+                holder.recyclerviewMovieBinding.date +=  " \u00b7 " + Converter.getNumlength(viewCountList[position]!!) + "회"
             }
 
             holder.recyclerviewMovieBinding.searchView.setOnClickListener {

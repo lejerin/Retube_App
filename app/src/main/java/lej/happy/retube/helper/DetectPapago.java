@@ -18,26 +18,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import lej.happy.retube.data.models.comments.Comment;
+import lej.happy.retube.data.models.youtube.Comments;
 
 public class DetectPapago {
 
     //현재 선택 언어 숫자 : 디폴트 -한국어
     private int nowSelectedLanNum = 0;
     //언어 선택 한국어, 영어, 일본어, 베트남어, 중국어 간체, 중국어 번체, 인도네시아어, 태국어, 독일어, 러시아어, 스페인어, 이탈리아어, 프랑스어
-    private List<Comment.Item> koComments = new ArrayList<>();
-    private List<Comment.Item> enComments = new ArrayList<>();
-    private List<Comment.Item> jaComments = new ArrayList<>();
-    private List<Comment.Item> viComments = new ArrayList<>();
-    private List<Comment.Item> zhCNComments = new ArrayList<>();
-    private List<Comment.Item> zhTWComments = new ArrayList<>();
-    private List<Comment.Item> idComments = new ArrayList<>();
-    private List<Comment.Item> thComments = new ArrayList<>();
-    private List<Comment.Item> deComments = new ArrayList<>();
-    private List<Comment.Item> ruComments = new ArrayList<>();
-    private List<Comment.Item> esComments = new ArrayList<>();
-    private List<Comment.Item> itComments = new ArrayList<>();
-    private List<Comment.Item> frComments = new ArrayList<>();
+    private List<Comments.Item> koComments = new ArrayList<>();
+    private List<Comments.Item> enComments = new ArrayList<>();
+    private List<Comments.Item> jaComments = new ArrayList<>();
+    private List<Comments.Item> viComments = new ArrayList<>();
+    private List<Comments.Item> zhCNComments = new ArrayList<>();
+    private List<Comments.Item> zhTWComments = new ArrayList<>();
+    private List<Comments.Item> idComments = new ArrayList<>();
+    private List<Comments.Item> thComments = new ArrayList<>();
+    private List<Comments.Item> deComments = new ArrayList<>();
+    private List<Comments.Item> ruComments = new ArrayList<>();
+    private List<Comments.Item> esComments = new ArrayList<>();
+    private List<Comments.Item> itComments = new ArrayList<>();
+    private List<Comments.Item> frComments = new ArrayList<>();
 
 
     public void removeData(){
@@ -57,9 +57,9 @@ public class DetectPapago {
         frComments.clear();
     }
 
-    public List<Comment.Item> analyzeList(List<Comment.Item> item){
+    public List<Comments.Item> analyzeList(List<Comments.Item> item){
 
-        List<Comment.Item> list = new ArrayList<>();
+        List<Comments.Item> list = new ArrayList<>();
 
         Thread thread = new Thread()
         {
@@ -186,7 +186,7 @@ public class DetectPapago {
         return result;
     }
 
-    public List<Comment.Item> getLanList(int newSelectedLanNum){
+    public List<Comments.Item> getLanList(int newSelectedLanNum){
         nowSelectedLanNum = newSelectedLanNum;
         switch (nowSelectedLanNum){
             case 0:

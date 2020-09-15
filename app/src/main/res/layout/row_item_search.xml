@@ -8,7 +8,7 @@
         <import type="android.view.View" />
         <variable
             name="search"
-            type="lej.happy.retube.data.models.search.Item" />
+            type="lej.happy.retube.data.models.youtube.Searches.Items" />
         <variable
             name="date"
             type="String" />

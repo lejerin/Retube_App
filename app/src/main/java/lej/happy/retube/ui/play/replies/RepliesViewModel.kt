@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
-import lej.happy.retube.data.models.comments.Replies
+import lej.happy.retube.data.models.youtube.Replies
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.util.Coroutines
 

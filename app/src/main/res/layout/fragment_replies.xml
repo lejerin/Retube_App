@@ -7,7 +7,7 @@
     <data>
         <variable
             name="commentdata"
-            type="lej.happy.retube.data.models.comments.Comment.Item" />
+            type="lej.happy.retube.data.models.youtube.Comments.Item" />
         <variable
             name="title"
             type="String" />
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:textSize="17dp"
-            android:text="@{@string/replies_count(commentdata.snippet.totalReplyCount.toString())}"
+            android:text="@{@string/replies_count(commentdata.snippet.totalReplyCount)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -148,7 +148,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:text="@{commentdata.snippet.topLevelComment.snippet.likeCount.toString()}" />
+                            android:text="@{commentdata.snippet.topLevelComment.snippet.likeCount}" />
 
                         <ImageView
                             android:layout_width="15dp"
@@ -178,7 +178,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:text="@{commentdata.snippet.totalReplyCount.toString()}" />
+                            android:text="@{commentdata.snippet.totalReplyCount}" />
 
                     </LinearLayout>
 

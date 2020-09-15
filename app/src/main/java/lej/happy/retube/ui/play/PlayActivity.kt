@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import lej.happy.retube.R
-import lej.happy.retube.data.models.comments.Comment
+import lej.happy.retube.data.models.youtube.Comments
 import lej.happy.retube.ui.play.comments.CommentsFragment
 import lej.happy.retube.ui.play.replies.RepliesFragment
 
@@ -54,7 +54,7 @@ class PlayActivity : AppCompatActivity() {
     }
 
 
-    fun setRepliesFragment(comment: Comment.Item){
+    fun setRepliesFragment(comment: Comments.Item){
         commentFragment =
             RepliesFragment(comment)
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()

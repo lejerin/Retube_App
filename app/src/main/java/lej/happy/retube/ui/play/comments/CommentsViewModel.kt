@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
-import lej.happy.retube.data.models.Video
-import lej.happy.retube.data.models.comments.Comment
+import lej.happy.retube.data.models.youtube.Video
+import lej.happy.retube.data.models.youtube.Comments
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.helper.DetectPapago
 import lej.happy.retube.util.Coroutines
@@ -19,14 +19,14 @@ class CommentsViewModel(
     private val detectPapago = DetectPapago()
     private lateinit var job: Job
 
-    private val _commentsList = MutableLiveData<List<Comment.Item>>()
-    val commentsList : LiveData<List<Comment.Item>>
+    private val _commentsList = MutableLiveData<List<Comments.Item>>()
+    val commentsList : LiveData<List<Comments.Item>>
         get() = _commentsList
 
     var nextToken: String? = null
     private var firstCommentToken = true
 
-    private val list: MutableList<Comment.Item> = ArrayList()
+    private val list: MutableList<Comments.Item> = ArrayList()
     private var isAdd = false
 
     private val _findCount = MutableLiveData<Int>()

@@ -8,8 +8,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
 import lej.happy.retube.R
-import lej.happy.retube.data.models.SaveTransData
-import lej.happy.retube.data.models.comments.Comment
+import lej.happy.retube.data.models.youtube.SaveTransData
+import lej.happy.retube.data.models.youtube.Comments
 import lej.happy.retube.databinding.RowItemCommentBinding
 import lej.happy.retube.helper.TransferPapago
 import lej.happy.retube.ui.RecyclerViewClickListener
@@ -17,7 +17,7 @@ import lej.happy.retube.util.Converter
 
 
 class CommentsAdapter (
-    private val commentList : List<Comment.Item>,
+    private val commentList : List<Comments.Item>,
     private val listener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
@@ -123,7 +123,12 @@ class CommentsAdapter (
                             transferPapago.startTransfer(commentList[position].snippet.topLevelComment.snippet.textDisplay, sourceTarget, "ko")
                         }.await()
                         withContext(Dispatchers.Main) {
-                            transHashMap.put(position, SaveTransData(true, result))
+                            transHashMap.put(position,
+                                SaveTransData(
+                                    true,
+                                    result
+                                )
+                            )
                             holder.recyclerviewMovieBinding.transferText.text = result
                             holder.recyclerviewMovieBinding.transferText.visibility = View.VISIBLE
                         }
