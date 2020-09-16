@@ -7,6 +7,10 @@ import com.bumptech.glide.Glide
 import lej.happy.retube.R
 import lej.happy.retube.data.models.youtube.Replies
 
+@BindingAdapter("android:src")
+fun setImageViewResource(imageView: ImageView, resource: Int) {
+    imageView.setImageResource(resource)
+}
 
 @BindingAdapter("image")
 fun loadImageview(view : ImageView, url: String){

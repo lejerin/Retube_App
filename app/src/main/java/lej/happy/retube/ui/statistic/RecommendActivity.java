@@ -27,7 +27,7 @@ public class RecommendActivity extends AppCompatActivity {
 
     private List<Searches.Items> videoSearchList = new ArrayList<>();
     RecyclerView rv;
-//    private SearchAdapter adapter;
+    private SearchAdapter adapter;
     private LinearLayoutManager manager;
     private HashMap<Integer,Integer> viewCountList = new HashMap<Integer, Integer>();
     private int startNum = 0;
@@ -50,21 +50,21 @@ public class RecommendActivity extends AppCompatActivity {
         String keyword9 = intent.getExtras().getString("keyword9");
 
         rv = findViewById(R.id.rc_recyclerView);
-//        adapter = new SearchAdapter(RecommendActivity.this,videoSearchList,viewCountList);
-//        manager = new LinearLayoutManager(RecommendActivity.this);
-//        rv.setAdapter(adapter);
-//        rv.setLayoutManager(manager);
-//
-//        adapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View v, int pos) {
-//
-//                Intent intent = new Intent(RecommendActivity.this, PlayActivity.class);
-//                intent.putExtra("videoID",videoSearchList.get(pos).getId().getVideoId());
-//                startActivity(intent);
-//
-//            }
-//        });
+        adapter = new SearchAdapter(RecommendActivity.this,videoSearchList,viewCountList);
+        manager = new LinearLayoutManager(RecommendActivity.this);
+        rv.setAdapter(adapter);
+        rv.setLayoutManager(manager);
+
+        adapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int pos) {
+
+                Intent intent = new Intent(RecommendActivity.this, PlayActivity.class);
+                intent.putExtra("videoID",videoSearchList.get(pos).getId().getVideoId());
+                startActivity(intent);
+
+            }
+        });
 
 
 

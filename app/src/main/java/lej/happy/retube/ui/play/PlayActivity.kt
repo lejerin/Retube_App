@@ -58,7 +58,7 @@ class PlayActivity : AppCompatActivity() {
         commentFragment =
             RepliesFragment(comment)
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-
+        ft.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left,R.anim.exit_to_right)
         ft.add(R.id.comment_layout, commentFragment)
         ft.addToBackStack(null)
         ft.commit()

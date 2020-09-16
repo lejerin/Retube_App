@@ -1,7 +1,17 @@
 package lej.happy.retube.util
 
+import android.graphics.Color
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import io.realm.Realm
+import io.realm.RealmResults
+import io.realm.Sort
+import io.realm.internal.android.JsonUtils
+import lej.happy.retube.R
 import lej.happy.retube.data.models.Realm.*
+import lej.happy.retube.data.models.UserStat
+import lej.happy.retube.helper.MyValueFormatter
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -9,32 +19,34 @@ import java.util.*
 
 object RealmUtil {
 
-    fun calTag(tags: List<String>) : List<String>?{
-        if (tags.isNotEmpty()) {
-            //글자수 작은 것만
-            val shortTag: MutableList<String> = ArrayList()
-            for (i in tags.indices) {
-                if (tags[i].length < 6) {
-                    shortTag.add(tags[i])
+    fun calTag(tags: List<String>?) : List<String>{
+        if (tags != null) {
+            if (tags.isNotEmpty()) {
+                //글자수 작은 것만
+                val shortTag: MutableList<String> = ArrayList()
+                for (i in tags.indices) {
+                    if (tags[i].length < 6) {
+                        shortTag.add(tags[i])
+                    }
                 }
-            }
 
-            //태그를 3개만 저장하기 위해서
-            if (shortTag.size < 4) {
-                saveViewNoun(shortTag)
-                return shortTag
-            } else {
-                val newList: MutableList<String> = ArrayList()
-                newList.add(shortTag[0])
-                newList.add(shortTag[shortTag.size / 2])
-                newList.add(shortTag[shortTag.size - 1])
-                saveViewNoun(newList)
-                return newList
+                //태그를 3개만 저장하기 위해서
+                if (shortTag.size < 4) {
+                    saveViewNoun(shortTag)
+                    return shortTag
+                } else {
+                    val newList: MutableList<String> = ArrayList()
+                    newList.add(shortTag[0])
+                    newList.add(shortTag[shortTag.size / 2])
+                    newList.add(shortTag[shortTag.size - 1])
+                    saveViewNoun(newList)
+                    return newList
 
+                }
             }
         }
 
-        return null
+        return listOf()
     }
 
     fun saveChannel(channelId: String) {
@@ -227,6 +239,164 @@ object RealmUtil {
             }
         }
 
+    }
+
+
+    fun getUserData() : UserStat{
+        val realm: Realm = Realm.getDefaultInstance()
+
+        val user =
+            realm.where(
+                User::class.java
+            ).findFirst()
+
+        val newUser = UserStat()
+        newUser.date = user?.startDate + " 부터"
+        newUser.viewCount = user?.viewCount.toString()
+
+        val dawn = user?.down
+        val am = user?.am
+        val pm = user?.pm
+        val night = user?.night
+
+        var maxString = "새벽"
+        var maxInt: Int? = dawn
+
+        if (maxInt!! < am!!) {
+            maxString = "오전"
+            maxInt = am
+        }
+        if (maxInt!! < pm!!) {
+            maxString = "오후"
+            maxInt = pm
+        }
+        if (maxInt!! < night!!) {
+            maxString = "밤"
+            maxInt = night
+        }
+
+        val all: Int = dawn!! + am!! + pm!! + night!!
+        val percent = (maxInt.toDouble() / all.toDouble() * 100.0).toInt()
+
+        newUser.time_percent = "$percent%"
+        newUser.time_text = maxString
+
+
+        val week = user.week
+        val holy = user.holy
+
+        var maxString2 = "주중"
+        var maxInt2 = week
+
+        if (holy > maxInt2) {
+            maxString2 = "주말"
+            maxInt2 = holy
+        }
+        val all2 = week + holy
+        val percent2 = (maxInt2.toDouble() / all2.toDouble() * 100.0).toInt()
+
+        newUser.day_text = maxString2
+        newUser.day_percent = "$percent2%"
+
+
+
+        return newUser
+    }
+
+
+    fun getPieChartList() : PieData{
+        val realm: Realm = Realm.getDefaultInstance()
+
+        val yValues = ArrayList<PieEntry>()
+
+
+        val categories: RealmResults<Category> =
+            realm.where(Category::class.java).sort("categoryCount", Sort.DESCENDING)
+                .findAll()
+
+
+        val colors = ArrayList<Int>()
+
+        if (categories.size > 0) {
+            yValues.add(PieEntry(categories[0]?.categoryCount?.toFloat()!!, categories[0]?.categoryName))
+            colors.add(Color.rgb(212, 223, 230))
+            if (categories.size > 1) {
+                yValues.add(PieEntry(categories[1]?.categoryCount?.toFloat()!!, categories[1]?.categoryName))
+                colors.add(Color.rgb(142, 192, 228))
+                if (categories.size > 2) {
+                    yValues.add(PieEntry(categories[2]?.categoryCount?.toFloat()!!, categories[2]?.categoryName))
+                    colors.add(Color.rgb(202, 219, 233))
+                    if (categories.size > 3) {
+                        yValues.add(PieEntry(categories[3]?.categoryCount?.toFloat()!!, categories[3]?.categoryName))
+                        colors.add(Color.rgb(106, 175, 230))
+                        if (categories.size > 4) {
+                            yValues.add(PieEntry(categories[4]?.categoryCount?.toFloat()!!, categories[4]?.categoryName))
+                            colors.add(Color.rgb(214, 236, 250))
+                        }
+                    }
+                }
+            }
+        }
+
+        val dataSet = PieDataSet(yValues, "category")
+        dataSet.sliceSpace = 3f
+        dataSet.selectionShift = 5f
+        dataSet.colors = colors
+
+        val data = PieData(dataSet)
+        data.setDrawValues(true)
+        data.setValueTextSize(20f)
+        data.setValueFormatter(MyValueFormatter("%"))
+
+        return data
+    }
+
+
+    fun getKeyWordSearch(checkId: Int) : RealmResults<RealmSearch>? {
+        val realm: Realm = Realm.getDefaultInstance()
+        val cal = Calendar.getInstance()
+        cal.time = Date()
+
+        when(checkId){
+            R.id.radioDay -> {
+
+            }
+            R.id.radioWeek -> {
+                cal.add(Calendar.DATE, -7)
+            }
+            R.id.radioMonth -> {
+                cal.add(Calendar.MONTH, -1)
+            }
+        }
+
+        return realm.where(RealmSearch::class.java)
+            .greaterThanOrEqualTo("date", Converter.stringToDate("00:00:00", cal.time))
+            .lessThanOrEqualTo("date", Converter.stringToDate("23:59:59", Date()))
+            .sort("count", Sort.DESCENDING).findAll()
+    }
+
+    fun getKeyWordView(checkId: Int) : RealmResults<ViewVideo>? {
+        val realm: Realm = Realm.getDefaultInstance()
+        val cal = Calendar.getInstance()
+        cal.time = Date()
+
+
+        when(checkId){
+            R.id.radioDay -> {
+
+            }
+            R.id.radioWeek -> {
+                cal.add(Calendar.DATE, -7)
+            }
+            R.id.radioMonth -> {
+                cal.add(Calendar.MONTH, -1)
+            }
+        }
+
+        return realm.where(ViewVideo::class.java)
+            .greaterThanOrEqualTo("date", Converter.stringToDate("00:00:00", cal.time))
+            .lessThanOrEqualTo("date", Converter.stringToDate("23:59:59", Date()))
+            .sort("count", Sort.DESCENDING).findAll()
     }
 
 

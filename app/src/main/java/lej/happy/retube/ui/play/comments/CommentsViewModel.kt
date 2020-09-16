@@ -123,14 +123,15 @@ class CommentsViewModel(
 
 
 
-    private var _tag = MutableLiveData<List<String>?>()
-    val tag : LiveData<List<String>?>
+    private var _tag = MutableLiveData<List<String>>()
+    val tag : LiveData<List<String>>
         get() = _tag
 
     private fun saveData(data: Video) {
 
         //태그 저장
-        _tag.value = RealmUtil.calTag(data.items[0].snippet.tags)
+
+        _tag.value =  RealmUtil.calTag(data.items[0].snippet.tags)
         //카테고리 저장
         RealmUtil.saveCategory(data.items[0].snippet.categoryId)
         RealmUtil.saveChannel(data.items[0].snippet.channelId)

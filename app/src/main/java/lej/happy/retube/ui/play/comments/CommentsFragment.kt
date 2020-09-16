@@ -96,7 +96,7 @@ class CommentsFragment(val videoid: String) : Fragment(),
         //태그 정보 가져오기
         viewModel.tag.observe(viewLifecycleOwner, Observer { tags ->
 
-            if(!tags.isNullOrEmpty()){
+            if(!tags.isEmpty()){
                 for (i in tags.indices) {
                     binding.tagText.text = binding.tagText.text.toString() + " #" + tags[i]
                 }
