@@ -10,7 +10,7 @@ import io.realm.Sort
 import kotlinx.coroutines.Job
 import lej.happy.retube.data.models.ChannelStat
 import lej.happy.retube.data.models.Keyword
-import lej.happy.retube.data.models.Realm.ViewChannel
+import lej.happy.retube.data.models.realm.ViewChannel
 import lej.happy.retube.data.models.UserStat
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.util.Coroutines

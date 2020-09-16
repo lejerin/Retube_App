@@ -13,11 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.github.mikephil.charting.animation.Easing
-import io.realm.RealmResults
-import io.realm.Sort
-import io.realm.internal.android.JsonUtils
 import lej.happy.retube.R
-import lej.happy.retube.data.models.Realm.RealmSearch
 import lej.happy.retube.data.network.YoutubeApi
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.databinding.FragmentStatBinding

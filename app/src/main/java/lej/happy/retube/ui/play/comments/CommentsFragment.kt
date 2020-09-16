@@ -25,7 +25,7 @@ import lej.happy.retube.ui.RecyclerViewClickListener
 import lej.happy.retube.ui.play.PlayActivity
 import lej.happy.retube.ui.play.PlayViewModelFactory
 import lej.happy.retube.util.Converter
-import lej.happy.retube.util.LinearLayoutManagerWrapper
+import lej.happy.retube.helper.LinearLayoutManagerWrapper
 
 
 class CommentsFragment(val videoid: String) : Fragment(),
@@ -64,7 +64,11 @@ class CommentsFragment(val videoid: String) : Fragment(),
         //데이터 갖고온 뒤 조회수 불러오기
         //스크롤 시 다음 쿼리 요청
 
-        layoutManager = LinearLayoutManagerWrapper(context, LinearLayoutManager.VERTICAL, false)
+        layoutManager = LinearLayoutManagerWrapper(
+            context,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
         recyclerView.layoutManager = layoutManager
         recyclerView.setHasFixedSize(false)
         recyclerView.adapter =
@@ -111,22 +115,22 @@ class CommentsFragment(val videoid: String) : Fragment(),
         viewModel.getCommentDatas(videoid, order,getString(R.string.api_key))
         viewModel.commentsList.observe(viewLifecycleOwner, Observer { newComment ->
 
-            if(newComment.size >= 8){
+            if(newComment.isNotEmpty()){
 
                 (recyclerView.adapter as CommentsAdapter).setIsNext(viewModel.nextToken)
-                val postionstart = commentsList.size +1
+                val pos = commentsList.size +1
                 commentsList.addAll(newComment)
 
                 if(isSetNum){
                     recyclerView.adapter!!.notifyDataSetChanged()
                 }else{
-                    recyclerView.adapter!!.notifyItemRangeInserted(postionstart, commentsList.size)
+                    recyclerView.adapter!!.notifyItemRangeInserted(pos, commentsList.size)
                 }
 
-                isSetNum = false
-                offLodingDialog()
             }
 
+            isSetNum = false
+            offLodingDialog()
         })
 
 

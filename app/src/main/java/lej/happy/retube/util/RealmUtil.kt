@@ -7,9 +7,8 @@ import com.github.mikephil.charting.data.PieEntry
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
-import io.realm.internal.android.JsonUtils
 import lej.happy.retube.R
-import lej.happy.retube.data.models.Realm.*
+import lej.happy.retube.data.models.realm.*
 import lej.happy.retube.data.models.UserStat
 import lej.happy.retube.helper.MyValueFormatter
 import java.text.ParseException

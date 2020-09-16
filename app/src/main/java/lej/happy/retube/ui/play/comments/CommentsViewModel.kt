@@ -39,53 +39,60 @@ class CommentsViewModel(
 
         if(!isAdd) list.clear()
 
-        job = Coroutines.ioThenMain(
-            {
-                if(nextToken != null){
-                    repository.getMoreCommentData("snippet", videoId, order, nextToken!!,  10, key)
+        if(nextToken == null && !firstCommentToken){
+            //더이상 불러올 댓글이 없음
+            _commentsList.value = list
 
-                }else{
-                    if(!firstCommentToken){
-                        //더이상 불러올 댓글이 없음
-                       job.cancel()
+        }else {
+
+            job = Coroutines.ioThenMain(
+                {
+                    if (nextToken != null) {
+                        repository.getMoreCommentData(
+                            "snippet",
+                            videoId,
+                            order,
+                            nextToken!!,
+                            10,
+                            key
+                        )
+
+                    } else {
+                        firstCommentToken = false
+                        repository.getCommentData("snippet", videoId, order, 10, key)
                     }
-                    firstCommentToken = false
-                    repository.getCommentData("snippet", videoId, order, 10, key)
+                },
+                {
 
-                }
-            },
-            {
-
-                nextToken = it?.getnextPageToken()
-                //언어 체크 한 뒤 배열에 넣기
-                CoroutineScope(Job() + Dispatchers.Main).launch(Dispatchers.Default) {
-                    async {
-                        list.addAll(detectPapago.analyzeList(it?.items))
-                    }.await()
-                    withContext(Dispatchers.Main) {
-                        _findCount.value = list.size
-                        //총 8개 이상 될 때 까지 반복
-                        if(list.size >= 8){
-                            _commentsList.value = list
-                            isAdd = false
-                        }else{
-                            isAdd = true
-                            getCommentDatas(videoId, order, key)
+                    nextToken = it?.getnextPageToken()
+                    //언어 체크 한 뒤 배열에 넣기
+                    CoroutineScope(Job() + Dispatchers.Main).launch(Dispatchers.Default) {
+                        async {
+                            list.addAll(detectPapago.analyzeList(it?.items))
+                        }.await()
+                        withContext(Dispatchers.Main) {
+                            _findCount.value = list.size
+                            //총 8개 이상 될 때 까지 반복
+                            if (list.size >= 8) {
+                                _commentsList.value = list
+                                isAdd = false
+                            } else {
+                                isAdd = true
+                                getCommentDatas(videoId, order, key)
+                            }
                         }
                     }
+
+
                 }
-
-
-
-            }
-        )
-
+            )
+        }
     }
 
 
     fun jobCancle(){
-        job.cancel()
         _commentsList.value = list
+        job.cancel()
         isAdd = false
     }
 

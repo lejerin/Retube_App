@@ -18,7 +18,7 @@ import lej.happy.retube.data.network.YoutubeApi
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.databinding.FragmentSearchBinding
 import lej.happy.retube.ui.RecyclerViewClickListener
-import lej.happy.retube.util.LinearLayoutManagerWrapper
+import lej.happy.retube.helper.LinearLayoutManagerWrapper
 import kotlinx.android.synthetic.main.fragment_search.*
 import lej.happy.retube.data.models.youtube.Searches
 import lej.happy.retube.ui.play.PlayActivity
@@ -56,7 +56,11 @@ class SearchFragment : Fragment(),
         //데이터 갖고온 뒤 조회수 불러오기
         //스크롤 시 다음 쿼리 요청
 
-        layoutManager = LinearLayoutManagerWrapper(context, LinearLayoutManager.VERTICAL, false)
+        layoutManager = LinearLayoutManagerWrapper(
+            context,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
         rc_search.layoutManager = layoutManager
         rc_search.setHasFixedSize(true)
         rc_search.adapter = SearchAdapter(videoSearchList,viewCountList, this)
