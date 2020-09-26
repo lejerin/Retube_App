@@ -54,8 +54,7 @@ object Converter {
         }
 
 
-    fun getNumlength(value: String): String {
-        val num  = value.toInt()
+    fun getNumlength(num: Int): String {
 
         var length = (Math.log10(num.toDouble()) + 1).toInt()
         if (length == 4) {
@@ -70,5 +69,22 @@ object Converter {
         }
         return num.toString()
     }
+
+    //time String -> Date
+     fun stringToDate(str: String, date: Date): Date? {
+        val transFormat =
+            SimpleDateFormat("EE, MM월 dd일 yyyy년")
+        val ori = transFormat.format(date)
+        val from = "$ori $str"
+        val dateFormat =
+            SimpleDateFormat("EE, MM월 dd일 yyyy년 HH:mm:ss")
+        try {
+            return dateFormat.parse(from)
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return Date()
+    }
+
 
 }

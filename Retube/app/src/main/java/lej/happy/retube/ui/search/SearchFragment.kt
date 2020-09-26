@@ -2,6 +2,7 @@ package lej.happy.retube.ui.search
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,13 +15,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import lej.happy.retube.R
-import lej.happy.retube.data.models.search.Item
 import lej.happy.retube.data.network.YoutubeApi
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.databinding.FragmentSearchBinding
 import lej.happy.retube.ui.RecyclerViewClickListener
-import lej.happy.retube.util.LinearLayoutManagerWrapper
+import lej.happy.retube.helper.LinearLayoutManagerWrapper
 import kotlinx.android.synthetic.main.fragment_search.*
+import lej.happy.retube.data.models.youtube.Searches
 import lej.happy.retube.ui.play.PlayActivity
 
 
@@ -30,9 +31,8 @@ class SearchFragment : Fragment(),
     private lateinit var factory: SearchViewModelFactory
     private lateinit var viewModel: SearchViewModel
 
-    private val videoSearchList: MutableList<Item> = mutableListOf()
+    private val videoSearchList: MutableList<Searches.Items> = mutableListOf()
     private val viewCountList = HashMap<Int, Int>()
-
 
     lateinit var layoutManager : LinearLayoutManagerWrapper
     private var lastVisibleItemPosition = 0
@@ -57,7 +57,11 @@ class SearchFragment : Fragment(),
         //데이터 갖고온 뒤 조회수 불러오기
         //스크롤 시 다음 쿼리 요청
 
-        layoutManager = LinearLayoutManagerWrapper(context, LinearLayoutManager.VERTICAL, false)
+        layoutManager = LinearLayoutManagerWrapper(
+            context,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
         rc_search.layoutManager = layoutManager
         rc_search.setHasFixedSize(true)
         rc_search.adapter = SearchAdapter(videoSearchList,viewCountList, this)

@@ -12,6 +12,7 @@ abstract class SafeApiRequest {
             return response.body()!!
         }else{
             //@todo handle api exception
+            System.out.println("오류" + response.errorBody().toString())
             throw  ApiException(
                 response.code().toString()
             )

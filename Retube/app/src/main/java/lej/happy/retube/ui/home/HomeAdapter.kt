@@ -6,14 +6,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import lej.happy.retube.R
 import lej.happy.retube.databinding.RowItemHomeBinding
-import lej.happy.retube.data.models.Channel
-import lej.happy.retube.data.models.HomeMostPopular
+import lej.happy.retube.data.models.youtube.Channel
+import lej.happy.retube.data.models.youtube.HomeMostPopular
 import lej.happy.retube.ui.RecyclerViewClickListener
 import lej.happy.retube.util.Converter
 
 class HomeAdapter (
-    private val videoList : List<HomeMostPopular.Item>,
-    private val channelList : HashMap<Int, Channel.Item>,
+    private val videoList : List<HomeMostPopular.Items>,
+    private val channelList : HashMap<Int, Channel.Items>,
     private val listener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>(){
 

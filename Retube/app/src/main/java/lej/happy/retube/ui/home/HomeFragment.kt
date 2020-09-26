@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import lej.happy.retube.R
 import lej.happy.retube.data.network.YoutubeApi
 import lej.happy.retube.data.repositories.YoutubeRepository
-import lej.happy.retube.data.models.Channel
-import lej.happy.retube.data.models.HomeMostPopular
+import lej.happy.retube.data.models.youtube.Channel
 import lej.happy.retube.ui.RecyclerViewClickListener
 import kotlinx.android.synthetic.main.fragment_home.*
+import lej.happy.retube.data.models.youtube.HomeMostPopular
 import lej.happy.retube.ui.play.PlayActivity
 
 
@@ -25,11 +25,10 @@ class HomeFragment : Fragment() ,
     private lateinit var factory: HomeViewModelFactory
     private lateinit var viewModel: HomeViewModel
 
-    private val videoMostPopularList: MutableList<HomeMostPopular.Item> = mutableListOf()
-    private var channelList: HashMap<Int, Channel.Item> = HashMap<Int, Channel.Item>()
+    private val videoMostPopularList: MutableList<HomeMostPopular.Items> = mutableListOf()
+    private var channelList: HashMap<Int, Channel.Items> = HashMap<Int, Channel.Items>()
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -51,7 +50,7 @@ class HomeFragment : Fragment() ,
         factory = HomeViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory).get(HomeViewModel::class.java)
         viewModel.getHomeDatas("snippet,statistics","items(id,snippet(title,thumbnails,publishedAt,channelId,channelTitle),statistics)",
-            "mostPopular", getString(R.string.api_key),"KR",3)
+            "mostPopular", getString(R.string.api_key),"KR",20)
         viewModel.homedatas.observe(viewLifecycleOwner, Observer { home ->
 
             videoMostPopularList.clear()
@@ -72,7 +71,7 @@ class HomeFragment : Fragment() ,
 
     private fun getAllChannelData(){
         for (i in 0..videoMostPopularList.size-1){
-            viewModel.getChannelDatas("snippet", videoMostPopularList.get(i).getSnippet().getChannelId(), getString(R.string.api_key),10 , i)
+            viewModel.getChannelDatas("snippet", videoMostPopularList.get(i).snippet.channelId, getString(R.string.api_key),10 , i)
         }
     }
 

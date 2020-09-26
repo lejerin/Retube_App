@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import lej.happy.retube.data.repositories.YoutubeRepository
-import lej.happy.retube.data.models.Channel
-import lej.happy.retube.data.models.HomeMostPopular
+import lej.happy.retube.data.models.youtube.Channel
 import lej.happy.retube.util.Coroutines
 import kotlinx.coroutines.Job
+import lej.happy.retube.data.models.youtube.HomeMostPopular
 
 class HomeViewModel(
     private val repository: YoutubeRepository
@@ -29,9 +29,9 @@ class HomeViewModel(
 
     }
 
-    private val _list = HashMap<Int, Channel.Item>()
-    private val _channels = MutableLiveData<HashMap<Int, Channel.Item>>()
-    val chennels : LiveData<HashMap<Int, Channel.Item>>
+    private val _list = HashMap<Int, Channel.Items>()
+    private val _channels = MutableLiveData<HashMap<Int, Channel.Items>>()
+    val chennels : LiveData<HashMap<Int, Channel.Items>>
         get() = _channels
 
     fun getChannelDatas(part: String, id: String, key: String, maxResults: Int, num: Int){

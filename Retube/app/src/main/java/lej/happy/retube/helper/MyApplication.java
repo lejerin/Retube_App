@@ -3,14 +3,13 @@ package lej.happy.retube.helper;
 import android.app.Application;
 import android.content.SharedPreferences;
 
-import lej.happy.retube.data.Realm.User;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import lej.happy.retube.data.models.realm.User;
 
 public class MyApplication extends Application {
 

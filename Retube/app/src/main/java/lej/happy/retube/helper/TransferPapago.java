@@ -20,7 +20,42 @@ import java.util.Map;
 // 네이버 기계번역 (Papago SMT) API 예제
 public class TransferPapago {
 
-    public String startTransfer(String text, String source, String target) {
+    public String startTransfer(String text, int source_num, String target) {
+
+        String source = "ko";
+
+        switch (source_num){
+            case 0: source = "ko";
+                    break;
+            case 1: source = "en";
+                break;
+            case 2: source = "ja";
+                break;
+            case 3: source = "vi";
+                break;
+            case 4: source = "zh-CN";
+                break;
+            case 5: source = "zh-TW";
+                break;
+            case 6: source = "id";
+                break;
+            case 7: source = "th";
+                break;
+            case 8: source = "de";
+                break;
+            case 9: source = "ru";
+                break;
+            case 10: source = "es";
+                break;
+            case 11: source = "it";
+                break;
+            case 12: source = "fr";
+                break;
+            default:
+                break;
+        }
+
+
         String clientId = "WpsgWfnfde9g6DQukZui";//애플리케이션 클라이언트 아이디값";
         String clientSecret = "CgL9FauIu0";//애플리케이션 클라이언트 시크릿값";
 

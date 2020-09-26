@@ -6,9 +6,10 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="android.text.Html"/>
         <variable
             name="search"
-            type="lej.happy.retube.data.models.search.Item" />
+            type="lej.happy.retube.data.models.youtube.Searches.Items" />
         <variable
             name="date"
             type="String" />
@@ -38,7 +39,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:text="@{search.snippet.title}"
+        android:text="@{Html.fromHtml(search.snippet.title).toString()}"
         android:maxLines="2"
         android:ellipsize="end"
         android:textColor="@color/black"

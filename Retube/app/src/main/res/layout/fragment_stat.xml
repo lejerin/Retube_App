@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.statistic.StatFragment">
+
+    <data>
+        <variable
+            name="StatViewModel"
+            type="lej.happy.retube.ui.statistic.StatViewModel" />
+        <variable
+            name="user"
+            type="lej.happy.retube.data.models.UserStat" />
+        <variable
+            name="searchTag"
+            type="lej.happy.retube.data.models.Keyword" />
+        <variable
+            name="viewTag"
+            type="lej.happy.retube.data.models.Keyword" />
+
+    </data>
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/statBackground"
-    tools:context=".ui.stat.StatFragment">
+    android:background="@color/statBackground">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -32,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:text="2020.05.27 부터"
+                    android:text="@{user.date}"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -56,7 +74,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="100"
+                        android:text="@{user.viewCount}"
                         android:textStyle="bold"
                         android:textColor="@color/textPrimary"
                         android:textSize="18sp" />
@@ -107,7 +125,7 @@
                         android:id="@+id/timeImg"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/am"
+                        android:src="@{user.time_img, default=@drawable/am}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -118,7 +136,7 @@
                         android:id="@+id/timePercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="30%"
+                        android:text="@{user.time_percent}"
                         android:textColor="@color/textPrimary"
                         android:textStyle="bold"
                         android:textSize="18dp"
@@ -144,7 +162,7 @@
                         android:id="@+id/weekImg"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/week"
+                        android:src="@{user.day_img, default=@drawable/week}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
@@ -156,7 +174,7 @@
                         android:id="@+id/weekPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="30%"
+                        android:text="@{user.day_percent}"
                         android:textStyle="bold"
                         android:textColor="@color/textPrimary"
                         android:textSize="18dp"
@@ -273,7 +291,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="주중"
+                        android:text="@{user.day_text}"
                         android:textStyle="bold"
                         android:textColor="@color/textPrimary"
                         android:textSize="14sp" />
@@ -318,7 +336,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="새벽"
+                        android:text="@{user.time_text}"
                         android:textStyle="bold"
                         android:textColor="@color/textPrimary"
                         android:textSize="14sp" />
@@ -359,7 +377,7 @@
                         android:id="@+id/search_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text='@{searchTag.list.get(0) ?? ""}'
                         android:textSize="@dimen/keword_very_large"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -372,7 +390,7 @@
                         android:id="@+id/search_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text='@{searchTag.list.get(1) ?? ""}'
                         android:textSize="@dimen/keword_very_large"
                         app:layout_constraintBottom_toBottomOf="@+id/search_7"
                         app:layout_constraintEnd_toStartOf="@+id/search_1"
@@ -383,7 +401,7 @@
                         android:id="@+id/search_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text='@{searchTag.list.get(2) ?? ""}'
                         android:textSize="@dimen/keword_large"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/search_1"
@@ -395,7 +413,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="16dp"
-                        android:text=""
+                        android:text='@{searchTag.list.get(3) ?? ""}'
                         android:textSize="@dimen/keword_regular"
                         app:layout_constraintEnd_toStartOf="@+id/search_1"
                         app:layout_constraintHorizontal_bias="0.598"
@@ -407,7 +425,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
-                        android:text=""
+                        android:text='@{searchTag.list.get(4) ?? ""}'
                         android:textSize="@dimen/keword_regular"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/search_3"
@@ -418,7 +436,7 @@
                         android:id="@+id/search_6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text='@{searchTag.list.get(5) ?? ""}'
                         android:textSize="@dimen/keword_small"
                         app:layout_constraintBottom_toTopOf="@+id/search_3"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -432,7 +450,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:text=""
+                        android:text='@{searchTag.list.get(6) ?? ""}'
                         android:textSize="@dimen/keword_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/search_2"
@@ -443,7 +461,7 @@
                         android:id="@+id/search_8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text='@{searchTag.list.get(7) ?? ""}'
                         android:textSize="@dimen/keword_very_small"
                         app:layout_constraintBottom_toTopOf="@+id/search_7"
                         app:layout_constraintEnd_toStartOf="@+id/search_2"
@@ -456,7 +474,7 @@
                         android:id="@+id/search_9"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text='@{searchTag.list.get(8) ?? ""}'
                         android:textSize="@dimen/keword_very_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -465,17 +483,6 @@
                         app:layout_constraintTop_toBottomOf="@+id/search_3"
                         app:layout_constraintVertical_bias="0.703" />
 
-                    <ImageButton
-                        android:id="@+id/shareSearch"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:background="#00000000"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/share"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
@@ -557,7 +564,7 @@
                         android:id="@+id/view_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text='@{viewTag.list.get(0) ?? ""}'
                         android:textSize="@dimen/keword_very_large"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -571,7 +578,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:text=""
+                        android:text='@{viewTag.list.get(1) ?? ""}'
                         android:textSize="@dimen/keword_very_large"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/view_7"
@@ -582,7 +589,7 @@
                         android:id="@+id/view_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text='@{viewTag.list.get(2) ?? ""}'
                         android:textSize="@dimen/keword_large"
                         app:layout_constraintBottom_toTopOf="@+id/view_2"
                         app:layout_constraintEnd_toStartOf="@+id/view_6"
@@ -595,7 +602,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text=""
+                        android:text='@{viewTag.list.get(8) ?? ""}'
                         android:textSize="@dimen/keword_very_small"
                         app:layout_constraintEnd_toStartOf="@+id/view_3"
                         app:layout_constraintStart_toEndOf="@+id/view_5"
@@ -606,7 +613,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:text=""
+                        android:text='@{viewTag.list.get(4) ?? ""}'
                         android:textSize="@dimen/keword_regular"
                         app:layout_constraintBottom_toTopOf="@+id/view_1"
                         app:layout_constraintStart_toStartOf="parent"
@@ -617,7 +624,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="12dp"
-                        android:text=""
+                        android:text='@{viewTag.list.get(5) ?? ""}'
                         android:textSize="@dimen/keword_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -630,7 +637,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="24dp"
                         android:layout_marginBottom="8dp"
-                        android:text=""
+                        android:text='@{viewTag.list.get(6) ?? ""}'
                         android:textSize="@dimen/keword_small"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent" />
@@ -639,7 +646,7 @@
                         android:id="@+id/view_8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text=""
+                        android:text='@{viewTag.list.get(7) ?? ""}'
                         android:textSize="@dimen/keword_very_small"
                         app:layout_constraintBottom_toTopOf="@+id/view_7"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -654,22 +661,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:layout_marginBottom="20dp"
-                        android:text=""
+                        android:text='@{viewTag.list.get(3) ?? ""}'
                         android:textSize="@dimen/keword_large"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
 
-                    <ImageButton
-                        android:id="@+id/shareTagBtn"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginEnd="5dp"
-                        android:background="#00000000"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/share"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
@@ -763,3 +759,4 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -7,14 +7,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import lej.happy.retube.helper.WiseNLUExample
-import lej.happy.retube.data.Realm.RealmSearch
-import lej.happy.retube.data.models.search.Item
-import lej.happy.retube.data.models.viewCount
+import lej.happy.retube.data.models.ViewCount
 import lej.happy.retube.data.repositories.YoutubeRepository
 import lej.happy.retube.util.Coroutines
-import io.realm.Realm
 import kotlinx.coroutines.Job
-import java.util.*
+import lej.happy.retube.data.models.youtube.Searches
+import lej.happy.retube.util.RealmUtil
 import kotlin.collections.ArrayList
 
 
@@ -41,8 +39,8 @@ class SearchViewModel(
     }
 
 
-    private val _searchdatas = MutableLiveData<MutableList<Item>>()
-    val searchdatas : LiveData<MutableList<Item>>
+    private val _searchdatas = MutableLiveData<List<Searches.Items>>()
+    val searchdatas : LiveData<List<Searches.Items>>
         get() = _searchdatas
 
     var nextToken : String? = null
@@ -56,7 +54,7 @@ class SearchViewModel(
             { repository.getSearchData(part, maxResults, order, type, q, safeSearch, key) },
             {
                 nextToken = it?.nextPageToken
-                _searchdatas.value = it!!.items
+                _searchdatas.value = it?.items
             }
         )
     }
@@ -68,9 +66,6 @@ class SearchViewModel(
             {
 
                 nextToken = it?.nextPageToken
-//                val arr = _searchdatas.value
-//                arr?.addAll(it!!.items)
-//                _searchdatas.value = arr
                 _searchdatas.value = it!!.items
                 System.out.println("loading more" + _searchdatas.value!!.size)
             }
@@ -79,8 +74,8 @@ class SearchViewModel(
 
     //조회수 불러오기
 
-    private val _viewCount = MutableLiveData<viewCount>()
-    val viewCount : LiveData<viewCount>
+    private val _viewCount = MutableLiveData<ViewCount>()
+    val viewCount : LiveData<ViewCount>
         get() = _viewCount
 
     fun getViewCountDatas(part: String,  key: String, id: String, num: Int){
@@ -88,32 +83,19 @@ class SearchViewModel(
             { repository.getViewDetailData(part, key, id) },
             {
                 if (it != null) {
-                    _viewCount.value = viewCount(num, it.items[0].statistics.viewCount.toInt())
+                    _viewCount.value =
+                        ViewCount(
+                            num,
+                            it.items[0].statistics.viewCount.toInt()
+                        )
                 }
             }
         )
     }
 
     fun saveNoun(list: List<String>){
-        val realm: Realm = Realm.getDefaultInstance()
 
-        for (i in 0..list.size-1){
-            val isRealmSearch: RealmSearch? =
-                realm.where(RealmSearch::class.java).equalTo("noun", list[i]).findFirst()
-            if (isRealmSearch != null){
-                realm.executeTransaction {
-                    isRealmSearch.setCount(isRealmSearch.getCount() + 1)
-                    isRealmSearch.setDate(Date())
-                }
-            }else{
-                realm.executeTransaction { realm ->
-                    val search: RealmSearch = realm.createObject(RealmSearch::class.java)
-                    search.setNoun(list[i])
-                    search.setCount(1)
-                    search.setDate(Date())
-                }
-            }
-        }
+        RealmUtil.saveSearchNoun(list)
 
     }
 

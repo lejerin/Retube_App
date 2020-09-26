@@ -40,4 +40,35 @@ class YoutubeRepository (
 
     }
 
+    //댓글
+    suspend fun getCommentData(part: String,  videoId: String, order: String, maxResults: Int, key: String)
+            = apiRequest {
+        api.getCommentsData(part, videoId, order, maxResults, key)
+
+    }
+
+    suspend fun getMoreCommentData(part: String,  videoId: String, order: String, pageToken: String,
+                                   maxResults: Int, key: String)
+            = apiRequest {
+        api.getMoreCommentData(part, videoId, order, pageToken, maxResults, key)
+
+    }
+
+    //대댓글
+    suspend fun getRepliesData(part: String, videoId: String, maxResults: Int, key: String)
+            = apiRequest {
+        api.getRepliesData(part, videoId , maxResults , key)
+    }
+
+    suspend fun getMoreRepliesData(part: String, pageToken: String,  videoId: String, maxResults: Int, key: String)
+            = apiRequest {
+        api.getMoreRepliesData(part, pageToken, videoId , maxResults , key)
+    }
+    
+    //비디오 자세한 정보
+    suspend fun getDetailVideo(part: String, key: String, fields: String, id: String)
+        = apiRequest {
+        api.getPlayVideo(part, key, fields, id)
+    }
+
 }

@@ -1,9 +1,7 @@
 package lej.happy.retube.data.network
 
-import lej.happy.retube.data.models.Channel
-import lej.happy.retube.data.models.HomeMostPopular
-import lej.happy.retube.data.models.search.Searchs
-import lej.happy.retube.data.models.VideoStats.VideoStats
+import lej.happy.retube.data.models.youtube.*
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -41,7 +39,7 @@ interface YoutubeApi {
         @Query("q") q: String,
         @Query("safeSearch") safeSearch: String,
         @Query("key") key: String
-    ): Response<Searchs>
+    ): Response<Searches>
 
     @GET("search")
     suspend fun getMoreSerchVideo(
@@ -53,7 +51,7 @@ interface YoutubeApi {
         @Query("q") q: String,
         @Query("safeSearch") safeSearch: String,
         @Query("key") key: String
-    ): Response<Searchs>
+    ): Response<Searches>
 
     @GET("videos")
     suspend fun getVideoDetail(
@@ -62,6 +60,54 @@ interface YoutubeApi {
         @Query("id") id: String
     ): Response<VideoStats>
 
+    //댓글
+    @GET("commentThreads")
+    suspend fun getCommentsData(
+        @Query("part") part: String,
+        @Query("videoId") videoId: String,
+        @Query("order") order: String,
+        @Query("maxResults") maxResults: Int,
+        @Query("key") key: String
+    ): Response<Comments.Model>
+
+
+    @GET("commentThreads")
+    suspend fun getMoreCommentData(
+        @Query("part") part: String,
+        @Query("videoId") videoId: String,
+        @Query("order") order: String,
+        @Query("pageToken") pageToken: String,
+        @Query("maxResults") maxResults: Int,
+        @Query("key") key: String
+    ): Response<Comments.Model>
+
+    //대댓글
+
+    @GET("comments")
+    suspend fun getRepliesData(
+        @Query("part") part: String,
+        @Query("parentId") videoId: String,
+        @Query("maxResults") maxResults: Int,
+        @Query("key") key: String
+    ): Response<Replies>
+
+    @GET("comments")
+    suspend fun getMoreRepliesData(
+        @Query("part") part: String,
+        @Query("pageToken") pageToken: String,
+        @Query("parentId") videoId: String,
+        @Query("maxResults") maxResults: Int,
+        @Query("key") key: String
+    ): Response<Replies>
+
+    //플레이 비디오 자세한 정보
+    @GET("videos")
+    suspend fun getPlayVideo(
+        @Query("part") part: String,
+        @Query("key") key: String,
+        @Query("fields") fields: String,
+        @Query("id") id: String
+    ): Response<Video>
 
 
     companion object{
