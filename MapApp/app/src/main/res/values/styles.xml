@@ -1,0 +1,28 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="CustomFullDialog">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <style name="AnimationPopupStyle">
+        <item name="android:windowEnterAnimation">@anim/open</item>
+        <item name="android:windowExitAnimation">@anim/close</item>
+    </style>
+
+    <style name="EditScreenTextInputLayoutStyleLight" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorControlNormal">@color/gray_dark</item>
+        <item name="colorControlActivated">@color/gray_dark</item>
+        <item name="colorControlHighlight">@color/gray_dark</item>
+        <item name="colorAccent">@color/gray_dark</item>
+        <item name="android:textColorHint">@color/gray_dark</item>
+    </style>
+
+</resources>
