@@ -4,6 +4,8 @@ import com.example.shopping.data.model.LoginRequest
 import com.example.shopping.data.model.SignUpRequest
 import com.example.shopping.data.network.SafeApiRequest
 import com.example.shopping.data.network.ShopApi
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 class ApiRepository (
     private val api: ShopApi
@@ -25,9 +27,19 @@ class ApiRepository (
     }
 
 
-    suspend fun uploadProduct()
+    suspend fun uploadProduct(
+        image: MultipartBody.Part,
+        product: RequestBody,
+        productDetail: RequestBody,
+        productPrice: RequestBody,
+        productStock: RequestBody,
+        productMajorCategory: RequestBody,
+        productMinorCategory: RequestBody,
+        productMerchandiser: RequestBody
+    )
             = apiRequest {
-        api.uploadProduct()
+        api.uploadProduct(image, product, productDetail, productPrice, productStock, productMajorCategory, productMinorCategory
+        , productMerchandiser)
     }
 
 }
